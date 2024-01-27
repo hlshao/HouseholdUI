@@ -54,10 +54,10 @@ To effectively use the Taiwan Household Registration Database Project's input in
 ### Citation Formats
 
 #### APA or IEEE Reference List Format
-Wang, Weihsin, Shu-Li Huang, Hsuan-Lei Shao, (2024) HouseholdUI (Version 1.1) [Source code]. https://github.com/hlshao/HouseholdUI
+Wang, Weihsin, Shu-Li Huang, Hsuan-Lei Shao, (2024) Household Registration User Interface (Version 1.1) [Source code]. https://github.com/hlshao/HouseholdUI
 
 #### ACM References Format
-Wang, Weihsin, Shu-Li Huang, Hsuan-Lei Shao. 2024. HouseholdUI, Version 1.1. Lab. of Computational China Studies. [Source code]. https://github.com/hlshao/HouseholdUI
+Wang, Weihsin, Shu-Li Huang, Hsuan-Lei Shao. 2024. Household Registration User Interface, Version 1.1. Lab. of Computational China Studies. [Source code]. https://github.com/hlshao/HouseholdUI
 
 #### CSE Bibliography Format
-Wang W-H, Huang S-L, Shao H-L.2024. HouseholdUI (Version 1.1) [Source code]. Available from: https://github.com/hlshao/HouseholdUI
+Wang W-H, Huang S-L, Shao H-L.2024. Household Registration User Interface (Version 1.1) [Source code]. Available from: https://github.com/hlshao/HouseholdUI

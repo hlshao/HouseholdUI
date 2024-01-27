@@ -1,6 +1,6 @@
 # HouseholdUI and Taiwan Household Registration Database Project
-Project Name: Household Registration User Interface
-This project represents a significant step in preserving and understanding the rich demographic history of Taiwan, offering invaluable resources for researchers and historians worldwide.
+- Project Name: Household Registration User Interface
+- This project represents a significant step in preserving and understanding the rich demographic history of Taiwan, offering invaluable resources for researchers and historians worldwide.
 
 ## 1. Introduction
 The Taiwan Household Registration Database Project is an innovative input interface designed to assist the Program of Historical Demography at the Institute of Ethnology, Academia Sinica, Taiwan, in compiling and organizing historical data. This project aims to establish a comprehensive database of Taiwan's household registration records, focusing on documents managed by the police since 1906.

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>日治時期戶冊登錄系統</title>
+    <style>
+        body{
+            background-color: #b7b7a4; /* 背景 */
+        }
+        .household, .member, .event ,.special{
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 20px; /* 圓角 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px; 
+            box-sizing: border-box; 
+            margin-bottom: 20px; /* 底部距離 */
+            font-size: 25px; /* 調整文字大小 */
+            color:#6b705c; /* 文字顏色 */
+
+        }
+
+        input, select {
+            border-radius: 5px; /* 圓角 */
+            margin-bottom: 10px; /* 這只是為了增加一些垂直間距，可根據需要調整 */
+            width: 200px; /* 調整寬度，可以使用百分比或像素值 */
+            height: 30px; /* 調整高度，可以使用百分比或像素值 */
+            font-size: 25px; /* 調整文字大小 */
+            border: 1px solid #000; /* 設定框線的顏色和寬度 */
+        }
+
+        h2 { /*標題底線*/
+            border-bottom: 2px solid #a2a2a2; /* 設定底線的寬度、類型和顏色 */
+            width: 20%; /* 調整底線寬度，可以根據需要調整百分比 */
+            padding-bottom: 5px; /* 可選：增加底線與文字之間的空間 */
+            color:#6b705c; /* 文字顏色 */
+        }
+
+        /*單選框*/
+        input[type="radio"] {
+            width: 20px; /* 調整寬度 */
+            height: 20px; /* 調整高度 */
+        }
+
+        /* 按鈕 */
+        button{
+            border: 2px solid #6b705c; /* 邊框 */
+            background-color:#fff; /* 白色背景 */
+            color:#6b705c; /* 文字顏色 */
+            border-radius: 48px; /* 圓角 */
+            cursor:pointer;
+            width: 120px; /* 調整寬度 */
+            height: 40px; /* 調整高度 */
+            font-size: 20px; /* 調整文字大小 */
+        }
+            
+        button:hover{  /* 按鈕特效 */
+            color:#fff;
+            background-color:#6b705c;
+            border:2px #6b705c solid;
+            
+        }
+
+        /* 奇數行背景顏色 */
+        table tr:nth-child(odd) {
+            background-color: #dad7cd;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="household">
+        <h2>戶冊</h2>
+        <form id="householdForm">
+            <label for="nameInput">戶號：</label>
+            <input type="number" id="id">
+            <label for="nameInput">戶冊別：</label>
+            <input type="radio" name="type" value="1" id="origin">本冊
+            <input type="radio" name="type" value="2" id="remove">除冊
+            <input type="radio" name="type" value="3" id="stay">寄留戶
+            本居id<input type="number" id="origin_id">
+            本國住所<input type="text" id="origin_address">
+            <label for="nameInput">是否有斜線：</label>
+            <input type="radio" name="slash" value="1" id="yes">是
+            <input type="radio" name="slash" value="0" id="no">否
+            <br>
+            <label for="nameInput">住所：</label>
+            年號
+            <select id="rg">
+            </select>
+            <select id="first">
+            </select>
+            <select id="first_all">
+            </select>
+            <select id="second">
+            </select>
+            <select id="second_all">
+            </select>
+            <select id="third">
+            </select>
+            <select id="third_all">
+            </select>
+            <select id="fourth">
+            </select>
+            <select id="fourth_all">
+            </select>
+            <br>
+            <input type="number" id="chome">丁目
+            <input type="number" id="address">番地
+            <input type="number" id="of1">之
+            <input type="number" id="of2">
+            <br>
+            <label for="nameInput">戶主事由：</label>
+            <select id="reason">
+            </select>
+            年號
+            <select id="rg2">
+            </select>
+            <input type="number" id="yy2">年
+            <input type="number" id="mm2">月
+            <input type="number" id="dd2">日
+            <br>
+            <label for="nameInput">前戶主事由：</label>
+            <select id="ex_reason">
+            </select>
+            前戶主<input type="text" id="ex_name">
+            <br>
+            <input type="text" id="ex_relationshipsearch" oninput="filterOptions('ex_relationshipInput', 'ex_relationshipsearch')" placeholder="搜尋關係">
+            戶主續柄
+            <select id="ex_relationshipInput">
+            </select>
+            <button type="submit">新增</button>
+        </form>
+        <button onclick="searchhousehold()">查詢</button>
+        <div id="result"></div>
+    </div>
+
+    <div class="member">
+        <h2>成員</h2>
+        <form id="memberForm">
+            <label for="nameInput">戶號：</label>
+            <input type="number" id="id1">
+            <label for="nameInput">人號：</label>
+            <input type="number" id="perno">
+            <label for="nameInput">是否有斜線：</label>
+            <input type="radio" name="slash2" value="1" id="yes">是
+            <input type="radio" name="slash2" value="0" id="no">否
+            <br>
+            <label for="nameInput">名字1：</label>
+            <input type="text" id="nameInput">
+            <label for="nameInput">名字2：</label>
+            <input type="text" id="nameInput2">
+            <label for="nameInput">名字3：</label>
+            <input type="text" id="nameInput3">
+            <br>
+            <label for="numberInput">生日：</label>
+            <select id="reign">
+            </select>
+            <input type="number" id="yy">年
+            <input type="number" id="mm">月
+            <input type="number" id="dd">日
+            <input type="radio" name="gender" value="1" id="male">男
+            <input type="radio" name="gender" value="2" id="female">女
+            <br>
+            <label for="nameInput">雙親：</label>
+            父<input type="text" id="father">
+            母<input type="text" id="mother">
+            出生別
+            <select id="porder">
+            </select>
+            <br>
+            <label for="nameInput">續柄：</label>
+            <input type="text" id="relationshipsearch" oninput="filterOptions('relationshipInput', 'relationshipsearch')" placeholder="搜尋續柄">
+            <select id="relationshipInput">
+            </select>
+            <br>
+            <label for="nameInput">職業：</label>
+            1.
+            <input type="text" id="job1search" oninput="filterOptions('job1', 'job1search')" placeholder="搜尋職業">
+            <select id="job1">
+            </select>
+            <br>
+            <label for="nameInput">職業：</label>
+            2.
+            <input type="text" id="job2search" oninput="filterOptions('job2', 'job2search')" placeholder="搜尋職業">
+            <select id="job2">
+            </select>
+            <br>
+            <label for="nameInput">種族：</label>
+            <select id="race">
+            </select>
+            阿片
+            <select id="opium">
+            </select>
+            纏足
+            <select id="foot_binding">
+            </select>
+            <br>
+            <label for="nameInput">初始關係1:</label>
+            <select id="initial_relationship1">
+            </select>
+            關係人<input type="text" id="relevant_person1">
+            <br>
+            <label for="nameInput">初始關係2:</label>
+            <select id="initial_relationship2">
+            </select>
+            關係人<input type="text" id="relevant_person2">
+
+            <button type="submit">新增</button>
+        </form>
+        <button onclick="searchmember()">查詢</button>
+        <div id="result2"></div>
+    </div>
+    <div class="event">
+        <h2>事件</h2>
+        <form id="eventForm">
+            <label for="nameInput">所屬戶號:</label>
+            <input type="number" id="id2">
+            <label for="nameInput">所屬人號:</label>
+            <input type="number" id="perno2">
+            <br>
+            <label for="nameInput">日期:</label>
+            <select id="rg3">
+            </select>
+            <input type="number" id="yy3">年
+            <input type="number" id="mm3">月
+            <input type="number" id="dd3">日
+            <label for="nameInput">序次:</label>
+            <input type="number" id="no">
+            <br>
+            <label for="nameInput">事件：</label>
+            <input type="text" id="eventsearch" oninput="filterOptions('event', 'eventsearch')" placeholder="搜尋事件">
+            <select id="event">
+            </select>
+            <br>
+            關係人<input type="text" id="relevant_person3">
+            關係
+            <input type="text" id="relationsearch" oninput="filterOptions('relationInput', 'relationsearch')" placeholder="搜尋關係">
+            <select id="relationInput">
+            </select>
+            <br>
+            <label for="nameInput">他戶:</label>
+            戶主
+            <input type="text" id="name2">
+            續柄
+            <input type="text" id="relationshipsearch2" oninput="filterOptions('relationshipInput2', 'relationshipsearch2')" placeholder="搜尋續柄">
+            <select id="relationshipInput2">
+            </select>
+            <br>
+            <label for="nameInput">住所:</label>
+            年號
+            <select id="rg_event">
+            </select>
+            <select id="first_event">
+            </select>
+            <select id="first_all_event">
+            </select>
+            <select id="second_event">
+            </select>
+            <select id="second_all_event">
+            </select>
+            <select id="third_event">
+            </select>
+            <select id="third_all_event">
+            </select>
+            <select id="fourth_event">
+            </select>
+            <select id="fourth_all_event">
+            </select>
+            <br>
+            <input type="number" id="chome_event">丁目
+            <input type="number" id="address_event">番地
+            <input type="number" id="of1_event">之
+            <input type="number" id="of2_event">
+
+            <button type="submit">新增</button>
+        </form>
+        <button onclick="searchevent()">查詢</button>
+        <div id="result3"></div>
+    </div>
+    <div class="special">
+        <h2>特殊情況</h2>
+        <form id="specialForm">
+            <label for="nameInput">戶號:</label>
+            <input type="number" id="id4">
+            <label for="nameInput">人號:</label>
+            <input type="number" id="perno4">
+            <br>
+            <label for="nameInput">特殊情況:</label>
+            <input type="text" id="special_event">
+            <button type="submit">新增</button>
+        </form>    
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

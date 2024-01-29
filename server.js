@@ -1,0 +1,379 @@
+const express = require('express');
+const fs = require('fs');
+const app = express();
+const port = 3000;
+const csvFilePath = 'person.csv';
+const csvFilePath2 = 'household.csv';
+const csvFilePath3 = 'event.csv';
+const csvFilePath4 = 'special.csv';
+
+app.use(express.json());
+app.use(express.static('.')); // 服務靜態文件，如HTML和JavaScript
+
+// 處理POST請求，產生CSV文件
+app.post('/generate-householdForm-csv', (req, res) => {
+    // 從請求體中取得傳遞的數字
+    const id = req.body.id;
+    const type = req.body.type;
+    const origin_id = req.body.origin_id;
+    const origin_address = req.body.origin_address;
+    const slash = req.body.slash;
+    const rg = req.body.rg;
+    const rg_ch= req.body.rg_ch;
+    const first = req.body.first;
+    const first_ch = req.body.first_ch;
+    const first_all_ch = req.body.first_all_ch;
+    
+    const second = req.body.second;
+    const second_ch = req.body.second_ch;
+    const second_all_ch = req.body.second_all_ch;
+
+    const third = req.body.third;
+    const third_ch = req.body.third_ch;
+    const third_all_ch = req.body.third_all_ch;
+    
+    const fourth = req.body.fourth;
+    const fourth_ch = req.body.fourth_ch;
+    const fourth_all_ch = req.body.fourth_all_ch;
+
+    const chome = req.body.chome;
+    const address = req.body.address;
+    const of1 = req.body.of1;
+    const of2 = req.body.of2;
+
+    const reason = req.body.reason;
+    const reason_ch = req.body.reason_ch;
+    const rg2 = req.body.rg2;
+    const rg2_ch = req.body.rg2_ch;
+    const yy2 = req.body.yy2;
+    const mm2 = req.body.mm2;
+    const dd2 = req.body.dd2;
+
+    const ex_reason = req.body.ex_reason;
+    const ex_reason_ch = req.body.ex_reason_ch;
+    const ex_name = req.body.ex_name;
+    const ex_relationship = req.body.ex_relationship;
+    const ex_relationship_ch = req.body.ex_relationship_ch;
+
+
+    // 檢查文件是否存在
+    fs.access(csvFilePath2, fs.constants.F_OK, (err) => {
+        if (err) {
+            // 如果文件不存在，寫入標題並附加數據
+            const csvHeader = 'id,type,本居id,本居住所,是否有斜線,rg,年號,adrlevel1,adr1tp,adr1cd,地名1,adrlevel2,adr1tp2,adr1cd2,地名2,adrlevel3,adr1tp3,adr1cd3,地名3,adrlevel4,adr1tp4,adr1cd4,地名4,chome,address,of1,of2,reason,戶主事由,rg2,年號2,yy,mm,dd,ex_reason,前戶主事由,ex_name,ex_relationship,前戶主續柄\n'; 
+            fs.writeFile(csvFilePath2, csvHeader, 'utf-8', (err) => {
+                if (err) {
+                    console.error('Error writing CSV header:', err);
+                    res.status(500).send({ message: 'Error in generating CSV' });
+                    return;
+                }
+                appendDataToCSV2(id,type,origin_id,origin_address,slash,rg,rg_ch,first,first_ch,first_all_ch,first_all_ch,second,second_ch,second_all_ch,second_all_ch,third,third_ch,third_all_ch,third_all_ch,fourth,fourth_ch,fourth_all_ch,fourth_all_ch,chome,address,of1,of2,reason,reason_ch,rg2,rg2_ch,yy2,mm2,dd2,ex_reason,ex_reason_ch,ex_name,ex_relationship,ex_relationship_ch,res);
+            });
+        } else {
+            // 文件存在，附加數據
+            fs.readFile(csvFilePath2, 'utf-8', (err, data) => {
+                if (err) {
+                    console.error('Error reading CSV:', err);
+                    res.status(500).send({ message: 'Error in generating CSV' });
+                    return;
+                }
+                appendDataToCSV2(id,type,origin_id,origin_address,slash,rg,rg_ch,first,first_ch,first_all_ch,first_all_ch,second,second_ch,second_all_ch,second_all_ch,third,third_ch,third_all_ch,third_all_ch,fourth,fourth_ch,fourth_all_ch,fourth_all_ch,chome,address,of1,of2,reason,reason_ch,rg2,rg2_ch,yy2,mm2,dd2,ex_reason,ex_reason_ch,ex_name,ex_relationship,ex_relationship_ch,res);
+            });
+        }
+    });
+});
+
+function appendDataToCSV2(id,type,origin_id,origin_address,slash,rg,rg_ch,first,first_ch,first_all_ch,first_all_ch,second,second_ch,second_all_ch,second_all_ch,third,third_ch,third_all_ch,third_all_ch,fourth,fourth_ch,fourth_all_ch,fourth_all_ch,chome,address,of1,of2,reason,reason_ch,rg2,rg2_ch,yy2,mm2,dd2,ex_reason,ex_reason_ch,ex_name,ex_relationship,ex_relationship_ch,res) {
+    // 下拉選單中文
+    const rg_ch2 = rg_ch.trim() ? rg_ch.split(' ')[1] : '';//rg_ch 是空白的情況下，rg_ch2 也是空白
+    const first_ch2 = first_ch.trim() ?first_ch.split(' ')[1]: '';
+    const first_all_ch1 = first_all_ch.trim() ?first_all_ch.split(' ')[0]: '';
+    const first_all_ch2 = first_all_ch.trim() ?first_all_ch.split(' ')[1]: '';
+    const second_ch2 = second_ch.trim() ?second_ch.split(' ')[1]: '';
+    const second_all_ch1 = second_all_ch.trim() ?second_all_ch.split(' ')[0]: '';
+    const second_all_ch2 = second_all_ch.trim() ?second_all_ch.split(' ')[1]: '';
+    const third_ch2 = third_ch.trim() ? third_ch.split(' ')[1] : '';
+    const third_all_ch1 = third_all_ch.trim() ?third_all_ch.split(' ')[0]: '';
+    const third_all_ch2 = third_all_ch.trim() ?third_all_ch.split(' ')[1]: '';
+    const fourth_ch2 = fourth_ch.trim() ? fourth_ch.split(' ')[1] : '';
+    const fourth_all_ch1 = fourth_all_ch.trim() ?fourth_all_ch.split(' ')[0]: '';
+    const fourth_all_ch2 = fourth_all_ch.trim() ?fourth_all_ch.split(' ')[1]: '';
+    const reason_ch2 = reason_ch.trim() ? reason_ch.split(' ')[1] : '';
+    const rg2_ch2 = rg2_ch.trim() ? rg2_ch.split(' ')[1] : '';
+    const ex_reason_ch2= ex_reason_ch.trim() ? ex_reason_ch.split(' ')[1] : '';
+    const ex_relationship_ch2 = ex_relationship_ch.trim() ? ex_relationship_ch.split(' ')[1] : '';
+
+    // 建構CSV檔案內容
+    const csvContent = `${id},${type},${origin_id},${origin_address},${slash},${rg},${rg_ch2},${first},${first_ch2},${first_all_ch1},${first_all_ch2},${second},${second_ch2},${second_all_ch1},${second_all_ch2},${third},${third_ch2},${third_all_ch1},${third_all_ch2},${fourth},${fourth_ch2},${fourth_all_ch1},${fourth_all_ch2},${chome},${address},${of1},${of2},${reason},${reason_ch2},${rg2},${rg2_ch2},${yy2},${mm2},${dd2},${ex_reason},${ex_reason_ch2},${ex_name},${ex_relationship},${ex_relationship_ch2}\n`;
+
+    // 附加到現有的CSV文件
+    fs.appendFile('household.csv', csvContent, 'utf-8', (err) => {
+        if (err) {
+            console.error('Error appending to CSV:', err);
+            res.status(500).send({ message: 'Error in generating CSV' });
+        } else {
+            console.log('Data appended to CSV file successfully');
+            res.send({ message: 'CSV generated' });
+        }
+    });
+}
+
+// 處理POST請求，產生CSV文件
+app.post('/generate-csv', (req, res) => {
+    // 從請求體中取得傳遞的數字
+    const id1 = req.body.id1;
+    const perno = req.body.perno;
+    const slash2 = req.body.slash2;
+    const name = req.body.name;
+    const name2 = req.body.name2;
+    const name3 = req.body.name3;
+    const reign = req.body.reign;
+    const reign_ch = req.body.reign_ch;
+    const yy = req.body.yy;
+    const mm = req.body.mm;
+    const dd = req.body.dd;
+    const sex = req.body.sex;
+    const father = req.body.father;
+    const mother = req.body.mother;
+    const porder = req.body.porder;
+    const porder_ch = req.body.porder_ch;
+    const relationship = req.body.relationship;
+    const relationship_ch = req.body.relationship_ch;
+    const job1 = req.body.job1;
+    const job1_ch = req.body.job1_ch;
+    const job2 = req.body.job2;
+    const job2_ch = req.body.job2_ch;
+    const race = req.body.race;
+    const race_ch = req.body.race_ch;
+    const opium = req.body.opium;
+    const opium_ch = req.body.opium_ch;
+    const foot_binding = req.body.foot_binding;
+    const foot_binding_ch = req.body.foot_binding_ch;
+    const initial_relationship1 = req.body.initial_relationship1;
+    const initial_relationship1_ch = req.body.initial_relationship1_ch;
+    const relevant_person1 = req.body.relevant_person1;
+    const initial_relationship2 = req.body.initial_relationship2;
+    const initial_relationship2_ch = req.body.initial_relationship2_ch;
+    const relevant_person2 = req.body.relevant_person2;
+    
+
+    // 檢查文件是否存在
+    fs.access(csvFilePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            // 如果文件不存在，寫入標題並附加數據
+            const csvHeader = 'id,perno,是否有斜線,name,name2,name3,sex,reign,年號,yy,mm,dd,father,mother,porder,出生別,relationship,續柄,job1,職業1,job2,職業2,race,種族,opium,阿片,foot_binding,纏足,initial_relationship1,初始關係1,relevant_person1,initial_relationship2,初始關係2,relevant_person2\n';
+            fs.writeFile(csvFilePath, csvHeader, 'utf-8', (err) => {
+                if (err) {
+                    console.error('Error writing CSV header:', err);
+                    res.status(500).send({ message: 'Error in generating CSV' });
+                    return;
+                }
+                appendDataToCSV(id1,perno,slash2, name,name2,name3, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2,res);
+            });
+        } else {
+            // 文件存在，附加數據
+            fs.readFile(csvFilePath, 'utf-8', (err, data) => {
+                if (err) {
+                    console.error('Error reading CSV:', err);
+                    res.status(500).send({ message: 'Error in generating CSV' });
+                    return;
+                }
+                appendDataToCSV(id1,perno,slash2, name,name2,name3, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2, res);
+            });
+        }
+    });
+});
+
+function appendDataToCSV(id1, perno,slash2,name,name2,name3, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2,res) {
+    //中文
+    const reign_ch2 = reign_ch.trim() ? reign_ch.split(' ')[1] : '';
+    const porder_ch2=porder_ch.trim() ? porder_ch.split(' ')[1] : '';
+    const relationship_ch2=relationship_ch.trim() ? relationship_ch.split(' ')[1] : '';
+    const job1_ch2=job1_ch.trim() ? job1_ch.split(' ')[1] : '';
+    const job2_ch2=job2_ch.trim() ? job2_ch.split(' ')[1] : '';
+    const race_ch2=race_ch.trim() ? race_ch.split(' ')[1] : '';
+    const opium_ch2=opium_ch.trim() ? opium_ch.split(' ')[1] : '';
+    const foot_binding_ch2=foot_binding_ch.trim() ? foot_binding_ch.split(' ')[1] : '';
+    const initial_relationship1_ch2=initial_relationship1_ch.trim() ? initial_relationship1_ch.split(' ')[1] : '';
+    const initial_relationship2_ch2=initial_relationship2_ch.trim() ? initial_relationship2_ch.split(' ')[1] : '';
+    // 建構CSV檔案內容
+    const csvContent = `${id1},${perno},${slash2},${name},${name2},${name3},${sex},${reign},${reign_ch2},${yy},${mm},${dd},${father},${mother},${porder},${porder_ch2},${relationship},${relationship_ch2},${job1},${job1_ch2},${job2},${job2_ch2},${race},${race_ch2},${opium},${opium_ch2},${foot_binding},${foot_binding_ch2},${initial_relationship1},${initial_relationship1_ch2},${relevant_person1},${initial_relationship2},${initial_relationship2_ch2},${relevant_person2}\n`;
+
+    // 附加到現有的CSV文件
+    fs.appendFile('person.csv', csvContent, 'utf-8', (err) => {
+        if (err) {
+            console.error('Error appending to CSV:', err);
+            res.status(500).send({ message: 'Error in generating CSV' });
+        } else {
+            console.log('Data appended to CSV file successfully');
+            res.send({ message: 'CSV generated' });
+        }
+    });
+}
+
+// 監聽指定端口，啟動伺服器
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+
+//成員
+// 處理POST請求，產生CSV文件
+app.post('/generate-eventForm-csv', (req, res) => {
+    // 從請求體中取得傳遞的數字
+    const id2 = req.body.id2;
+    const perno2 = req.body.perno2;
+    const rg3 = req.body.rg3;
+    const rg3_ch = req.body.rg3_ch;
+    const yy3 = req.body.yy3;
+    const mm3 = req.body.mm3;
+    const dd3 = req.body.dd3;
+    const no = req.body.no;
+    const event = req.body.event;
+    const event_ch = req.body.event_ch;
+
+    const relevant_person3 = req.body.relevant_person3;
+    const relationInput = req.body.relationInput;
+    const relationInput_ch = req.body.relationInput_ch;
+
+    const name2 = req.body.name2;
+    const relationshipInput2 = req.body.relationshipInput2;
+    const relationshipInput2_ch = req.body.relationshipInput2_ch;
+
+    const rg_event = req.body.rg_event;
+    const rg_event_ch = req.body.rg_event_ch;
+    const first_event = req.body.first_event;
+    const first_event_ch = req.body.first_event_ch;
+    const first_all_event_ch = req.body.first_all_event_ch;
+
+    const second_event = req.body.second_event;
+    const second_event_ch = req.body.second_event_ch;
+    const second_all_event_ch = req.body.second_all_event_ch;
+
+    const third_event = req.body.third_event;
+    const third_event_ch = req.body.third_event_ch;
+    const third_all_event_ch = req.body.third_all_event_ch;
+
+    const fourth_event = req.body.fourth_event;
+    const fourth_event_ch = req.body.fourth_event_ch;
+    const fourth_all_event_ch = req.body.fourth_all_event_ch;
+
+    const chome_event = req.body.chome_event;
+    const address_event = req.body.address_event;
+    const of1_event = req.body.of1_event;
+    const of2_event = req.body.of2_event;
+
+    // 檢查文件是否存在
+    fs.access(csvFilePath3, fs.constants.F_OK, (err) => {
+        if (err) {
+            // 如果文件不存在，寫入標題並附加數據
+            const csvHeader = 'id,perno,rg,年號,yy,mm,dd,no,event,事件,關係人,relation,關係,戶主,relationship,續柄,rg2,年號2,adrlevel1,adr1tp,adr1cd,地名1,adrlevel2,adr1tp2,adr1cd2,地名2,adrlevel3,adr1tp3,adr1cd3,地名3,adrlevel4,adr1tp4,adr1cd4,地名4,chome,address,of1,of2\n'; 
+            fs.writeFile(csvFilePath3, csvHeader, 'utf-8', (err) => {
+                if (err) {
+                    console.error('Error writing CSV header:', err);
+                    res.status(500).send({ message: 'Error in generating CSV' });
+                    return;
+                }
+                appendDataToCSV3(id2,perno2,rg3,rg3_ch,yy3,mm3,dd3,no,event,event_ch,relevant_person3,relationInput,relationInput_ch,name2,relationshipInput2,relationshipInput2_ch,rg_event,rg_event_ch,first_event,first_event_ch,first_all_event_ch,first_all_event_ch,second_event,second_event_ch,second_all_event_ch,second_all_event_ch,third_event,third_event_ch,third_all_event_ch,third_all_event_ch,fourth_event,fourth_event_ch,fourth_all_event_ch,fourth_all_event_ch,chome_event,address_event,of1_event,of2_event,res);
+            });
+        } else {
+            // 文件存在，附加數據
+            fs.readFile(csvFilePath3, 'utf-8', (err, data) => {
+                if (err) {
+                    console.error('Error reading CSV:', err);
+                    res.status(500).send({ message: 'Error in generating CSV' });
+                    return;
+                }
+                appendDataToCSV3(id2,perno2,rg3,rg3_ch,yy3,mm3,dd3,no,event,event_ch,relevant_person3,relationInput,relationInput_ch,name2,relationshipInput2,relationshipInput2_ch,rg_event,rg_event_ch,first_event,first_event_ch,first_all_event_ch,first_all_event_ch,second_event,second_event_ch,second_all_event_ch,second_all_event_ch,third_event,third_event_ch,third_all_event_ch,third_all_event_ch,fourth_event,fourth_event_ch,fourth_all_event_ch,fourth_all_event_ch,chome_event,address_event,of1_event,of2_event,res);
+            });
+        }
+    });
+});
+
+function appendDataToCSV3(id2,perno2,rg3,rg3_ch,yy3,mm3,dd3,no,event,event_ch,relevant_person3,relationInput,relationInput_ch,name2,relationshipInput2,relationshipInput2_ch,rg_event,rg_event_ch,first_event,first_event_ch,first_all_event_ch,first_all_event_ch,second_event,second_event_ch,second_all_event_ch,second_all_event_ch,third_event,third_event_ch,third_all_event_ch,third_all_event_ch,fourth_event,fourth_event_ch,fourth_all_event_ch,fourth_all_event_ch,chome_event,address_event,of1_event,of2_event,res) {
+    // 下拉選單中文
+    const rg3_ch2 = rg3_ch.trim() ? rg3_ch.split(' ')[1] : '';
+    const event_ch2 = event_ch.trim() ? event_ch.split(' ')[1] : '';
+    const relationInput_ch2 = relationInput_ch.trim() ? relationInput_ch.split(' ')[1] : '';
+    const relationshipInput2_ch2 = relationshipInput2_ch.trim() ? relationshipInput2_ch.split(' ')[1] : '';
+    const rg_event_ch2 = rg_event_ch.trim() ? rg_event_ch.split(' ')[1] : '';
+    const first_event_ch2 = first_event_ch.trim() ? first_event_ch.split(' ')[1] : '';
+    const first_all_event_ch1 = first_all_event_ch.trim() ? first_all_event_ch.split(' ')[0] : '';
+    const first_all_event_ch2 = first_all_event_ch.trim() ? first_all_event_ch.split(' ')[1] : '';
+    const second_event_ch2 = second_event_ch.trim() ? second_event_ch.split(' ')[1] : '';
+    const second_all_event_ch1 = second_all_event_ch.trim() ? second_all_event_ch.split(' ')[0] : '';
+    const second_all_event_ch2 = second_all_event_ch.trim() ? second_all_event_ch.split(' ')[1] : '';
+    const third_event_ch2 = third_event_ch.trim() ? third_event_ch.split(' ')[1] : '';
+    const third_all_event_ch1 = third_all_event_ch.trim() ? third_all_event_ch.split(' ')[0] : '';
+    const third_all_event_ch2 = third_all_event_ch.trim() ? third_all_event_ch.split(' ')[1] : '';
+    const fourth_event_ch2 = fourth_event_ch.trim() ? fourth_event_ch.split(' ')[1] : '';
+    const fourth_all_event_ch1 = fourth_all_event_ch.trim() ? fourth_all_event_ch.split(' ')[0] : '';
+    const fourth_all_event_ch2 = fourth_all_event_ch.trim() ? fourth_all_event_ch.split(' ')[1] : '';
+
+
+    // 建構CSV檔案內容
+    const csvContent = `${id2},${perno2},${rg3},${rg3_ch2},${yy3},${mm3},${dd3},${no},${event},${event_ch2},${relevant_person3},${relationInput},${relationInput_ch2},${name2},${relationshipInput2},${relationshipInput2_ch2},${rg_event},${rg_event_ch2},${first_event},${first_event_ch2},${first_all_event_ch1},${first_all_event_ch2},${second_event},${second_event_ch2},${second_all_event_ch1},${second_all_event_ch2},${third_event},${third_event_ch2},${third_all_event_ch1},${third_all_event_ch2},${fourth_event},${fourth_event_ch2},${fourth_all_event_ch1},${fourth_all_event_ch2},${chome_event},${address_event},${of1_event},${of2_event}\n`;
+
+    // 附加到現有的CSV文件
+    fs.appendFile('event.csv', csvContent, 'utf-8', (err) => {
+        if (err) {
+            console.error('Error appending to CSV:', err);
+            res.status(500).send({ message: 'Error in generating CSV' });
+        } else {
+            console.log('Data appended to CSV file successfully');
+            res.send({ message: 'CSV generated' });
+        }
+    });
+}
+
+// 特殊情況
+app.post('/generate-specialForm-csv', (req, res) => {
+    // 從請求體中取得傳遞的數字
+    const id4 = req.body.id4;
+    const perno4 = req.body.perno4;
+    const special_event = req.body.special_event;
+
+    // 檢查文件是否存在
+    fs.access(csvFilePath4, fs.constants.F_OK, (err) => {
+        if (err) {
+            // 如果文件不存在，寫入標題並附加數據
+            const csvHeader = 'id,perno,特殊情況\n'; 
+            fs.writeFile(csvFilePath4, csvHeader, 'utf-8', (err) => {
+                if (err) {
+                    console.error('Error writing CSV header:', err);
+                    res.status(500).send({ message: 'Error in generating CSV' });
+                    return;
+                }
+                appendDataToCSV4(id4,perno4,special_event,res);
+            });
+        } else {
+            // 文件存在，附加數據
+            fs.readFile(csvFilePath4, 'utf-8', (err, data) => {
+                if (err) {
+                    console.error('Error reading CSV:', err);
+                    res.status(500).send({ message: 'Error in generating CSV' });
+                    return;
+                }
+                appendDataToCSV4(id4,perno4,special_event,res);
+            });
+        }
+    });
+});
+
+function appendDataToCSV4(id4,perno4,special_event,res) {
+
+    // 建構CSV檔案內容
+    const csvContent = `${id4},${perno4},${special_event}\n`;
+
+    // 附加到現有的CSV文件
+    fs.appendFile('special.csv', csvContent, 'utf-8', (err) => {
+        if (err) {
+            console.error('Error appending to CSV:', err);
+            res.status(500).send({ message: 'Error in generating CSV' });
+        } else {
+            console.log('Data appended to CSV file successfully');
+            res.send({ message: 'CSV generated' });
+        }
+    });
+}
+
+

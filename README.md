@@ -29,10 +29,10 @@ To effectively use the Taiwan Household Registration Database Project's input in
 
 ### Step 4: Data Entry
 - Once the interface is open in your browser, you can start entering data according to the provided fields.
-- After entering the data and saving it, the interface will generate four different CSV files in the `housePlanInput_1` folder, corresponding to different data categories: `household`, `person`, `event`, and `feedback`.
+- After entering the data and saving it, the interface will generate four different CSV files in the `housePlanInput_1` folder, corresponding to different data categories: `household`, `person`, `event`, and `special`.
 
 ### Step 5: Data Compilation and Analysis
-- The generated CSV files (`household.csv`, `person.csv`, `event.csv`, and `feedback.csv`) can now be used for further compilation, merging, and analysis as per your research requirements.
+- The generated CSV files (`household.csv`, `person.csv`, `event.csv`, and `special.csv`) can now be used for further compilation, merging, and analysis as per your research requirements.
 ---
 ## 3. Copyright and License
 

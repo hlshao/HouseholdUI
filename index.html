@@ -131,6 +131,10 @@
             <select id="ex_relationshipInput">
             </select>
             <button type="submit">新增</button>
+            <br>
+            index
+            <input type="number" id="indexInput" readonly>
+            <button type="button" onclick="modifyHousehold()">修改</button>
         </form>
         <button onclick="searchhousehold()">查詢</button>
         <div id="result"></div>
@@ -144,8 +148,8 @@
             <label for="nameInput">人號：</label>
             <input type="number" id="perno">
             <label for="nameInput">是否有斜線：</label>
-            <input type="radio" name="slash2" value="1" id="yes">是
-            <input type="radio" name="slash2" value="0" id="no">否
+            <input type="radio" name="slash2" value="1" id="yes2">是
+            <input type="radio" name="slash2" value="0" id="no2">否
             <br>
             <label for="nameInput">名字1：</label>
             <input type="text" id="nameInput">
@@ -208,6 +212,10 @@
             關係人<input type="text" id="relevant_person2">
 
             <button type="submit">新增</button>
+            <br>
+            index
+            <input type="number" id="indexInput2" readonly>
+            <button type="button" onclick="modifyHousehold2()">修改</button>
         </form>
         <button onclick="searchmember()">查詢</button>
         <div id="result2"></div>
@@ -227,7 +235,7 @@
             <input type="number" id="mm3">月
             <input type="number" id="dd3">日
             <label for="nameInput">序次:</label>
-            <input type="number" id="no">
+            <input type="number" id="no3">
             <br>
             <label for="nameInput">事件：</label>
             <input type="text" id="eventsearch" oninput="filterOptions('event', 'eventsearch')" placeholder="搜尋事件">
@@ -275,6 +283,10 @@
             <input type="number" id="of2_event">
 
             <button type="submit">新增</button>
+            <br>
+            index
+            <input type="number" id="indexInput3" readonly>
+            <button type="button" onclick="modifyHousehold3()">修改</button>
         </form>
         <button onclick="searchevent()">查詢</button>
         <div id="result3"></div>
@@ -290,7 +302,13 @@
             <label for="nameInput">特殊情況:</label>
             <input type="text" id="special_event">
             <button type="submit">新增</button>
-        </form>    
+            <br>
+            index
+            <input type="number" id="indexInput4" readonly>
+            <button type="button" onclick="modifyHousehold4()">修改</button>
+        </form>
+        <button onclick="searchspecial()">查詢</button>
+        <div id="result4"></div>    
     </div>
     <script src="script.js"></script>
 </body>

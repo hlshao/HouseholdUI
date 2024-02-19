@@ -1,0 +1,6 @@
+id,perno,是否有斜線,name,name2,name3,sex,reign,年號,yy,mm,dd,father,mother,porder,出生別,relationship,續柄,job1,職業1,job2,職業2,race,種族,opium,阿片,foot_binding,纏足,initial_relationship1,初始關係1,relevant_person1,initial_relationship2,初始關係2,relevant_person2,index
+101,1,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1
+101,2,0,王小明,,,1,12,大正,2,2,2,王大蔥,王奶奶,1,長,,,100,田作業主,100,田作業主,,,,,,,,,,,,,2
+
+
+101,3,,,王大明,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,3

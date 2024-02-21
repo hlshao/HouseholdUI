@@ -209,16 +209,16 @@ app.post('/modify-householdForm-csv', (req, res) => {
             return;
         }
 
-        // 将内容按行拆分为数组
+        // 讀取 CSV 文件的内容
         let rows = data.trim().split('\n');
-        // 根据索引值找到要修改的行
+        // 將內容按行拆分
         if (index >= 0 && index < rows.length) {
-            // 将其他输入框的内容拼接为 CSV 格式的一行数据
-            const newRow = `${id},${type},${origin_id},${origin_address},${slash},${rg},${rg_ch2},${first},${first_ch2},${first_all_ch1},${first_all_ch2},${second},${second_ch2},${second_all_ch1},${second_all_ch2},${third},${third_ch2},${third_all_ch1},${third_all_ch2},${fourth},${fourth_ch2},${fourth_all_ch1},${fourth_all_ch2},${chome},${address},${of1},${of2},${reason},${reason_ch2},${rg2},${rg2_ch2},${yy2},${mm2},${dd2},${ex_reason},${ex_reason_ch2},${ex_name},${ex_relationship},${ex_relationship_ch2},${index}\n`; // 根据你的输入框内容进行相应拼接
-            // 将新行覆盖到原始 CSV 行
+            // 將輸入框內容拚結成一行
+            const newRow = `${id},${type},${origin_id},${origin_address},${slash},${rg},${rg_ch2},${first},${first_ch2},${first_all_ch1},${first_all_ch2},${second},${second_ch2},${second_all_ch1},${second_all_ch2},${third},${third_ch2},${third_all_ch1},${third_all_ch2},${fourth},${fourth_ch2},${fourth_all_ch1},${fourth_all_ch2},${chome},${address},${of1},${of2},${reason},${reason_ch2},${rg2},${rg2_ch2},${yy2},${mm2},${dd2},${ex_reason},${ex_reason_ch2},${ex_name},${ex_relationship},${ex_relationship_ch2},${index}`;
+            // 覆蓋到原始 CSV 行
             rows[index] = newRow;
 
-            // 将修改后的内容写回 CSV 文件
+            // 將修改後的內容寫回csv
             const modifiedData = rows.join('\n');
             fs.writeFile(csvFilePath2, modifiedData, 'utf-8', (err) => {
                 if (err) {
@@ -257,6 +257,8 @@ app.post('/generate-csv', (req, res) => {
     const name = req.body.name;
     const name2 = req.body.name2;
     const name3 = req.body.name3;
+    const name4 = req.body.name4;
+    const name5 = req.body.name5;
     const reign = req.body.reign;
     const reign_ch = req.body.reign_ch;
     const yy = req.body.yy;
@@ -291,14 +293,14 @@ app.post('/generate-csv', (req, res) => {
     fs.access(csvFilePath, fs.constants.F_OK, (err) => {
         if (err) {
             // 如果文件不存在，寫入標題並附加數據
-            const csvHeader = 'id,perno,是否有斜線,name,name2,name3,sex,reign,年號,yy,mm,dd,father,mother,porder,出生別,relationship,續柄,job1,職業1,job2,職業2,race,種族,opium,阿片,foot_binding,纏足,initial_relationship1,初始關係1,relevant_person1,initial_relationship2,初始關係2,relevant_person2,index\n';
+            const csvHeader = 'id,perno,是否有斜線,name,name2,name3,name4,name5,sex,reign,年號,yy,mm,dd,father,mother,porder,出生別,relationship,續柄,job1,職業1,job2,職業2,race,種族,opium,阿片,foot_binding,纏足,initial_relationship1,初始關係1,relevant_person1,initial_relationship2,初始關係2,relevant_person2,index\n';
             fs.writeFile(csvFilePath, csvHeader, 'utf-8', (err) => {
                 if (err) {
                     console.error('Error writing CSV header:', err);
                     res.status(500).send({ message: 'Error in generating CSV' });
                     return;
                 }
-                appendDataToCSV(id1,perno,slash2, name,name2,name3, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2,res);
+                appendDataToCSV(id1,perno,slash2, name,name2,name3,name4,name5, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2,res);
             });
         } else {
             // 文件存在，附加數據
@@ -308,7 +310,7 @@ app.post('/generate-csv', (req, res) => {
                     res.status(500).send({ message: 'Error in generating CSV' });
                     return;
                 }
-                appendDataToCSV(id1,perno,slash2, name,name2,name3, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2, res);
+                appendDataToCSV(id1,perno,slash2, name,name2,name3,name4,name5, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2, res);
             });
         }
     });
@@ -316,7 +318,7 @@ app.post('/generate-csv', (req, res) => {
 
 let index2 = 1; // 定義一個全局變量，用於自動增加索引值
 
-function appendDataToCSV(id1, perno,slash2,name,name2,name3, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2,res) {
+function appendDataToCSV(id1, perno,slash2,name,name2,name3,name4,name5, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2,res) {
     //中文
     const reign_ch2 = reign_ch.trim() ? reign_ch.split(' ')[1] : '';
     const porder_ch2=porder_ch.trim() ? porder_ch.split(' ')[1] : '';
@@ -329,7 +331,7 @@ function appendDataToCSV(id1, perno,slash2,name,name2,name3, sex, reign,reign_ch
     const initial_relationship1_ch2=initial_relationship1_ch.trim() ? initial_relationship1_ch.split(' ')[1] : '';
     const initial_relationship2_ch2=initial_relationship2_ch.trim() ? initial_relationship2_ch.split(' ')[1] : '';
     // 建構CSV檔案內容
-    const csvContent = `${id1},${perno},${slash2},${name},${name2},${name3},${sex},${reign},${reign_ch2},${yy},${mm},${dd},${father},${mother},${porder},${porder_ch2},${relationship},${relationship_ch2},${job1},${job1_ch2},${job2},${job2_ch2},${race},${race_ch2},${opium},${opium_ch2},${foot_binding},${foot_binding_ch2},${initial_relationship1},${initial_relationship1_ch2},${relevant_person1},${initial_relationship2},${initial_relationship2_ch2},${relevant_person2},${index2}\n`;
+    const csvContent = `${id1},${perno},${slash2},${name},${name2},${name3},${name4},${name5},${sex},${reign},${reign_ch2},${yy},${mm},${dd},${father},${mother},${porder},${porder_ch2},${relationship},${relationship_ch2},${job1},${job1_ch2},${job2},${job2_ch2},${race},${race_ch2},${opium},${opium_ch2},${foot_binding},${foot_binding_ch2},${initial_relationship1},${initial_relationship1_ch2},${relevant_person1},${initial_relationship2},${initial_relationship2_ch2},${relevant_person2},${index2}\n`;
 
     // 在每次新增數據時自動增加索引值
     index2++;
@@ -354,6 +356,8 @@ app.post('/modify-generate-csv', (req, res) => {
     const name = req.body.name;
     const name2 = req.body.name2;
     const name3 = req.body.name3;
+    const name4 = req.body.name4;
+    const name5 = req.body.name5;
     const reign = req.body.reign;
     const reign_ch = req.body.reign_ch;
     const yy = req.body.yy;
@@ -396,7 +400,7 @@ app.post('/modify-generate-csv', (req, res) => {
     const initial_relationship1_ch2=initial_relationship1_ch.trim() ? initial_relationship1_ch.split(' ')[1] : '';
     const initial_relationship2_ch2=initial_relationship2_ch.trim() ? initial_relationship2_ch.split(' ')[1] : '';
 
-    // 读取 CSV 文件的内容
+    // 讀取 CSV 文件的内容
     fs.readFile(csvFilePath, 'utf-8', (err, data) => {
         if (err) {
             console.error('Error reading CSV:', err);
@@ -404,18 +408,18 @@ app.post('/modify-generate-csv', (req, res) => {
             return;
         }
 
-        // 将内容按行拆分为数组
+        // 將內容按行拆分
         let rows2 = data.trim().split('\n');
 
-        // 根据索引值找到要修改的行
+        // 根據索引找到要修改的行
         if (index2 >= 0 && index2 < rows2.length) {
-            // 将其他输入框的内容拼接为 CSV 格式的一行数据
-            const newRow2 = `${id1},${perno},${slash2},${name},${name2},${name3},${sex},${reign},${reign_ch2},${yy},${mm},${dd},${father},${mother},${porder},${porder_ch2},${relationship},${relationship_ch2},${job1},${job1_ch2},${job2},${job2_ch2},${race},${race_ch2},${opium},${opium_ch2},${foot_binding},${foot_binding_ch2},${initial_relationship1},${initial_relationship1_ch2},${relevant_person1},${initial_relationship2},${initial_relationship2_ch2},${relevant_person2},${index2}\n`; // 根据你的输入框内容进行相应拼接
+            // 將輸入框內容拚結成一行
+            const newRow2 = `${id1},${perno},${slash2},${name},${name2},${name3},${name4},${name5},${sex},${reign},${reign_ch2},${yy},${mm},${dd},${father},${mother},${porder},${porder_ch2},${relationship},${relationship_ch2},${job1},${job1_ch2},${job2},${job2_ch2},${race},${race_ch2},${opium},${opium_ch2},${foot_binding},${foot_binding_ch2},${initial_relationship1},${initial_relationship1_ch2},${relevant_person1},${initial_relationship2},${initial_relationship2_ch2},${relevant_person2},${index2}`;
 
-            // 将新行覆盖到原始 CSV 行
+            // 覆蓋到原始 CSV 行
             rows2[index2] = newRow2;
 
-            // 将修改后的内容写回 CSV 文件
+            // 將修改後的內容寫回csv
             const modifiedData2 = rows2.join('\n');
             fs.writeFile(csvFilePath, modifiedData2, 'utf-8', (err) => {
                 if (err) {
@@ -627,7 +631,7 @@ app.post('/modify-eventForm-csv', (req, res) => {
     const fourth_all_event_ch1 = fourth_all_event_ch.trim() ? fourth_all_event_ch.split(' ')[0] : '';
     const fourth_all_event_ch2 = fourth_all_event_ch.trim() ? fourth_all_event_ch.split(' ')[1] : '';
 
-    // 读取 CSV 文件的内容
+    // 讀取 CSV 文件的内容
     fs.readFile(csvFilePath3, 'utf-8', (err, data) => {
         if (err) {
             console.error('Error reading CSV:', err);
@@ -635,17 +639,17 @@ app.post('/modify-eventForm-csv', (req, res) => {
             return;
         }
 
-        // 将内容按行拆分为数组
+        // 將內容按行拆分
         let rows3 = data.trim().split('\n');
-        // 根据索引值找到要修改的行
+        // 根據索引找到要修改的行
         if (index3 >= 0 && index3 < rows3.length) {
-            // 将其他输入框的内容拼接为 CSV 格式的一行数据
-            const newRow3 = `${id2},${perno2},${rg3},${rg3_ch2},${yy3},${mm3},${dd3},${no3},${event},${event_ch2},${relevant_person3},${relationInput},${relationInput_ch2},${name2},${relationshipInput2},${relationshipInput2_ch2},${rg_event},${rg_event_ch2},${first_event},${first_event_ch2},${first_all_event_ch1},${first_all_event_ch2},${second_event},${second_event_ch2},${second_all_event_ch1},${second_all_event_ch2},${third_event},${third_event_ch2},${third_all_event_ch1},${third_all_event_ch2},${fourth_event},${fourth_event_ch2},${fourth_all_event_ch1},${fourth_all_event_ch2},${chome_event},${address_event},${of1_event},${of2_event},${index3}\n`; // 根据你的输入框内容进行相应拼接
+            // 將輸入框內容拚結成一行
+            const newRow3 = `${id2},${perno2},${rg3},${rg3_ch2},${yy3},${mm3},${dd3},${no3},${event},${event_ch2},${relevant_person3},${relationInput},${relationInput_ch2},${name2},${relationshipInput2},${relationshipInput2_ch2},${rg_event},${rg_event_ch2},${first_event},${first_event_ch2},${first_all_event_ch1},${first_all_event_ch2},${second_event},${second_event_ch2},${second_all_event_ch1},${second_all_event_ch2},${third_event},${third_event_ch2},${third_all_event_ch1},${third_all_event_ch2},${fourth_event},${fourth_event_ch2},${fourth_all_event_ch1},${fourth_all_event_ch2},${chome_event},${address_event},${of1_event},${of2_event},${index3}`;
 
-            // 将新行覆盖到原始 CSV 行
+            // 覆蓋到原始 CSV 行
             rows3[index3] = newRow3;
 
-            // 将修改后的内容写回 CSV 文件
+            // 將修改後的內容寫回csv
             const modifiedData3 = rows3.join('\n');
             fs.writeFile(csvFilePath3, modifiedData3, 'utf-8', (err) => {
                 if (err) {
@@ -736,7 +740,7 @@ app.post('/modify-specialForm-csv', (req, res) => {
     const special_event = req.body.special_event;
     const index4 = req.body.index4;
 
-    // 读取 CSV 文件的内容
+    // 讀取 CSV 文件的内容
     fs.readFile(csvFilePath4, 'utf-8', (err, data) => {
         if (err) {
             console.error('Error reading CSV:', err);
@@ -747,15 +751,15 @@ app.post('/modify-specialForm-csv', (req, res) => {
         // 将内容按行拆分为数组
         let rows4 = data.trim().split('\n');
 
-        // 根据索引值找到要修改的行
+        // 根據索引找到要修改的行
         if (index4 >= 0 && index4 < rows4.length) {
-            // 将其他输入框的内容拼接为 CSV 格式的一行数据
-            const newRow4 = `${id4},${perno4},${special_event},${index4}\n`; // 根据你的输入框内容进行相应拼接
+            // 將輸入框內容拚結成一行
+            const newRow4 = `${id4},${perno4},${special_event},${index4}`; 
 
-            // 将新行覆盖到原始 CSV 行
+            // 覆蓋到原始 CSV 行
             rows4[index4] = newRow4;
 
-            // 将修改后的内容写回 CSV 文件
+            // 將修改後的內容寫回csv
             const modifiedData4 = rows4.join('\n');
             fs.writeFile(csvFilePath4, modifiedData4, 'utf-8', (err) => {
                 if (err) {

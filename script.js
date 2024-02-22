@@ -29,7 +29,7 @@ function loadDropdownFromTxtFile(txtFilePath, selectId) {
 }
 
 //選項與對應txt
-const txtFilePath1 = "select/menu002_日皇.txt";
+const txtFilePath1 = "select/menu003_日皇生日.txt";
 const selectId1 = "reign";
 loadDropdownFromTxtFile(txtFilePath1, selectId1);
 
@@ -77,11 +77,11 @@ const txtFilePath12 = "select/menu005_戶主事由.txt";
 const selectId12 = "reason";
 loadDropdownFromTxtFile(txtFilePath12, selectId12);
 
-const txtFilePath13 = "select/menu002_日皇.txt";
+const txtFilePath13 = "select/menu003_日皇生日.txt";
 const selectId13 = "rg2";
 loadDropdownFromTxtFile(txtFilePath13, selectId13);
 
-const txtFilePath14 = "select/menu002_日皇.txt";
+const txtFilePath14 = "select/menu003_日皇生日.txt";
 const selectId14 = "rg3";
 loadDropdownFromTxtFile(txtFilePath14, selectId14);
 
@@ -2073,8 +2073,9 @@ function modifyHousehold2() {
 
 //查詢事件
 function searchevent() {
-    // 獲取查詢的戶號
+    // 獲取查詢的戶號與人號
     var id2 = document.getElementById("id2").value;
+    var perno2 = document.getElementById("perno2").value;
   
     // 使用 fetch 加載文件
     fetch('event.csv')
@@ -2085,7 +2086,7 @@ function searchevent() {
   
             // 查找名字匹配的行
             var results = data.filter(function(row) {
-                return row[0] === id2; // 戶號
+                return row[0] === id2 && row[1] === perno2; // 戶號與人號
             });
   
             // 顯示結果
@@ -2469,5 +2470,25 @@ document.addEventListener('DOMContentLoaded', function () {
         changeBackgroundColor('#ffe5ec');
     });
 });
+
+// 禁用enter提交
+function preventFormSubmit(formId) {
+    // 監聽指定表單的 keypress 事件
+    document.getElementById(formId).addEventListener("keypress", function(event) {
+        // 檢查按下的鍵是否為 Enter 鍵 (keyCode 為 13)
+        if (event.keyCode === 13) {
+            // 阻止預設的表單提交行為
+            event.preventDefault();
+            // 阻止進一步的事件傳播
+            return false;
+        }
+    });
+}
+
+// 對每個表單調用函數來設置 keypress 事件監聽器
+preventFormSubmit("householdForm");
+preventFormSubmit("memberForm");
+preventFormSubmit("eventForm");
+preventFormSubmit("specialForm");
   
 

@@ -219,7 +219,7 @@ app.post('/modify-householdForm-csv', (req, res) => {
             rows[index] = newRow;
 
             // 將修改後的內容寫回csv
-            const modifiedData = rows.join('\n');
+            const modifiedData = rows.join('\n')+ '\n';;
             fs.writeFile(csvFilePath2, modifiedData, 'utf-8', (err) => {
                 if (err) {
                     console.error('Error writing modified CSV:', err);
@@ -420,7 +420,7 @@ app.post('/modify-generate-csv', (req, res) => {
             rows2[index2] = newRow2;
 
             // 將修改後的內容寫回csv
-            const modifiedData2 = rows2.join('\n');
+            const modifiedData2 = rows2.join('\n')+ '\n';;
             fs.writeFile(csvFilePath, modifiedData2, 'utf-8', (err) => {
                 if (err) {
                     console.error('Error writing modified CSV:', err);
@@ -650,7 +650,7 @@ app.post('/modify-eventForm-csv', (req, res) => {
             rows3[index3] = newRow3;
 
             // 將修改後的內容寫回csv
-            const modifiedData3 = rows3.join('\n');
+            const modifiedData3 = rows3.join('\n')+ '\n';;
             fs.writeFile(csvFilePath3, modifiedData3, 'utf-8', (err) => {
                 if (err) {
                     console.error('Error writing modified CSV:', err);
@@ -760,7 +760,7 @@ app.post('/modify-specialForm-csv', (req, res) => {
             rows4[index4] = newRow4;
 
             // 將修改後的內容寫回csv
-            const modifiedData4 = rows4.join('\n');
+            const modifiedData4 = rows4.join('\n')+ '\n';
             fs.writeFile(csvFilePath4, modifiedData4, 'utf-8', (err) => {
                 if (err) {
                     console.error('Error writing modified CSV:', err);

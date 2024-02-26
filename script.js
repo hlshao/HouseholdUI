@@ -89,7 +89,7 @@ const txtFilePath15 = "select/menu013_事件.txt";
 const selectId15= "event";
 loadDropdownFromTxtFile(txtFilePath15, selectId15);
 
-const txtFilePath16 = "select/menu014_初始關係.txt";
+const txtFilePath16 = "select/menu013_事件.txt";
 const selectId16= "relationInput";
 loadDropdownFromTxtFile(txtFilePath16, selectId16);
 
@@ -1429,8 +1429,8 @@ document.getElementById('eventForm').addEventListener('submit', function(e) {
         alert('事件新建成功!'); // 在產生CSV成功時彈出提示
 
         // 清除輸入框的值
-        document.getElementById('id2').value = '';
-        document.getElementById('perno2').value = '';
+        //document.getElementById('id2').value = '';
+        //document.getElementById('perno2').value = '';
         document.getElementById('rg3').value = '';
         document.getElementById('yy3').value = '';
         document.getElementById('mm3').value = '';
@@ -1521,6 +1521,9 @@ function searchhousehold() {
                 tableHtml += "<tr>";
                 tableHtml += "<th>修改</th>"; // 新增修改欄位
                 for (var i = 0; i < data[0].length; i++) {
+                    if (i === 5 || i === 7 || i === 8 || i === 9|| i === 11|| i === 12|| i === 13|| i === 15|| i === 16|| i === 17|| i === 19|| i === 20|| i === 21|| i === 27|| i === 29|| i === 34|| i === 37) {
+                        continue; // 跳過 i 為 5、7、8、9 的情況
+                    }
                     tableHtml += "<th>" + data[0][i] + "</th>";
                 }
                 tableHtml += "</tr>";
@@ -1530,9 +1533,11 @@ function searchhousehold() {
                     // 修改欄位及單選框
                     tableHtml += "<td><input type='radio' name='modify' onclick='fillInputs(" + JSON.stringify(results[j]) + ")'></td>";
                     for (var i = 0; i < results[j].length; i++) {
+                        if (i === 5 || i === 7 || i === 8 || i === 9|| i === 11|| i === 12|| i === 13|| i === 15|| i === 16|| i === 17|| i === 19|| i === 20|| i === 21|| i === 27|| i === 29|| i === 34|| i === 37) {
+                            continue; // 跳過 i 為 5、7、8、9 的情況
+                        }
                         tableHtml += "<td>" + results[j][i] + "</td>";
                     }
-                    tableHtml += "</tr>";
                 }
                 tableHtml += "</table>";
                 resultDiv.innerHTML = tableHtml;
@@ -1849,6 +1854,9 @@ function searchmember() {
                 tableHtml += "<tr>";
                 tableHtml += "<th>修改</th>"; // 新增修改欄位
                 for (var i = 0; i < data[0].length; i++) {
+                    if (i === 4 || i === 5 || i === 6 || i === 7|| i === 9|| i === 16|| i === 18|| i === 20|| i === 22|| i === 24|| i === 26|| i === 28|| i === 30|| i === 33) {
+                        continue; // 跳過
+                    }
                     tableHtml += "<th>" + data[0][i] + "</th>";
                 }
                 tableHtml += "</tr>";
@@ -1858,6 +1866,9 @@ function searchmember() {
                     // 修改欄位及單選框
                     tableHtml += "<td><input type='radio' name='modify' onclick='fillInputs2(" + JSON.stringify(results[j]) + ")'></td>";
                     for (var i = 0; i < results[j].length; i++) {
+                        if (i === 4 || i === 5 || i === 6 || i === 7|| i === 9|| i === 16|| i === 18|| i === 20|| i === 22|| i === 24|| i === 26|| i === 28|| i === 30|| i === 33) {
+                            continue; // 跳過
+                        }
                         tableHtml += "<td>" + results[j][i] + "</td>";
                     }
                     tableHtml += "</tr>";
@@ -1911,7 +1922,7 @@ function fillInputs2(rowData) {
     //續柄
     setSelectedIndex(rowData,"relationshipInput",18,19)
     //職業
-    setSelectedIndex(rowData,"job1",20,12)
+    setSelectedIndex(rowData,"job1",20,21)
     setSelectedIndex(rowData,"job2",22,23)
     //種族
     setSelectedIndex(rowData,"race",24,25)
@@ -2097,6 +2108,9 @@ function searchevent() {
                 tableHtml += "<tr>";
                 tableHtml += "<th>修改</th>"; // 新增修改欄位
                 for (var i = 0; i < data[0].length; i++) {
+                    if (i === 2 || i === 8|| i === 11|| i ===14|| i ===16|| i ===18|| i ===19|| i ===20|| i ===22|| i ===23|| i ===24|| i ===26|| i ===27|| i ===28|| i ===30|| i ===31|| i ===32) {
+                        continue; // 跳過
+                    }
                     tableHtml += "<th>" + data[0][i] + "</th>";
                 }
                 tableHtml += "</tr>";
@@ -2106,6 +2120,9 @@ function searchevent() {
                     // 修改欄位及單選框
                     tableHtml += "<td><input type='radio' name='modify' onclick='fillInputs3(" + JSON.stringify(results[j]) + ")'></td>";
                     for (var i = 0; i < results[j].length; i++) {
+                        if (i === 2 || i === 8|| i === 11|| i ===14|| i ===16|| i ===18|| i ===19|| i ===20|| i ===22|| i ===23|| i ===24|| i ===26|| i ===27|| i ===28|| i ===30|| i ===31|| i ===32) {
+                            continue; // 跳過
+                        }
                         tableHtml += "<td>" + results[j][i] + "</td>";
                     }
                     tableHtml += "</tr>";

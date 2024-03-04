@@ -253,46 +253,48 @@
             <select id="event">
             </select>
             <br>
-            關係人<input type="text" id="relevant_person3">
-            關係
-            <input type="text" id="relationsearch" oninput="filterOptions('relationInput', 'relationsearch')" placeholder="搜尋關係">
-            <select id="relationInput">
-            </select>
-            <br>
-            <label for="nameInput">他戶:</label>
-            戶主
-            <input type="text" id="name2">
-            續柄
-            <input type="text" id="relationshipsearch2" oninput="filterOptions('relationshipInput2', 'relationshipsearch2')" placeholder="搜尋續柄">
-            <select id="relationshipInput2">
-            </select>
-            <br>
-            <label for="nameInput">住所:</label>
-            年號
-            <select id="rg_event">
-            </select>
-            <select id="first_event">
-            </select>
-            <select id="first_all_event">
-            </select>
-            <select id="second_event">
-            </select>
-            <select id="second_all_event">
-            </select>
-            <select id="third_event">
-            </select>
-            <select id="third_all_event">
-            </select>
-            <select id="fourth_event">
-            </select>
-            <select id="fourth_all_event">
-            </select>
-            <br>
-            <input type="number" id="chome_event">丁目
-            <input type="number" id="address_event">番地
-            <input type="number" id="of1_event">之
-            <input type="number" id="of2_event">
-
+            <div id="relationFields">
+                關係人<input type="text" id="relevant_person3">
+                關係
+                <input type="text" id="relationsearch" oninput="filterOptions('relationInput', 'relationsearch')" placeholder="搜尋關係">
+                <select id="relationInput">
+                </select>
+            </div>
+            <div id="otherhouse">
+                <label for="nameInput">他戶:</label>
+                戶主
+                <input type="text" id="name2">
+                續柄
+                <input type="text" id="relationshipsearch2" oninput="filterOptions('relationshipInput2', 'relationshipsearch2')" placeholder="搜尋續柄">
+                <select id="relationshipInput2">
+                </select>
+            </div>
+            <div id="where">
+                <label for="nameInput">住所:</label>
+                年號
+                <select id="rg_event">
+                </select>
+                <select id="first_event">
+                </select>
+                <select id="first_all_event">
+                </select>
+                <select id="second_event">
+                </select>
+                <select id="second_all_event">
+                </select>
+                <select id="third_event">
+                </select>
+                <select id="third_all_event">
+                </select>
+                <select id="fourth_event">
+                </select>
+                <select id="fourth_all_event">
+                </select>
+                <input type="number" id="chome_event">丁目
+                <input type="number" id="address_event">番地
+                <input type="number" id="of1_event">之
+                <input type="number" id="of2_event">
+            </div>
             <button type="submit">新增</button>
             <br>
             index

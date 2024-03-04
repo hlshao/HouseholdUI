@@ -2509,3 +2509,42 @@ preventFormSubmit("eventForm");
 preventFormSubmit("specialForm");
   
 
+//事件隱藏欄位
+document.addEventListener('DOMContentLoaded', function() {
+    var eventDropdown = document.getElementById('event');
+    var relationFields = document.getElementById('relationFields');
+    var otherhouse = document.getElementById('otherhouse');
+    var where = document.getElementById('where');
+
+    eventDropdown.addEventListener('change', function() {
+        if (eventDropdown.value === '102'|| eventDropdown.value === '103' || eventDropdown.value === '104'|| eventDropdown.value === '105'|| eventDropdown.value === '106'|| eventDropdown.value === '201'
+        || eventDropdown.value === '204'|| eventDropdown.value === '205'|| eventDropdown.value === '307'|| eventDropdown.value === '310'|| eventDropdown.value === '406'|| eventDropdown.value === '414'
+        || eventDropdown.value === '805'|| eventDropdown.value === '806'|| eventDropdown.value === '807'|| eventDropdown.value === '808'|| eventDropdown.value === '809'|| eventDropdown.value === '810'
+        || eventDropdown.value === '901'|| eventDropdown.value === '902'|| eventDropdown.value === '906') { //0
+            relationFields.style.display = 'none';
+            otherhouse.style.display = 'none';
+            where.style.display = 'none';
+        } else if (eventDropdown.value === '203'|| eventDropdown.value === '208'|| eventDropdown.value === '210'|| eventDropdown.value === '211'|| eventDropdown.value === '301'|| eventDropdown.value === '302'
+        || eventDropdown.value === '401'|| eventDropdown.value === '503'|| eventDropdown.value === '504'|| eventDropdown.value === '523'|| eventDropdown.value === '517'|| eventDropdown.value === '518') { //1
+            relationFields.style.display = 'block';  // 根據需求，這裡可能需要調整顯示還是隱藏
+            otherhouse.style.display = 'none';       // 隱藏 otherhouse 元素
+            where.style.display = 'none';            // 隱藏 where 元素
+        } else if (eventDropdown.value === '101'|| eventDropdown.value === '202'|| eventDropdown.value === '206'|| eventDropdown.value === '207'|| eventDropdown.value === '601'|| eventDropdown.value === '603'
+        || eventDropdown.value === '803'|| eventDropdown.value === '811') { //2
+            relationFields.style.display = 'none';  
+            otherhouse.style.display = 'none';       
+            where.style.display = 'block';            
+        }else if (eventDropdown.value === '308'|| eventDropdown.value === '309'|| eventDropdown.value === '407'|| eventDropdown.value === '413'|| eventDropdown.value === '408'|| eventDropdown.value === '501'
+        || eventDropdown.value === '502'|| eventDropdown.value === '514'|| eventDropdown.value === '505'|| eventDropdown.value === '507'|| eventDropdown.value === '515'|| eventDropdown.value === '516'
+        || eventDropdown.value === '510'|| eventDropdown.value === '511'|| eventDropdown.value === '512'|| eventDropdown.value === '513'|| eventDropdown.value === '801'|| eventDropdown.value === '802'
+        || eventDropdown.value === '903'|| eventDropdown.value === '904'|| eventDropdown.value === '905') { //6
+            relationFields.style.display = 'none';  
+            otherhouse.style.display = 'block';       
+            where.style.display = 'block';            
+        }else {
+            relationFields.style.display = 'block';
+            otherhouse.style.display = 'block';
+            where.style.display = 'block';
+        }
+    });
+});

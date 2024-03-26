@@ -89,7 +89,7 @@ const txtFilePath15 = "select/menu013_事件.txt";
 const selectId15= "event";
 loadDropdownFromTxtFile(txtFilePath15, selectId15);
 
-const txtFilePath16 = "select/menu013_事件.txt";
+const txtFilePath16 = "select/menu006_續柄.txt";
 const selectId16= "relationInput";
 loadDropdownFromTxtFile(txtFilePath16, selectId16);
 

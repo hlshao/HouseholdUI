@@ -2,30 +2,32 @@
 function loadDropdownFromTxtFile(txtFilePath, selectId) {
     const selectElement = document.getElementById(selectId);
 
-    // 清空下拉選單的內容
-    selectElement.innerHTML = '';
+    // 檢查選單元素是否存在
+    if (selectElement) {
+        // 清空下拉選單的內容
+        selectElement.innerHTML = '';
 
-    // 使用Fetch API讀取txt文件
-    fetch(txtFilePath)
-        .then(response => response.text())
-        .then(data => {
-            // 將txt文件的內容分行
-            const lines = data.split('\n');
+        // 使用Fetch API讀取txt文件
+        fetch(txtFilePath)
+            .then(response => response.text())
+            .then(data => {
+                // 將txt文件的內容分行
+                const lines = data.split('\n');
 
-            // 將每一行的內容添加到下拉選單中
-            lines.forEach(line => {
-                const option = document.createElement("option");
-                // 使用正則表達式提取文本中的數字部分作為 value
-                const value = line.match(/-?\d+/);
-                option.value = value ? value[0] : ""; // 如果找到數字，設定為 value，否則設為空字符串
-                option.text = line;
-                selectElement.add(option);
-            });
+                // 將每一行的內容添加到下拉選單中
+                lines.forEach(line => {
+                    const option = document.createElement("option");
+                    // 使用正則表達式提取文本中的數字部分作為 value
+                    const value = line.match(/-?\d+/);
+                    option.value = value ? value[0] : ""; // 如果找到數字，設定為 value，否則設為空字符串
+                    option.text = line;
+                    selectElement.add(option);
+                });
 
-            // 將選中索引設為 -1 預設選項空白
-            selectElement.selectedIndex = -1;
-        })
-        .catch(error => console.error(`發生錯誤（${selectId}):`, error));
+                // 將選中索引設為 -1 預設選項空白
+                selectElement.selectedIndex = -1;
+            })
+            .catch(error => console.error(`發生錯誤（${selectId}):`, error));}
 }
 
 //選項與對應txt
@@ -121,12 +123,31 @@ function handleRgChange(first,rg) {
 }
 
 // 調用函數
-document.getElementById("rg").addEventListener("change", function () {
-    handleRgChange("first","rg");
+//document.getElementById("rg").addEventListener("change", function () {
+//    handleRgChange("first","rg");
+//});
+document.addEventListener("DOMContentLoaded", function() {
+    const rgElement = document.getElementById("rg");
+
+    // 檢查元素是否存在
+    if (rgElement) {
+        rgElement.addEventListener("change", function () {
+            handleRgChange("first", "rg");
+        });
+    }
 });
 
-document.getElementById("rg_event").addEventListener("change", function () {
-    handleRgChange("first_event","rg_event");
+//document.getElementById("rg_event").addEventListener("change", function () {
+//    handleRgChange("first_event","rg_event");
+//});
+document.addEventListener('DOMContentLoaded', function () {
+    var rgEventElement = document.getElementById('rg_event');
+
+    if (rgEventElement) {
+        rgEventElement.addEventListener('change', function () {
+            handleRgChange('first_event', 'rg_event');
+        });
+    }
 });
 
 // 第一層
@@ -217,11 +238,31 @@ function handleFirstDropdownChange(first_all,first,rg) {
 }
 
 // 將相同的更新邏輯應用於兩個下拉選單
-document.getElementById("first").addEventListener("change", function () {
-    handleFirstDropdownChange("first_all","first","rg");
+//document.getElementById("first").addEventListener("change", function () {
+//    handleFirstDropdownChange("first_all","first","rg");
+//});
+document.addEventListener("DOMContentLoaded", function() {
+    const firstElement = document.getElementById("first");
+
+    // 檢查元素是否存在
+    if (firstElement) {
+        firstElement.addEventListener("change", function () {
+            handleFirstDropdownChange("first_all", "first", "rg");
+        });
+    }
 });
-document.getElementById("first_event").addEventListener("change", function () {
-    handleFirstDropdownChange("first_all_event","first_event","rg_event");
+
+//document.getElementById("first_event").addEventListener("change", function () {
+//    handleFirstDropdownChange("first_all_event","first_event","rg_event");
+//});
+document.addEventListener('DOMContentLoaded', function () {
+    var firstEventElement = document.getElementById('first_event');
+
+    if (firstEventElement) {
+        firstEventElement.addEventListener('change', function () {
+            handleFirstDropdownChange('first_all_event', 'first_event', 'rg_event');
+        });
+    }
 });
 
 // 更新first_all的函數
@@ -326,12 +367,31 @@ function handleRgChange2(first_all,second) {
 }
 
 // 調用函數
-document.getElementById("first_all").addEventListener("change", function () {
-    handleRgChange2("first_all","second");
+//document.getElementById("first_all").addEventListener("change", function () {
+//    handleRgChange2("first_all","second");
+//});
+document.addEventListener("DOMContentLoaded", function() {
+    const firstAllElement = document.getElementById("first_all");
+
+    // 檢查元素是否存在
+    if (firstAllElement) {
+        firstAllElement.addEventListener("change", function() {
+            handleRgChange2("first_all", "second");
+        });
+    }
 });
 
-document.getElementById("first_all_event").addEventListener("change", function () {
-    handleRgChange2("first_all_event","second_event");
+//document.getElementById("first_all_event").addEventListener("change", function () {
+//    handleRgChange2("first_all_event","second_event");
+//});
+document.addEventListener('DOMContentLoaded', function () {
+    var firstAllEventElement = document.getElementById('first_all_event');
+
+    if (firstAllEventElement) {
+        firstAllEventElement.addEventListener('change', function () {
+            handleRgChange2('first_all_event', 'second_event');
+        });
+    }
 });
 
 
@@ -433,12 +493,31 @@ function handleFirstDropdownChange2(second,first_all,second_all) {
 }
 
 // 將相同的更新邏輯應用於兩個下拉選單
-document.getElementById("second").addEventListener("change", function () {
-    handleFirstDropdownChange2("second","first_all","second_all");
+//document.getElementById("second").addEventListener("change", function () {
+//    handleFirstDropdownChange2("second","first_all","second_all");
+//});
+document.addEventListener("DOMContentLoaded", function() {
+    const secondElement = document.getElementById("second");
+
+    // 檢查元素是否存在
+    if (secondElement) {
+        secondElement.addEventListener("change", function() {
+            handleFirstDropdownChange2("second", "first_all", "second_all");
+        });
+    }
 });
 
-document.getElementById("second_event").addEventListener("change", function () {
-    handleFirstDropdownChange2("second_event","first_all_event","second_all_event");
+//document.getElementById("second_event").addEventListener("change", function () {
+//    handleFirstDropdownChange2("second_event","first_all_event","second_all_event");
+//});
+document.addEventListener('DOMContentLoaded', function () {
+    var secondEventElement = document.getElementById('second_event');
+
+    if (secondEventElement) {
+        secondEventElement.addEventListener('change', function () {
+            handleFirstDropdownChange2('second_event', 'first_all_event', 'second_all_event');
+        });
+    }
 });
 
 
@@ -551,13 +630,32 @@ function handleRgChange3(second_all,third) {
 }
 
 // 調用函數
-document.getElementById("second_all").addEventListener("change", function () {
-    handleRgChange3("second_all","third");
+//document.getElementById("second_all").addEventListener("change", function () {
+//    handleRgChange3("second_all","third");
+//});
+document.addEventListener("DOMContentLoaded", function() {
+    const secondAllElement = document.getElementById("second_all");
+
+    // 檢查元素是否存在
+    if (secondAllElement) {
+        secondAllElement.addEventListener("change", function() {
+            handleRgChange3("second_all", "third");
+        });
+    }
 });
 
 // 調用函數
-document.getElementById("second_all_event").addEventListener("change", function () {
-    handleRgChange3("second_all_event","third_event");
+//document.getElementById("second_all_event").addEventListener("change", function () {
+//    handleRgChange3("second_all_event","third_event");
+//});
+document.addEventListener('DOMContentLoaded', function () {
+    var secondAllEventElement = document.getElementById('second_all_event');
+
+    if (secondAllEventElement) {
+        secondAllEventElement.addEventListener('change', function () {
+            handleRgChange3('second_all_event', 'third_event');
+        });
+    }
 });
 
 // 更新third的函數
@@ -661,11 +759,30 @@ function handleFirstDropdownChange3(third,second_all,third_all) {
 }
 
 // 將相同的更新邏輯應用於兩個下拉選單
-document.getElementById("third").addEventListener("change", function () {
-    handleFirstDropdownChange3("third","second_all","third_all");
+//document.getElementById("third").addEventListener("change", function () {
+//    handleFirstDropdownChange3("third","second_all","third_all");
+//});
+document.addEventListener("DOMContentLoaded", function() {
+    const thirdElement = document.getElementById("third");
+
+    // 檢查元素是否存在
+    if (thirdElement) {
+        thirdElement.addEventListener("change", function() {
+            handleFirstDropdownChange3("third", "second_all", "third_all");
+        });
+    }
 });
-document.getElementById("third_event").addEventListener("change", function () {
-    handleFirstDropdownChange3("third_event","second_all_event","third_all_event");
+//document.getElementById("third_event").addEventListener("change", function () {
+//    handleFirstDropdownChange3("third_event","second_all_event","third_all_event");
+//});
+document.addEventListener('DOMContentLoaded', function () {
+    var thirdEventElement = document.getElementById('third_event');
+
+    if (thirdEventElement) {
+        thirdEventElement.addEventListener('change', function () {
+            handleFirstDropdownChange3('third_event', 'second_all_event', 'third_all_event');
+        });
+    }
 });
 
 // 更新second_all的函數
@@ -779,11 +896,30 @@ function handleRgChange4(third_all,fourth) {
 }
 
 // 調用函數
-document.getElementById("third_all").addEventListener("change", function () {
-    handleRgChange4("third_all","fourth");
+//document.getElementById("third_all").addEventListener("change", function () {
+//    handleRgChange4("third_all","fourth");
+//});
+document.addEventListener("DOMContentLoaded", function() {
+    const thirdAllElement = document.getElementById("third_all");
+
+    // 檢查元素是否存在
+    if (thirdAllElement) {
+        thirdAllElement.addEventListener("change", function() {
+            handleRgChange4("third_all", "fourth");
+        });
+    }
 });
-document.getElementById("third_all_event").addEventListener("change", function () {
-    handleRgChange4("third_all_event","fourth_event");
+//document.getElementById("third_all_event").addEventListener("change", function () {
+//    handleRgChange4("third_all_event","fourth_event");
+//});
+document.addEventListener('DOMContentLoaded', function () {
+    var thirdAllEventElement = document.getElementById('third_all_event');
+
+    if (thirdAllEventElement) {
+        thirdAllEventElement.addEventListener('change', function () {
+            handleRgChange4('third_all_event', 'fourth_event');
+        });
+    }
 });
 
 // 更新fourth的函數
@@ -870,11 +1006,30 @@ function handleFirstDropdownChange4(fourth,third_all,fourth_all) {
 }
 
 // 將相同的更新邏輯應用於兩個下拉選單
-document.getElementById("fourth").addEventListener("change", function () {
-    handleFirstDropdownChange4("fourth","third_all","fourth_all");
+//document.getElementById("fourth").addEventListener("change", function () {
+//    handleFirstDropdownChange4("fourth","third_all","fourth_all");
+//});
+document.addEventListener("DOMContentLoaded", function() {
+    const fourthElement = document.getElementById("fourth");
+
+    // 檢查元素是否存在
+    if (fourthElement) {
+        fourthElement.addEventListener("change", function() {
+            handleFirstDropdownChange4("fourth", "third_all", "fourth_all");
+        });
+    }
 });
-document.getElementById("fourth_event").addEventListener("change", function () {
-    handleFirstDropdownChange4("fourth_event","third_all_event","fourth_all_event");
+//document.getElementById("fourth_event").addEventListener("change", function () {
+//    handleFirstDropdownChange4("fourth_event","third_all_event","fourth_all_event");
+//});
+document.addEventListener('DOMContentLoaded', function () {
+    var fourthEventElement = document.getElementById('fourth_event');
+
+    if (fourthEventElement) {
+        fourthEventElement.addEventListener('change', function () {
+            handleFirstDropdownChange4('fourth_event', 'third_all_event', 'fourth_all_event');
+        });
+    }
 });
 
 // 更新fourth_all的函數
@@ -1018,483 +1173,506 @@ function filterOptions(selectId, searchInputId) {
 }
 
 // 取得戶冊表單元素
-document.getElementById('householdForm').addEventListener('submit', function(e) {
-    // 阻止表單預設提交行為
-    e.preventDefault();
-
-    var id = document.getElementById('id').value; // 戶號
-    var typeInput = document.querySelector('input[name="type"]:checked');// 戶冊別
-    if (typeInput) {
-        var type = typeInput.value; 
-    } else {
-        var type = ""; 
-    }
-    var origin_id = document.getElementById('origin_id').value; // 本居id
-    var origin_address = document.getElementById('origin_address').value; // 本居住所
-    var slashInput = document.querySelector('input[name="slash"]:checked');// 斜線
-    if (slashInput) {
-        var slash = slashInput.value; 
-    } else {
-        var slash = ""; 
-    }
-
-    var rg = document.getElementById('rg').value;  // 年號
-    var rg_ch = ""; // 年號的文字
-    if (rg){
-        rg_ch = document.getElementById('rg').options[document.getElementById('rg').selectedIndex].text;
-    }
+document.addEventListener("DOMContentLoaded", function() {
+    const formElement = document.getElementById('householdForm');
     
-    var first = document.getElementById('first').value;  // 1
-    var first_ch = "";
-    if (first){
-        first_ch = document.getElementById('first').options[document.getElementById('first').selectedIndex].text;  // 第一層級別
-    }
-    var first_all_ch= "";
-    if (document.getElementById('first_all').value){
-        first_all_ch = document.getElementById('first_all').options[document.getElementById('first_all').selectedIndex].text; //第一層地名跟代碼
-    }
+    if (formElement) {
+        formElement.addEventListener('submit', function(e) {
+            e.preventDefault();
 
-    var second = document.getElementById('second').value;  // 2
-    var second_ch = "";
-    if (second){
-        second_ch = document.getElementById('second').options[document.getElementById('second').selectedIndex].text;  // 第二層級別
-    }
-    var second_all_ch= "";
-    if (document.getElementById('second_all').value){
-        second_all_ch = document.getElementById('second_all').options[document.getElementById('second_all').selectedIndex].text; //第二層地名跟代碼
-    }  
+            var id = document.getElementById('id').value; // 戶號
+            var typeInput = document.querySelector('input[name="type"]:checked');// 戶冊別
+            if (typeInput) {
+                var type = typeInput.value; 
+            } else {
+                var type = ""; 
+            }
+            var origin_id = document.getElementById('origin_id').value; // 本居id
+            var origin_address = document.getElementById('origin_address').value; // 本居住所
+            var slashInput = document.querySelector('input[name="slash"]:checked');// 斜線
+            if (slashInput) {
+                var slash = slashInput.value; 
+            } else {
+                var slash = ""; 
+            }
 
-    var third = document.getElementById('third').value;  // 3
-    var third_ch = "";
-    if (third){
-        third_ch = document.getElementById('third').options[document.getElementById('third').selectedIndex].text;  // 第三層級別
-    }
-    var third_all_ch= "";
-    if (document.getElementById('third_all').value){
-        third_all_ch = document.getElementById('third_all').options[document.getElementById('third_all').selectedIndex].text; //第三層地名跟代碼
-    }  
+            var rg = document.getElementById('rg').value;  // 年號
+            var rg_ch = ""; // 年號的文字
+            if (rg){
+                rg_ch = document.getElementById('rg').options[document.getElementById('rg').selectedIndex].text;
+            }
+            
+            var first = document.getElementById('first').value;  // 1
+            var first_ch = "";
+            if (first){
+                first_ch = document.getElementById('first').options[document.getElementById('first').selectedIndex].text;  // 第一層級別
+            }
+            var first_all_ch= "";
+            if (document.getElementById('first_all').value){
+                first_all_ch = document.getElementById('first_all').options[document.getElementById('first_all').selectedIndex].text; //第一層地名跟代碼
+            }
 
-    var fourth = document.getElementById('fourth').value;  // 4
-    var fourth_ch = "";
-    if (fourth){
-        fourth_ch = document.getElementById('fourth').options[document.getElementById('fourth').selectedIndex].text;   // 第四層級別
-    }
-    var fourth_all_ch= "";
-    if (document.getElementById('fourth_all').value){
-        fourth_all_ch = document.getElementById('fourth_all').options[document.getElementById('fourth_all').selectedIndex].text; //第四層地名跟代碼
-    }  
+            var second = document.getElementById('second').value;  // 2
+            var second_ch = "";
+            if (second){
+                second_ch = document.getElementById('second').options[document.getElementById('second').selectedIndex].text;  // 第二層級別
+            }
+            var second_all_ch= "";
+            if (document.getElementById('second_all').value){
+                second_all_ch = document.getElementById('second_all').options[document.getElementById('second_all').selectedIndex].text; //第二層地名跟代碼
+            }  
 
-    var chome = document.getElementById('chome').value;  // 丁目
-    var address = document.getElementById('address').value;  // 番地
-    var of1 = document.getElementById('of1').value;  // 幾之
-    var of2 = document.getElementById('of2').value;  // 幾
-    
-    var reason = document.getElementById('reason').value;  // 戶主事由
-    var reason_ch = "";
-    if (reason){
-        reason_ch = document.getElementById('reason').options[document.getElementById('reason').selectedIndex].text;  // 戶主事由的文字
-    }
-    var rg2 = document.getElementById('rg2').value;  // 年號2
-    var rg2_ch = "";
-    if (rg2){
-        rg2_ch= document.getElementById('rg2').options[document.getElementById('rg2').selectedIndex].text; // 年號的文字
-    }
+            var third = document.getElementById('third').value;  // 3
+            var third_ch = "";
+            if (third){
+                third_ch = document.getElementById('third').options[document.getElementById('third').selectedIndex].text;  // 第三層級別
+            }
+            var third_all_ch= "";
+            if (document.getElementById('third_all').value){
+                third_all_ch = document.getElementById('third_all').options[document.getElementById('third_all').selectedIndex].text; //第三層地名跟代碼
+            }  
 
-    var yy2 = document.getElementById('yy2').value; //年2
-    var mm2 = document.getElementById('mm2').value; //月2
-    var dd2 = document.getElementById('dd2').value; //日2
+            var fourth = document.getElementById('fourth').value;  // 4
+            var fourth_ch = "";
+            if (fourth){
+                fourth_ch = document.getElementById('fourth').options[document.getElementById('fourth').selectedIndex].text;   // 第四層級別
+            }
+            var fourth_all_ch= "";
+            if (document.getElementById('fourth_all').value){
+                fourth_all_ch = document.getElementById('fourth_all').options[document.getElementById('fourth_all').selectedIndex].text; //第四層地名跟代碼
+            }  
 
-    var ex_reason = document.getElementById('ex_reason').value;  // 前戶主事由
-    var ex_reason_ch = "";
-    if (ex_reason){
-        ex_reason_ch = document.getElementById('ex_reason').options[document.getElementById('ex_reason').selectedIndex].text;  // 前戶主事由的文字
-    }
-    var ex_name = document.getElementById('ex_name').value; //前戶主
-    var ex_relationship = document.getElementById('ex_relationshipInput').value; // 前戶主續柄
-    var ex_relationship_ch = ""; 
-    if (ex_relationship){
-        ex_relationship_ch = document.getElementById('ex_relationshipInput').options[document.getElementById('ex_relationshipInput').selectedIndex].text; // 前戶主續柄的文字
-    }
-    
-    // 發送POST請求到指定的路徑'/generate-householdForm-csv'
-    fetch('/generate-householdForm-csv', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json', // 指定請求的內容類型為JSON
-        },
-        body: JSON.stringify({ id : id ,type:type,origin_id:origin_id,origin_address:origin_address,slash:slash,rg:rg,rg_ch:rg_ch,first:first,first_ch:first_ch, first_all_ch:first_all_ch,
-            second:second,second_ch:second_ch,second_all_ch:second_all_ch,
-            third:third,third_ch:third_ch,third_all_ch:third_all_ch,
-            fourth:fourth,fourth_ch:fourth_ch,fourth_all_ch:fourth_all_ch,
-            chome:chome,address:address,of1:of1,of2:of2,
-            reason:reason,reason_ch:reason_ch,rg2:rg2,rg2_ch:rg2_ch,
-            yy2:yy2,mm2:mm2,dd2:dd2,
-            ex_reason:ex_reason,ex_reason_ch:ex_reason_ch,ex_name:ex_name,ex_relationship:ex_relationship,ex_relationship_ch:ex_relationship_ch}), // 將輸入的數字轉換為JSON格式並作為請求體發送
-    })
-    .then(response => response.json()) // 解析回應的JSON數據
-    .then(data => {
-        alert('戶冊新建成功!'); // 在產生CSV成功時彈出提示
+            var chome = document.getElementById('chome').value;  // 丁目
+            var address = document.getElementById('address').value;  // 番地
+            var of1 = document.getElementById('of1').value;  // 幾之
+            var of2 = document.getElementById('of2').value;  // 幾
+            
+            var reason = document.getElementById('reason').value;  // 戶主事由
+            var reason_ch = "";
+            if (reason){
+                reason_ch = document.getElementById('reason').options[document.getElementById('reason').selectedIndex].text;  // 戶主事由的文字
+            }
+            var rg2 = document.getElementById('rg2').value;  // 年號2
+            var rg2_ch = "";
+            if (rg2){
+                rg2_ch= document.getElementById('rg2').options[document.getElementById('rg2').selectedIndex].text; // 年號的文字
+            }
 
-        // 清除輸入框的值
-        document.getElementById('id').value = '';
-        var typeRadioButtons = document.querySelectorAll('input[name="type"]');
-        typeRadioButtons.forEach(function(radio) {
-            radio.checked = false;
+            var yy2 = document.getElementById('yy2').value; //年2
+            var mm2 = document.getElementById('mm2').value; //月2
+            var dd2 = document.getElementById('dd2').value; //日2
+
+            var ex_reason = document.getElementById('ex_reason').value;  // 前戶主事由
+            var ex_reason_ch = "";
+            if (ex_reason){
+                ex_reason_ch = document.getElementById('ex_reason').options[document.getElementById('ex_reason').selectedIndex].text;  // 前戶主事由的文字
+            }
+            var ex_name = document.getElementById('ex_name').value; //前戶主
+            var ex_relationship = document.getElementById('ex_relationshipInput').value; // 前戶主續柄
+            var ex_relationship_ch = ""; 
+            if (ex_relationship){
+                ex_relationship_ch = document.getElementById('ex_relationshipInput').options[document.getElementById('ex_relationshipInput').selectedIndex].text; // 前戶主續柄的文字
+            }
+            
+            // 發送POST請求到指定的路徑'/generate-householdForm-csv'
+            fetch('/generate-householdForm-csv', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // 指定請求的內容類型為JSON
+                },
+                body: JSON.stringify({ id : id ,type:type,origin_id:origin_id,origin_address:origin_address,slash:slash,rg:rg,rg_ch:rg_ch,first:first,first_ch:first_ch, first_all_ch:first_all_ch,
+                    second:second,second_ch:second_ch,second_all_ch:second_all_ch,
+                    third:third,third_ch:third_ch,third_all_ch:third_all_ch,
+                    fourth:fourth,fourth_ch:fourth_ch,fourth_all_ch:fourth_all_ch,
+                    chome:chome,address:address,of1:of1,of2:of2,
+                    reason:reason,reason_ch:reason_ch,rg2:rg2,rg2_ch:rg2_ch,
+                    yy2:yy2,mm2:mm2,dd2:dd2,
+                    ex_reason:ex_reason,ex_reason_ch:ex_reason_ch,ex_name:ex_name,ex_relationship:ex_relationship,ex_relationship_ch:ex_relationship_ch}), // 將輸入的數字轉換為JSON格式並作為請求體發送
+            })
+            .then(response => response.json()) // 解析回應的JSON數據
+            .then(data => {
+                alert('戶冊新建成功!'); // 在產生CSV成功時彈出提示
+
+                // 清除輸入框的值
+                document.getElementById('id').value = '';
+                var typeRadioButtons = document.querySelectorAll('input[name="type"]');
+                typeRadioButtons.forEach(function(radio) {
+                    radio.checked = false;
+                });
+                document.getElementById('origin_id').value= '';
+                document.getElementById('origin_address').value= '';
+                var slashRadioButtons = document.querySelectorAll('input[name="slash"]');
+                slashRadioButtons.forEach(function(radio) {
+                    radio.checked = false;
+                });
+                document.getElementById('rg').value= '';
+                document.getElementById('first').value= '';
+                document.getElementById('first_all').value= '';
+                document.getElementById('second').value= '';
+                document.getElementById('second_all').value= '';
+                document.getElementById('third').value= '';
+                document.getElementById('third_all').value= '';
+                document.getElementById('fourth').value= '';
+                document.getElementById('fourth_all').value= '';
+                document.getElementById('chome').value= '';
+                document.getElementById('address').value= '';
+                document.getElementById('of1').value= '';
+                document.getElementById('of2').value= '';
+                document.getElementById('reason').value= '';
+                document.getElementById('rg2').value= '';
+                document.getElementById('yy2').value= '';
+                document.getElementById('mm2').value= '';
+                document.getElementById('dd2').value= '';
+                document.getElementById('ex_reason').value= '';
+                document.getElementById('ex_name').value= '';
+                document.getElementById('ex_relationshipsearch').value= '';
+                document.getElementById('ex_relationshipInput').value= '';
+
+            })
+            .catch((error) => {
+                console.error('Error:', error); //錯誤提醒
+            });
         });
-        document.getElementById('origin_id').value= '';
-        document.getElementById('origin_address').value= '';
-        var slashRadioButtons = document.querySelectorAll('input[name="slash"]');
-        slashRadioButtons.forEach(function(radio) {
-            radio.checked = false;
-        });
-        document.getElementById('rg').value= '';
-        document.getElementById('first').value= '';
-        document.getElementById('first_all').value= '';
-        document.getElementById('second').value= '';
-        document.getElementById('second_all').value= '';
-        document.getElementById('third').value= '';
-        document.getElementById('third_all').value= '';
-        document.getElementById('fourth').value= '';
-        document.getElementById('fourth_all').value= '';
-        document.getElementById('chome').value= '';
-        document.getElementById('address').value= '';
-        document.getElementById('of1').value= '';
-        document.getElementById('of2').value= '';
-        document.getElementById('reason').value= '';
-        document.getElementById('rg2').value= '';
-        document.getElementById('yy2').value= '';
-        document.getElementById('mm2').value= '';
-        document.getElementById('dd2').value= '';
-        document.getElementById('ex_reason').value= '';
-        document.getElementById('ex_name').value= '';
-        document.getElementById('ex_relationshipsearch').value= '';
-        document.getElementById('ex_relationshipInput').value= '';
-
-    })
-    .catch((error) => {
-        console.error('Error:', error); //錯誤提醒
-    });
-});
+    }});
 
 // 取得成員表單元素
-document.getElementById('memberForm').addEventListener('submit', function(e) {
+//document.getElementById('memberForm').addEventListener('submit', function(e) {
     // 阻止表單預設提交行為
-    e.preventDefault();
-
-    var id1 = document.getElementById('id1').value; // 序號
-    var perno = document.getElementById('perno').value; // 人號
-    var slashInput2 = document.querySelector('input[name="slash2"]:checked');// 斜線
-    if (slashInput2) {
-        var slash2 = slashInput2.value; 
-    } else {
-        var slash2 = ""; 
-    }
-
-    var name = document.getElementById('nameInput').value; // 名字
-    var name2 = document.getElementById('nameInput2').value; // 名字2
-    var name3 = document.getElementById('nameInput3').value; // 名字3
-    var name4 = document.getElementById('nameInput4').value; // 名字4
-    var name5 = document.getElementById('nameInput5').value; // 名字5
-    var reign = document.getElementById('reign').value;  // 年號
-    var reign_ch = ""; 
-    if (reign){
-        reign_ch = document.getElementById('reign').options[document.getElementById('reign').selectedIndex].text; // 年號的文字
-    }
-    var yy = document.getElementById('yy').value; //年
-    var mm = document.getElementById('mm').value; //月
-    var dd = document.getElementById('dd').value; //日
-    var genderInput = document.querySelector('input[name="gender"]:checked');// 性別
-    if (genderInput) {
-        var sex = genderInput.value; 
-    } else {
-        var sex = ""; 
-    }
-    var father = document.getElementById('father').value; //父
-    var mother = document.getElementById('mother').value; //母
-    var porder = document.getElementById('porder').value; //出生別
-    var porder_ch = ""; 
-    if (porder){
-        porder_ch = document.getElementById('porder').options[document.getElementById('porder').selectedIndex].text; // 出生別的文字
-    }
-    var relationship = document.getElementById('relationshipInput').value; // 續柄
-    var relationship_ch = ""; 
-    if (relationship){
-        relationship_ch = document.getElementById('relationshipInput').options[document.getElementById('relationshipInput').selectedIndex].text; // 續柄的文字
-    }
-    var job1 = document.getElementById('job1').value; //職業1
-    var job1_ch = ""; 
-    if (job1){
-        job1_ch = document.getElementById('job1').options[document.getElementById('job1').selectedIndex].text; // 職業1的文字
-    }
-    var job2 = document.getElementById('job2').value; //職業2
-    var job2_ch = ""; 
-    if (job2){
-        job2_ch = document.getElementById('job2').options[document.getElementById('job2').selectedIndex].text; // 職業2的文字
-    }
-    var race = document.getElementById('race').value; // 種族
-    var race_ch = ""; 
-    if (race){
-        race_ch = document.getElementById('race').options[document.getElementById('race').selectedIndex].text; // 種族的文字
-    }
-    var opium = document.getElementById('opium').value; //鴉片
-    var opium_ch = ""; 
-    if (opium){
-        opium_ch = document.getElementById('opium').options[document.getElementById('opium').selectedIndex].text; // 鴉片的文字
-    }
-    var foot_binding = document.getElementById('foot_binding').value; //纏足
-    var foot_binding_ch = ""; 
-    if (foot_binding){
-        foot_binding_ch = document.getElementById('foot_binding').options[document.getElementById('foot_binding').selectedIndex].text; // 纏足的文字
-    }
-    var initial_relationship1 = document.getElementById('initial_relationship1').value; //初始關係1
-    var initial_relationship1_ch = ""; 
-    if (initial_relationship1){
-        initial_relationship1_ch = document.getElementById('initial_relationship1').options[document.getElementById('initial_relationship1').selectedIndex].text; // 初始關係1的文字
-    }
-    var relevant_person1 = document.getElementById('relevant_person1').value; //關係人1
-    var initial_relationship2 = document.getElementById('initial_relationship2').value; //初始關係2
-    var initial_relationship2_ch = ""; 
-    if (initial_relationship2){
-        initial_relationship2_ch = document.getElementById('initial_relationship2').options[document.getElementById('initial_relationship2').selectedIndex].text; // 初始關係2的文字
-    }
-    var relevant_person2 = document.getElementById('relevant_person2').value; //關係人2
+//    e.preventDefault();
+document.addEventListener("DOMContentLoaded", function() {
+    const formElement = document.getElementById('memberForm');
     
-    // 發送POST請求到指定的路徑'/generate-csv'
-    fetch('/generate-csv', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json', // 指定請求的內容類型為JSON
-        },
-        body: JSON.stringify({ id1 : id1 ,perno:perno,slash2:slash2, name : name,name2:name2,name3:name3,name4:name4,name5:name5, reign : reign,reign_ch:reign_ch , yy : yy , mm : mm , dd : dd , 
-            sex : sex ,father:father,mother:mother,porder:porder,porder_ch:porder_ch,relationship:relationship,relationship_ch:relationship_ch,job1:job1,job1_ch:job1_ch,
-            job2:job2,job2_ch:job2_ch,race:race,race_ch:race_ch,opium:opium,opium_ch:opium_ch,foot_binding:foot_binding,foot_binding_ch:foot_binding_ch,
-            initial_relationship1:initial_relationship1,initial_relationship1_ch:initial_relationship1_ch,relevant_person1:relevant_person1,initial_relationship2:initial_relationship2,initial_relationship2_ch:initial_relationship2_ch,relevant_person2:relevant_person2}), // 將輸入的數字轉換為JSON格式並作為請求體發送
-    })
-    .then(response => response.json()) // 解析回應的JSON數據
-    .then(data => {
-        alert('成員新建成功!'); // 在產生CSV成功時彈出提示
+    if (formElement) {
+        formElement.addEventListener('submit', function(e) {
+            e.preventDefault();
 
-        // 清除輸入框的值
-        document.getElementById('id1').value = '';
-        document.getElementById('perno').value = '';
-        var slashRadioButtons2 = document.querySelectorAll('input[name="slash2"]');
-        slashRadioButtons2.forEach(function(radio) {
-            radio.checked = false;
+            var id1 = document.getElementById('id1').value; // 序號
+            var perno = document.getElementById('perno').value; // 人號
+            var slashInput2 = document.querySelector('input[name="slash2"]:checked');// 斜線
+            if (slashInput2) {
+                var slash2 = slashInput2.value; 
+            } else {
+                var slash2 = ""; 
+            }
+
+            var name = document.getElementById('nameInput').value; // 名字
+            var name2 = document.getElementById('nameInput2').value; // 名字2
+            var name3 = document.getElementById('nameInput3').value; // 名字3
+            var name4 = document.getElementById('nameInput4').value; // 名字4
+            var name5 = document.getElementById('nameInput5').value; // 名字5
+            var reign = document.getElementById('reign').value;  // 年號
+            var reign_ch = ""; 
+            if (reign){
+                reign_ch = document.getElementById('reign').options[document.getElementById('reign').selectedIndex].text; // 年號的文字
+            }
+            var yy = document.getElementById('yy').value; //年
+            var mm = document.getElementById('mm').value; //月
+            var dd = document.getElementById('dd').value; //日
+            var genderInput = document.querySelector('input[name="gender"]:checked');// 性別
+            if (genderInput) {
+                var sex = genderInput.value; 
+            } else {
+                var sex = ""; 
+            }
+            var father = document.getElementById('father').value; //父
+            var mother = document.getElementById('mother').value; //母
+            var porder = document.getElementById('porder').value; //出生別
+            var porder_ch = ""; 
+            if (porder){
+                porder_ch = document.getElementById('porder').options[document.getElementById('porder').selectedIndex].text; // 出生別的文字
+            }
+            var relationship = document.getElementById('relationshipInput').value; // 續柄
+            var relationship_ch = ""; 
+            if (relationship){
+                relationship_ch = document.getElementById('relationshipInput').options[document.getElementById('relationshipInput').selectedIndex].text; // 續柄的文字
+            }
+            var job1 = document.getElementById('job1').value; //職業1
+            var job1_ch = ""; 
+            if (job1){
+                job1_ch = document.getElementById('job1').options[document.getElementById('job1').selectedIndex].text; // 職業1的文字
+            }
+            var job2 = document.getElementById('job2').value; //職業2
+            var job2_ch = ""; 
+            if (job2){
+                job2_ch = document.getElementById('job2').options[document.getElementById('job2').selectedIndex].text; // 職業2的文字
+            }
+            var race = document.getElementById('race').value; // 種族
+            var race_ch = ""; 
+            if (race){
+                race_ch = document.getElementById('race').options[document.getElementById('race').selectedIndex].text; // 種族的文字
+            }
+            var opium = document.getElementById('opium').value; //鴉片
+            var opium_ch = ""; 
+            if (opium){
+                opium_ch = document.getElementById('opium').options[document.getElementById('opium').selectedIndex].text; // 鴉片的文字
+            }
+            var foot_binding = document.getElementById('foot_binding').value; //纏足
+            var foot_binding_ch = ""; 
+            if (foot_binding){
+                foot_binding_ch = document.getElementById('foot_binding').options[document.getElementById('foot_binding').selectedIndex].text; // 纏足的文字
+            }
+            var initial_relationship1 = document.getElementById('initial_relationship1').value; //初始關係1
+            var initial_relationship1_ch = ""; 
+            if (initial_relationship1){
+                initial_relationship1_ch = document.getElementById('initial_relationship1').options[document.getElementById('initial_relationship1').selectedIndex].text; // 初始關係1的文字
+            }
+            var relevant_person1 = document.getElementById('relevant_person1').value; //關係人1
+            var initial_relationship2 = document.getElementById('initial_relationship2').value; //初始關係2
+            var initial_relationship2_ch = ""; 
+            if (initial_relationship2){
+                initial_relationship2_ch = document.getElementById('initial_relationship2').options[document.getElementById('initial_relationship2').selectedIndex].text; // 初始關係2的文字
+            }
+            var relevant_person2 = document.getElementById('relevant_person2').value; //關係人2
+            
+            // 發送POST請求到指定的路徑'/generate-csv'
+            fetch('/generate-csv', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // 指定請求的內容類型為JSON
+                },
+                body: JSON.stringify({ id1 : id1 ,perno:perno,slash2:slash2, name : name,name2:name2,name3:name3,name4:name4,name5:name5, reign : reign,reign_ch:reign_ch , yy : yy , mm : mm , dd : dd , 
+                    sex : sex ,father:father,mother:mother,porder:porder,porder_ch:porder_ch,relationship:relationship,relationship_ch:relationship_ch,job1:job1,job1_ch:job1_ch,
+                    job2:job2,job2_ch:job2_ch,race:race,race_ch:race_ch,opium:opium,opium_ch:opium_ch,foot_binding:foot_binding,foot_binding_ch:foot_binding_ch,
+                    initial_relationship1:initial_relationship1,initial_relationship1_ch:initial_relationship1_ch,relevant_person1:relevant_person1,initial_relationship2:initial_relationship2,initial_relationship2_ch:initial_relationship2_ch,relevant_person2:relevant_person2}), // 將輸入的數字轉換為JSON格式並作為請求體發送
+            })
+            .then(response => response.json()) // 解析回應的JSON數據
+            .then(data => {
+                alert('成員新建成功!'); // 在產生CSV成功時彈出提示
+
+                // 清除輸入框的值
+                document.getElementById('id1').value = '';
+                document.getElementById('perno').value = '';
+                var slashRadioButtons2 = document.querySelectorAll('input[name="slash2"]');
+                slashRadioButtons2.forEach(function(radio) {
+                    radio.checked = false;
+                });
+                document.getElementById('nameInput').value = '';
+                document.getElementById('nameInput2').value = '';
+                document.getElementById('nameInput3').value = '';
+                document.getElementById('nameInput4').value = '';
+                document.getElementById('nameInput5').value = '';
+                document.getElementById('reign').value = '';
+                document.getElementById('yy').value = '';
+                document.getElementById('mm').value = '';
+                document.getElementById('dd').value = '';
+                var genderRadioButtons = document.querySelectorAll('input[name="gender"]');
+                genderRadioButtons.forEach(function(radio) {
+                    radio.checked = false;
+                });
+                document.getElementById('father').value = '';
+                document.getElementById('mother').value = '';
+                document.getElementById('porder').value = '';
+                document.getElementById('relationshipsearch').value = '';
+                document.getElementById('relationshipInput').value = '';
+                document.getElementById('job1search').value = '';
+                document.getElementById('job1').value = '';
+                document.getElementById('job2search').value = '';
+                document.getElementById('job2').value = '';
+                document.getElementById('race').value= ''; 
+                document.getElementById('opium').value= ''; 
+                document.getElementById('foot_binding').value= '';
+                document.getElementById('initial_relationship1').value= ''; 
+                document.getElementById('relevant_person1').value= ''; 
+                document.getElementById('initial_relationship2').value= ''; 
+                document.getElementById('relevant_person2').value= ''; 
+
+                // 更改背景顏色為預設
+                changeBackgroundColor('#fff');
+
+            })
+            .catch((error) => {
+                console.error('Error:', error); //錯誤提醒
+            });
         });
-        document.getElementById('nameInput').value = '';
-        document.getElementById('nameInput2').value = '';
-        document.getElementById('nameInput3').value = '';
-        document.getElementById('nameInput4').value = '';
-        document.getElementById('nameInput5').value = '';
-        document.getElementById('reign').value = '';
-        document.getElementById('yy').value = '';
-        document.getElementById('mm').value = '';
-        document.getElementById('dd').value = '';
-        var genderRadioButtons = document.querySelectorAll('input[name="gender"]');
-        genderRadioButtons.forEach(function(radio) {
-            radio.checked = false;
-        });
-        document.getElementById('father').value = '';
-        document.getElementById('mother').value = '';
-        document.getElementById('porder').value = '';
-        document.getElementById('relationshipsearch').value = '';
-        document.getElementById('relationshipInput').value = '';
-        document.getElementById('job1search').value = '';
-        document.getElementById('job1').value = '';
-        document.getElementById('job2search').value = '';
-        document.getElementById('job2').value = '';
-        document.getElementById('race').value= ''; 
-        document.getElementById('opium').value= ''; 
-        document.getElementById('foot_binding').value= '';
-        document.getElementById('initial_relationship1').value= ''; 
-        document.getElementById('relevant_person1').value= ''; 
-        document.getElementById('initial_relationship2').value= ''; 
-        document.getElementById('relevant_person2').value= ''; 
-
-        // 更改背景顏色為預設
-        changeBackgroundColor('#fff');
-
-    })
-    .catch((error) => {
-        console.error('Error:', error); //錯誤提醒
-    });
-});
+    }})
 
 // 取得事件表單元素
-document.getElementById('eventForm').addEventListener('submit', function(e) {
+//document.getElementById('eventForm').addEventListener('submit', function(e) {
     // 阻止表單預設提交行為
-    e.preventDefault();
-
-    var id2 = document.getElementById('id2').value; // 戶號
-    var perno2 = document.getElementById('perno2').value; // 人號
-
-    var rg3 = document.getElementById('rg3').value;  // 年號
-    var rg3_ch = ""; 
-    if (rg3){
-        rg3_ch = document.getElementById('rg3').options[document.getElementById('rg3').selectedIndex].text; // 年號的文字
-    }
-    var yy3 = document.getElementById('yy3').value; //年
-    var mm3 = document.getElementById('mm3').value; //月
-    var dd3 = document.getElementById('dd3').value; //日
-    var no3 = document.getElementById('no3').value; // 序號
-    var event = document.getElementById('event').value; // 事件
-    var event_ch = ""; 
-    if (event){
-        event_ch = document.getElementById('event').options[document.getElementById('event').selectedIndex].text; // 事件的文字
-    }
-    var relevant_person3 = document.getElementById('relevant_person3').value; // 關係人
-    var relationInput = document.getElementById('relationInput').value; // 關係
-    var relationInput_ch = ""; 
-    if (relationInput){
-        relationInput_ch = document.getElementById('relationInput').options[document.getElementById('relationInput').selectedIndex].text; // 關係的文字
-    }
-
-    var name2 = document.getElementById('name2').value; // 戶主
-    var relationshipInput2 = document.getElementById('relationshipInput2').value; // 續柄
-    var relationshipInput2_ch = ""; 
-    if (relationshipInput2){
-        relationshipInput2_ch = document.getElementById('relationshipInput2').options[document.getElementById('relationshipInput2').selectedIndex].text; // 續柄的文字
-    }
-
-    var rg_event = document.getElementById('rg_event').value;  // 年號
-    var rg_event_ch = ""; 
-    if (rg_event){
-        rg_event_ch = document.getElementById('rg_event').options[document.getElementById('rg_event').selectedIndex].text; // 年號的文字
-    }
-
-    var first_event = document.getElementById('first_event').value;  // 1
-    var first_event_ch = ""; 
-    if (first_event){
-        first_event_ch = document.getElementById('first_event').options[document.getElementById('first_event').selectedIndex].text;  // 第一層級別
-    }
-    var first_all_event_ch = ""; 
-    if (document.getElementById('first_all_event').value){
-        first_all_event_ch = document.getElementById('first_all_event').options[document.getElementById('first_all_event').selectedIndex].text; //第一層地名跟代碼
-    }
-
-    var second_event = document.getElementById('second_event').value;  // 2
-    var second_event_ch = ""; 
-    if (second_event){
-        second_event_ch = document.getElementById('second_event').options[document.getElementById('second_event').selectedIndex].text;  // 第二層級別
-    }
-    var second_all_event_ch = ""; 
-    if (document.getElementById('second_all_event').value){
-        second_all_event_ch = document.getElementById('second_all_event').options[document.getElementById('second_all_event').selectedIndex].text; //第二層地名跟代碼
-    }
-
-    var third_event = document.getElementById('third_event').value;  // 3
-    var third_event_ch = ""; 
-    if (third_event){
-        third_event_ch = document.getElementById('third_event').options[document.getElementById('third_event').selectedIndex].text;  // 第三層級別
-    }
-    var third_all_event_ch = ""; 
-    if (document.getElementById('third_all_event').value){
-        third_all_event_ch = document.getElementById('third_all_event').options[document.getElementById('third_all_event').selectedIndex].text; //第三層地名跟代碼
-    }
-
-    var fourth_event = document.getElementById('fourth_event').value;  // 4
-    var fourth_event_ch = ""; 
-    if (fourth_event){
-        fourth_event_ch = document.getElementById('fourth_event').options[document.getElementById('fourth_event').selectedIndex].text;  // 第四層級別
-    }
-    var fourth_all_event_ch = ""; 
-    if (document.getElementById('fourth_all_event').value){
-        fourth_all_event_ch = document.getElementById('fourth_all_event').options[document.getElementById('fourth_all_event').selectedIndex].text; //第四層地名跟代碼
-    }
+    //e.preventDefault();
+document.addEventListener("DOMContentLoaded", function() {
+    const formElement = document.getElementById('eventForm');
     
-    var chome_event = document.getElementById('chome_event').value;  // 丁目
-    var address_event = document.getElementById('address_event').value;  // 番地
-    var of1_event = document.getElementById('of1_event').value;  // 幾之
-    var of2_event= document.getElementById('of2_event').value;  // 幾
-    
-    // 發送POST請求到指定的路徑'/generate-csv'
-    fetch('/generate-eventForm-csv', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json', // 指定請求的內容類型為JSON
-        },
-        body: JSON.stringify({ id2:id2,perno2:perno2,rg3 : rg3,rg3_ch:rg3_ch , yy3 : yy3 , mm3 : mm3 , dd3 : dd3 , no3:no3,
-            event: event,event_ch:event_ch,
-            relevant_person3:relevant_person3,relationInput:relationInput,relationInput_ch:relationInput_ch,
-            name2:name2,relationshipInput2:relationshipInput2,relationshipInput2_ch:relationshipInput2_ch,
-            rg_event:rg_event,rg_event_ch:rg_event_ch,first_event:first_event,first_event_ch:first_event_ch,first_all_event_ch:first_all_event_ch,
-            second_event:second_event,second_event_ch:second_event_ch,second_all_event_ch:second_all_event_ch,
-            third_event:third_event,third_event_ch:third_event_ch,third_all_event_ch:third_all_event_ch,
-            fourth_event:fourth_event,fourth_event_ch:fourth_event_ch,fourth_all_event_ch:fourth_all_event_ch,
-            chome_event:chome_event,address_event:address_event,of1_event:of1_event,of2_event:of2_event
-            }), // 將輸入的數字轉換為JSON格式並作為請求體發送
-    })
-    .then(response => response.json()) // 解析回應的JSON數據
-    .then(data => {
-        alert('事件新建成功!'); // 在產生CSV成功時彈出提示
+    if (formElement) {
+        formElement.addEventListener('submit', function(e) {
+            e.preventDefault();
 
-        // 清除輸入框的值
-        //document.getElementById('id2').value = '';
-        //document.getElementById('perno2').value = '';
-        document.getElementById('rg3').value = '';
-        document.getElementById('yy3').value = '';
-        document.getElementById('mm3').value = '';
-        document.getElementById('dd3').value = '';
-        document.getElementById('no3').value = '';
-        document.getElementById('eventsearch').value = '';
-        document.getElementById('event').value = '';
-        document.getElementById('relevant_person3').value = '';
-        document.getElementById('relationsearch').value = '';
-        document.getElementById('relationInput').value = '';
-        document.getElementById('name2').value = '';
-        document.getElementById('relationshipsearch2').value = '';
-        document.getElementById('relationshipInput2').value = '';
-        document.getElementById('rg_event').value = '';
-        document.getElementById('first_event').value = '';
-        document.getElementById('first_all_event').value = '';
-        document.getElementById('second_event').value = '';
-        document.getElementById('second_all_event').value = '';
-        document.getElementById('third_event').value = '';
-        document.getElementById('third_all_event').value = '';
-        document.getElementById('fourth_event').value = '';
-        document.getElementById('fourth_all_event').value = '';
-        document.getElementById('chome_event').value= '';
-        document.getElementById('address_event').value= '';
-        document.getElementById('of1_event').value= '';
-        document.getElementById('of2_event').value= '';
+            var id2 = document.getElementById('id2').value; // 戶號
+            var perno2 = document.getElementById('perno2').value; // 人號
 
-    })
-    .catch((error) => {
-        console.error('Error:', error); //錯誤提醒
-    });
-});
+            var rg3 = document.getElementById('rg3').value;  // 年號
+            var rg3_ch = ""; 
+            if (rg3){
+                rg3_ch = document.getElementById('rg3').options[document.getElementById('rg3').selectedIndex].text; // 年號的文字
+            }
+            var yy3 = document.getElementById('yy3').value; //年
+            var mm3 = document.getElementById('mm3').value; //月
+            var dd3 = document.getElementById('dd3').value; //日
+            var no3 = document.getElementById('no3').value; // 序號
+            var event = document.getElementById('event').value; // 事件
+            var event_ch = ""; 
+            if (event){
+                event_ch = document.getElementById('event').options[document.getElementById('event').selectedIndex].text; // 事件的文字
+            }
+            var relevant_person3 = document.getElementById('relevant_person3').value; // 關係人
+            var relationInput = document.getElementById('relationInput').value; // 關係
+            var relationInput_ch = ""; 
+            if (relationInput){
+                relationInput_ch = document.getElementById('relationInput').options[document.getElementById('relationInput').selectedIndex].text; // 關係的文字
+            }
 
+            var name2 = document.getElementById('name2').value; // 戶主
+            var relationshipInput2 = document.getElementById('relationshipInput2').value; // 續柄
+            var relationshipInput2_ch = ""; 
+            if (relationshipInput2){
+                relationshipInput2_ch = document.getElementById('relationshipInput2').options[document.getElementById('relationshipInput2').selectedIndex].text; // 續柄的文字
+            }
+
+            var rg_event = document.getElementById('rg_event').value;  // 年號
+            var rg_event_ch = ""; 
+            if (rg_event){
+                rg_event_ch = document.getElementById('rg_event').options[document.getElementById('rg_event').selectedIndex].text; // 年號的文字
+            }
+
+            var first_event = document.getElementById('first_event').value;  // 1
+            var first_event_ch = ""; 
+            if (first_event){
+                first_event_ch = document.getElementById('first_event').options[document.getElementById('first_event').selectedIndex].text;  // 第一層級別
+            }
+            var first_all_event_ch = ""; 
+            if (document.getElementById('first_all_event').value){
+                first_all_event_ch = document.getElementById('first_all_event').options[document.getElementById('first_all_event').selectedIndex].text; //第一層地名跟代碼
+            }
+
+            var second_event = document.getElementById('second_event').value;  // 2
+            var second_event_ch = ""; 
+            if (second_event){
+                second_event_ch = document.getElementById('second_event').options[document.getElementById('second_event').selectedIndex].text;  // 第二層級別
+            }
+            var second_all_event_ch = ""; 
+            if (document.getElementById('second_all_event').value){
+                second_all_event_ch = document.getElementById('second_all_event').options[document.getElementById('second_all_event').selectedIndex].text; //第二層地名跟代碼
+            }
+
+            var third_event = document.getElementById('third_event').value;  // 3
+            var third_event_ch = ""; 
+            if (third_event){
+                third_event_ch = document.getElementById('third_event').options[document.getElementById('third_event').selectedIndex].text;  // 第三層級別
+            }
+            var third_all_event_ch = ""; 
+            if (document.getElementById('third_all_event').value){
+                third_all_event_ch = document.getElementById('third_all_event').options[document.getElementById('third_all_event').selectedIndex].text; //第三層地名跟代碼
+            }
+
+            var fourth_event = document.getElementById('fourth_event').value;  // 4
+            var fourth_event_ch = ""; 
+            if (fourth_event){
+                fourth_event_ch = document.getElementById('fourth_event').options[document.getElementById('fourth_event').selectedIndex].text;  // 第四層級別
+            }
+            var fourth_all_event_ch = ""; 
+            if (document.getElementById('fourth_all_event').value){
+                fourth_all_event_ch = document.getElementById('fourth_all_event').options[document.getElementById('fourth_all_event').selectedIndex].text; //第四層地名跟代碼
+            }
+            
+            var chome_event = document.getElementById('chome_event').value;  // 丁目
+            var address_event = document.getElementById('address_event').value;  // 番地
+            var of1_event = document.getElementById('of1_event').value;  // 幾之
+            var of2_event= document.getElementById('of2_event').value;  // 幾
+            
+            // 發送POST請求到指定的路徑'/generate-csv'
+            fetch('/generate-eventForm-csv', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // 指定請求的內容類型為JSON
+                },
+                body: JSON.stringify({ id2:id2,perno2:perno2,rg3 : rg3,rg3_ch:rg3_ch , yy3 : yy3 , mm3 : mm3 , dd3 : dd3 , no3:no3,
+                    event: event,event_ch:event_ch,
+                    relevant_person3:relevant_person3,relationInput:relationInput,relationInput_ch:relationInput_ch,
+                    name2:name2,relationshipInput2:relationshipInput2,relationshipInput2_ch:relationshipInput2_ch,
+                    rg_event:rg_event,rg_event_ch:rg_event_ch,first_event:first_event,first_event_ch:first_event_ch,first_all_event_ch:first_all_event_ch,
+                    second_event:second_event,second_event_ch:second_event_ch,second_all_event_ch:second_all_event_ch,
+                    third_event:third_event,third_event_ch:third_event_ch,third_all_event_ch:third_all_event_ch,
+                    fourth_event:fourth_event,fourth_event_ch:fourth_event_ch,fourth_all_event_ch:fourth_all_event_ch,
+                    chome_event:chome_event,address_event:address_event,of1_event:of1_event,of2_event:of2_event
+                    }), // 將輸入的數字轉換為JSON格式並作為請求體發送
+            })
+            .then(response => response.json()) // 解析回應的JSON數據
+            .then(data => {
+                alert('事件新建成功!'); // 在產生CSV成功時彈出提示
+
+                // 清除輸入框的值
+                //document.getElementById('id2').value = '';
+                //document.getElementById('perno2').value = '';
+                document.getElementById('rg3').value = '';
+                document.getElementById('yy3').value = '';
+                document.getElementById('mm3').value = '';
+                document.getElementById('dd3').value = '';
+                document.getElementById('no3').value = '';
+                document.getElementById('eventsearch').value = '';
+                document.getElementById('event').value = '';
+                document.getElementById('relevant_person3').value = '';
+                document.getElementById('relationsearch').value = '';
+                document.getElementById('relationInput').value = '';
+                document.getElementById('name2').value = '';
+                document.getElementById('relationshipsearch2').value = '';
+                document.getElementById('relationshipInput2').value = '';
+                document.getElementById('rg_event').value = '';
+                document.getElementById('first_event').value = '';
+                document.getElementById('first_all_event').value = '';
+                document.getElementById('second_event').value = '';
+                document.getElementById('second_all_event').value = '';
+                document.getElementById('third_event').value = '';
+                document.getElementById('third_all_event').value = '';
+                document.getElementById('fourth_event').value = '';
+                document.getElementById('fourth_all_event').value = '';
+                document.getElementById('chome_event').value= '';
+                document.getElementById('address_event').value= '';
+                document.getElementById('of1_event').value= '';
+                document.getElementById('of2_event').value= '';
+
+            })
+            .catch((error) => {
+                console.error('Error:', error); //錯誤提醒
+            });
+        });
+    }})
 // 取得特殊事件表單元素
-document.getElementById('specialForm').addEventListener('submit', function(e) {
+//document.getElementById('specialForm').addEventListener('submit', function(e) {
     // 阻止表單預設提交行為
-    e.preventDefault();
+    //e.preventDefault();
+document.addEventListener("DOMContentLoaded", function() {
+    const formElement = document.getElementById('specialForm');
     
-    var id4 = document.getElementById('id4').value; // 戶號
-    var perno4 = document.getElementById('perno4').value; // 人號
-    var special_event = document.getElementById('special_event').value; // 特殊情況
-    // 發送POST請求到指定的路徑'/generate-csv'
-    fetch('/generate-specialForm-csv', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json', // 指定請求的內容類型為JSON
-        },
-        body: JSON.stringify({ id4:id4,perno4:perno4,special_event : special_event
-            }), // 將輸入的數字轉換為JSON格式並作為請求體發送
-    })
-    .then(response => response.json()) // 解析回應的JSON數據
-    .then(data => {
-        alert('特殊情況新建成功!'); // 在產生CSV成功時彈出提示
+    if (formElement) {
+        formElement.addEventListener('submit', function(e) {
+            e.preventDefault();        
+            var id4 = document.getElementById('id4').value; // 戶號
+            var perno4 = document.getElementById('perno4').value; // 人號
+            var special_event = document.getElementById('special_event').value; // 特殊情況
+            // 發送POST請求到指定的路徑'/generate-csv'
+            fetch('/generate-specialForm-csv', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // 指定請求的內容類型為JSON
+                },
+                body: JSON.stringify({ id4:id4,perno4:perno4,special_event : special_event
+                    }), // 將輸入的數字轉換為JSON格式並作為請求體發送
+            })
+            .then(response => response.json()) // 解析回應的JSON數據
+            .then(data => {
+                alert('特殊情況新建成功!'); // 在產生CSV成功時彈出提示
 
-        // 清除輸入框的值
-        document.getElementById('id4').value = '';
-        document.getElementById('perno4').value = '';
-        document.getElementById('special_event').value = '';
+                // 清除輸入框的值
+                document.getElementById('id4').value = '';
+                document.getElementById('perno4').value = '';
+                document.getElementById('special_event').value = '';
 
-    })
-    .catch((error) => {
-        console.error('Error:', error); //錯誤提醒
-    });
-});
+            })
+            .catch((error) => {
+                console.error('Error:', error); //錯誤提醒
+            });
+        });
+    }})
 
 //查詢戶冊
 function searchhousehold() {
@@ -1579,6 +1757,11 @@ function fillInputs(rowData) {
     document.getElementById("third_all").selectedIndex = -1;
     document.getElementById("fourth").selectedIndex = -1;
     document.getElementById("fourth_all").selectedIndex = -1;
+    // 先隱藏所有欄位
+    var hiddenElements = document.querySelectorAll('.hidden');
+    hiddenElements.forEach(function(element) {
+        element.classList.remove('hidden');
+    });
     document.getElementById("id").value = rowData[0]; //戶號
     // 單選框
     var typeValue = rowData[1]; // 從 CSV 文件中獲取的值
@@ -1887,6 +2070,11 @@ function searchmember() {
 
 // 將 CSV 欄位的內容回填到 HTML 表單的輸入框中
 function fillInputs2(rowData) {
+    // 先隱藏所有欄位
+    var hiddenElements = document.querySelectorAll('.hidden');
+    hiddenElements.forEach(function(element) {
+        element.classList.remove('hidden');
+    });
     document.getElementById("id1").value = rowData[0]; //戶號
     document.getElementById("perno").value = rowData[1]; //人號
     // 是否有斜線
@@ -2149,6 +2337,13 @@ function fillInputs3(rowData) {
     document.getElementById("third_all_event").selectedIndex = -1;
     document.getElementById("fourth_event").selectedIndex = -1;
     document.getElementById("fourth_all_event").selectedIndex = -1;
+    // 先隱藏所有欄位
+    var hiddenElements = document.querySelectorAll('.hidden');
+    hiddenElements.forEach(function(element) {
+        element.classList.remove('hidden');
+    });
+
+
     document.getElementById("id2").value = rowData[0]; //戶號
     document.getElementById("perno2").value = rowData[1]; //人號
     //日期
@@ -2416,6 +2611,11 @@ function searchspecial() {
 }
 // 將 CSV 欄位的內容回填到 HTML 表單的輸入框中
 function fillInputs4(rowData) {
+    // 先隱藏所有欄位
+    var hiddenElements = document.querySelectorAll('.hidden');
+    hiddenElements.forEach(function(element) {
+        element.classList.remove('hidden');
+    });
     document.getElementById("id4").value = rowData[0]; //戶號
     document.getElementById("perno4").value = rowData[1]; //人號
     document.getElementById("special_event").value = rowData[2]; //特殊情況
@@ -2478,28 +2678,53 @@ document.addEventListener('DOMContentLoaded', function () {
     var maleRadio = document.getElementById('male');
     var femaleRadio = document.getElementById('female');
 
-    // 監聽性別變化事件
-    maleRadio.addEventListener('change', function () {
-        changeBackgroundColor('#caf0f8');
-    });
+    // 確保元素存在再添加事件監聽器
+    if (maleRadio) {
+        maleRadio.addEventListener('change', function () {
+            changeBackgroundColor('#caf0f8');
+        });
+    }
 
-    femaleRadio.addEventListener('change', function () {
-        changeBackgroundColor('#ffe5ec');
-    });
+    if (femaleRadio) {
+        femaleRadio.addEventListener('change', function () {
+            changeBackgroundColor('#ffe5ec');
+        });
+    }
 });
 
+function changeBackgroundColor(color) {
+    document.body.style.backgroundColor = color;
+}
+
 // 禁用enter提交
-function preventFormSubmit(formId) {
+//function preventFormSubmit(formId) {
     // 監聽指定表單的 keypress 事件
-    document.getElementById(formId).addEventListener("keypress", function(event) {
+//    document.getElementById(formId).addEventListener("keypress", function(event) {
         // 檢查按下的鍵是否為 Enter 鍵 (keyCode 為 13)
-        if (event.keyCode === 13) {
+//        if (event.keyCode === 13) {
             // 阻止預設的表單提交行為
-            event.preventDefault();
+//            event.preventDefault();
             // 阻止進一步的事件傳播
-            return false;
-        }
-    });
+//            return false;
+//        }
+//    });
+//}
+function preventFormSubmit(formId) {
+    // 嘗試獲取表單元素
+    const formElement = document.getElementById(formId);
+    
+    // 如果表單元素存在，則添加事件監聽器
+    if (formElement) {
+        formElement.addEventListener("keypress", function(event) {
+            // 檢查按下的鍵是否為 Enter 鍵 (keyCode 為 13)
+            if (event.keyCode === 13) {
+                // 阻止預設的表單提交行為
+                event.preventDefault();
+                // 阻止進一步的事件傳播
+                return false;
+            }
+        });
+    }
 }
 
 // 對每個表單調用函數來設置 keypress 事件監聽器
@@ -2516,35 +2741,52 @@ document.addEventListener('DOMContentLoaded', function() {
     var otherhouse = document.getElementById('otherhouse');
     var where = document.getElementById('where');
 
-    eventDropdown.addEventListener('change', function() {
-        if (eventDropdown.value === '102'|| eventDropdown.value === '103' || eventDropdown.value === '104'|| eventDropdown.value === '105'|| eventDropdown.value === '106'|| eventDropdown.value === '201'
-        || eventDropdown.value === '204'|| eventDropdown.value === '205'|| eventDropdown.value === '307'|| eventDropdown.value === '310'|| eventDropdown.value === '406'|| eventDropdown.value === '414'
-        || eventDropdown.value === '805'|| eventDropdown.value === '806'|| eventDropdown.value === '807'|| eventDropdown.value === '808'|| eventDropdown.value === '809'|| eventDropdown.value === '810'
-        || eventDropdown.value === '901'|| eventDropdown.value === '902'|| eventDropdown.value === '906') { //0
-            relationFields.style.display = 'none';
-            otherhouse.style.display = 'none';
-            where.style.display = 'none';
-        } else if (eventDropdown.value === '203'|| eventDropdown.value === '208'|| eventDropdown.value === '210'|| eventDropdown.value === '211'|| eventDropdown.value === '301'|| eventDropdown.value === '302'
-        || eventDropdown.value === '401'|| eventDropdown.value === '503'|| eventDropdown.value === '504'|| eventDropdown.value === '523'|| eventDropdown.value === '517'|| eventDropdown.value === '518') { //1
-            relationFields.style.display = 'block';  // 根據需求，這裡可能需要調整顯示還是隱藏
-            otherhouse.style.display = 'none';       // 隱藏 otherhouse 元素
-            where.style.display = 'none';            // 隱藏 where 元素
-        } else if (eventDropdown.value === '101'|| eventDropdown.value === '202'|| eventDropdown.value === '206'|| eventDropdown.value === '207'|| eventDropdown.value === '601'|| eventDropdown.value === '603'
-        || eventDropdown.value === '803'|| eventDropdown.value === '811') { //2
-            relationFields.style.display = 'none';  
-            otherhouse.style.display = 'none';       
-            where.style.display = 'block';            
-        }else if (eventDropdown.value === '308'|| eventDropdown.value === '309'|| eventDropdown.value === '407'|| eventDropdown.value === '413'|| eventDropdown.value === '408'|| eventDropdown.value === '501'
-        || eventDropdown.value === '502'|| eventDropdown.value === '514'|| eventDropdown.value === '505'|| eventDropdown.value === '507'|| eventDropdown.value === '515'|| eventDropdown.value === '516'
-        || eventDropdown.value === '510'|| eventDropdown.value === '511'|| eventDropdown.value === '512'|| eventDropdown.value === '513'|| eventDropdown.value === '801'|| eventDropdown.value === '802'
-        || eventDropdown.value === '903'|| eventDropdown.value === '904'|| eventDropdown.value === '905') { //6
-            relationFields.style.display = 'none';  
-            otherhouse.style.display = 'block';       
-            where.style.display = 'block';            
-        }else {
-            relationFields.style.display = 'block';
-            otherhouse.style.display = 'block';
-            where.style.display = 'block';
-        }
-    });
+    // 確保元素存在，避免 'null' 錯誤
+    if (eventDropdown && relationFields && otherhouse && where) {
+        eventDropdown.addEventListener('change', function() {
+            if (eventDropdown.value === '102'|| eventDropdown.value === '103' || eventDropdown.value === '104'|| eventDropdown.value === '105'|| eventDropdown.value === '106'|| eventDropdown.value === '201'
+            || eventDropdown.value === '204'|| eventDropdown.value === '205'|| eventDropdown.value === '307'|| eventDropdown.value === '310'|| eventDropdown.value === '406'|| eventDropdown.value === '414'
+            || eventDropdown.value === '805'|| eventDropdown.value === '806'|| eventDropdown.value === '807'|| eventDropdown.value === '808'|| eventDropdown.value === '809'|| eventDropdown.value === '810'
+            || eventDropdown.value === '901'|| eventDropdown.value === '902'|| eventDropdown.value === '906') { //0
+                clearAndHide(relationFields);
+                clearAndHide(otherhouse);
+                clearAndHide(where);
+            } else if (eventDropdown.value === '203'|| eventDropdown.value === '208'|| eventDropdown.value === '210'|| eventDropdown.value === '211'|| eventDropdown.value === '301'|| eventDropdown.value === '302'
+            || eventDropdown.value === '401'|| eventDropdown.value === '503'|| eventDropdown.value === '504'|| eventDropdown.value === '523'|| eventDropdown.value === '517'|| eventDropdown.value === '518') { //1
+                relationFields.style.display = 'block';  // 根據需求，這裡可能需要調整顯示還是隱藏
+                clearAndHide(otherhouse);
+                clearAndHide(where);        // 隱藏 where 元素
+            } else if (eventDropdown.value === '101'|| eventDropdown.value === '202'|| eventDropdown.value === '206'|| eventDropdown.value === '207'|| eventDropdown.value === '601'|| eventDropdown.value === '603'
+            || eventDropdown.value === '803'|| eventDropdown.value === '811') { //2
+                clearAndHide(relationFields);
+                clearAndHide(otherhouse);    
+                where.style.display = 'block';            
+            }else if (eventDropdown.value === '308'|| eventDropdown.value === '309'|| eventDropdown.value === '407'|| eventDropdown.value === '413'|| eventDropdown.value === '408'|| eventDropdown.value === '501'
+            || eventDropdown.value === '502'|| eventDropdown.value === '514'|| eventDropdown.value === '505'|| eventDropdown.value === '507'|| eventDropdown.value === '515'|| eventDropdown.value === '516'
+            || eventDropdown.value === '510'|| eventDropdown.value === '511'|| eventDropdown.value === '512'|| eventDropdown.value === '513'|| eventDropdown.value === '801'|| eventDropdown.value === '802'
+            || eventDropdown.value === '903'|| eventDropdown.value === '904'|| eventDropdown.value === '905') { //6
+                clearAndHide(relationFields);
+                otherhouse.style.display = 'block';       
+                where.style.display = 'block';            
+            }else {
+                relationFields.style.display = 'block';
+                otherhouse.style.display = 'block';
+                where.style.display = 'block';
+            }
+        });
+    }
+    // 清除元素內部值的輔助函數 避免修改事件後其他欄位自動隱藏無法刪除卻被送出
+    function clearAndHide(element) {
+        // 清除所有子元素的值
+        var inputs = element.querySelectorAll('input, textarea, select');
+        inputs.forEach(function(input) {
+            if (input.type === 'checkbox' || input.type === 'radio') {
+                input.checked = false;
+            } else {
+                input.value = '';
+            }
+        });
+        // 隱藏元素
+        element.style.display = 'none';
+    }
 });

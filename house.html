@@ -57,9 +57,16 @@
             padding-bottom: 5px; /* 可選：增加底線與文字之間的空間 */
             color:#6b705c; /* 文字顏色 */
         }
+        
 
         /*單選框*/
         input[type="radio"] {
+            width: 20px; /* 調整寬度 */
+            height: 20px; /* 調整高度 */
+        }
+
+        /*勾選框*/
+        input[type="checkbox"] {
             width: 20px; /* 調整寬度 */
             height: 20px; /* 調整高度 */
         }
@@ -94,6 +101,22 @@
         #fourth_all_event {
             width: 300px; /* 調整寬度以適應您的需求 */
         }
+
+        .underlined-label {
+            position: relative;
+            padding-bottom: 3px; /* 底線與文字之間的距離 */
+            display: inline-block;
+            font-size: 28px;
+        }
+
+        .underlined-label::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 200px; /* 固定線的長度 */
+            border-bottom: 3px dotted;
+        }
     </style>
 </head>
 <body>
@@ -122,7 +145,7 @@
                     </a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="house_search.html"> 查詢戶冊</a>
+                    <a class="nav-link" href="house_search.html"> 查詢與修改戶冊</a>
                     </li>
                 </ul>
                 </div>
@@ -137,19 +160,18 @@
             <label for="nameInput">輸入戶號：</label>
             <input type="number" id="id">
             <br>
+            <label for="nameInput">是否有斜線：</label>
+            <input type="radio" name="slash" value="1" id="yes">是
+            <input type="radio" name="slash" value="0" id="no">否
+            <br>
             <label for="nameInput">戶冊別：</label>
             <input type="radio" name="type" value="1" id="origin">本冊
             <input type="radio" name="type" value="2" id="remove">除冊
             <input type="radio" name="type" value="3" id="stay">寄留戶
             <br>
-            本居id<input type="number" id="origin_id">
-            本國住所<input type="text" id="origin_address">
+            <label for="nameInput" class="underlined-label">現住所/本籍</label>
             <br>
-            <label for="nameInput">是否有斜線：</label>
-            <input type="radio" name="slash" value="1" id="yes">是
-            <input type="radio" name="slash" value="0" id="no">否
-            <br>
-            <label for="nameInput">住所：</label>
+            <label for="nameInput">地址</label>
             年號
             <select id="rg">
             </select>
@@ -173,10 +195,22 @@
             <input type="number" id="address">番地
             <input type="number" id="of1">之
             <input type="number" id="of2">
+            <label for="nameInput">是否有修改：</label>
+            <input type="radio" name="revise" value="1" id="yes">是
+            <input type="radio" name="revise" value="0" id="no">否
             <br>
-            <label for="nameInput">戶主事由：</label>
-            <select id="reason">
-            </select>
+            <!--本居id<input type="number" id="origin_id">-->
+            <label for="nameInput">本居又ハ本國住所:</label>
+            <input type="text" id="origin_address">
+            <input type="checkbox" name="o_add" value="1" id="o_add_no" onchange="this.value=this.checked ? 1 : 0;">無此欄位
+            <br>
+            <label for="nameInput">族稱:</label>
+            <input type="text" id="clan_name">
+            <input type="checkbox" name="c_name" value="1" id="c_name_no" onchange="this.value=this.checked ? 1 : 0;">無此欄位
+            <br>
+            <label for="nameInput" class="underlined-label">戶主トナリタル年月日事由</label>
+            <br>
+            <label for="nameInput">開戶日期:</label>
             年號
             <select id="rg2">
             </select>
@@ -184,14 +218,31 @@
             <input type="number" id="mm2">月
             <input type="number" id="dd2">日
             <br>
-            <label for="nameInput">前戶主事由：</label>
+            <label for="nameInput">開戶原由:</label>
+            <select id="reason">
+            </select>
+            <label for="nameInput">前戶主退由：</label>
             <select id="ex_reason">
             </select>
-            前戶主<input type="text" id="ex_name">
             <br>
+            <label for="nameInput" class="underlined-label">戶主</label>
+            <br>
+            姓名<input type="text" id="o_name">
+            出生日期
+            <input type="number" id="o_yy2">年
+            <input type="number" id="o_mm2">月
+            <input type="number" id="o_dd2">日
+            <br>
+            <label for="nameInput" class="underlined-label">前戶主トノ續柄榮稱職業</label>
+            <br>
+            前戶主姓名<input type="text" id="ex_name">
+            與前戶主續柄:
             <input type="text" id="ex_relationshipsearch" oninput="filterOptions('ex_relationshipInput', 'ex_relationshipsearch')" placeholder="搜尋關係">
-            戶主續柄
             <select id="ex_relationshipInput">
+            </select>
+            <label for="nameInput">戶主職業：</label>
+            <input type="text" id="job3search" oninput="filterOptions('job3', 'job3search')" placeholder="搜尋職業">
+            <select id="job3">
             </select>
             <button type="submit">新增</button>
             <!--

@@ -28,10 +28,9 @@ fs.readFile('household.csv', 'utf-8', (err, data) => {
 app.post('/generate-householdForm-csv', (req, res) => {
     // 從請求體中取得傳遞的數字
     const id = req.body.id;
-    const type = req.body.type;
-    const origin_id = req.body.origin_id;
-    const origin_address = req.body.origin_address;
     const slash = req.body.slash;
+    const type = req.body.type;
+
     const rg = req.body.rg;
     const rg_ch= req.body.rg_ch;
     const first = req.body.first;
@@ -55,33 +54,47 @@ app.post('/generate-householdForm-csv', (req, res) => {
     const of1 = req.body.of1;
     const of2 = req.body.of2;
 
-    const reason = req.body.reason;
-    const reason_ch = req.body.reason_ch;
+    const revise=req.body.revise;
+    const origin_address = req.body.origin_address;
+    const o_add_no_checkboxValue = req.body.o_add_no_checkboxValue;
+
+    const clan_name = req.body.clan_name;
+    const c_name_no_checkboxValue = req.body.c_name_no_checkboxValue;
+
     const rg2 = req.body.rg2;
     const rg2_ch = req.body.rg2_ch;
     const yy2 = req.body.yy2;
     const mm2 = req.body.mm2;
     const dd2 = req.body.dd2;
-
+    const reason = req.body.reason;
+    const reason_ch = req.body.reason_ch;
     const ex_reason = req.body.ex_reason;
     const ex_reason_ch = req.body.ex_reason_ch;
+
+    const o_name = req.body.o_name;
+    const o_yy2 = req.body.o_yy2;
+    const o_mm2 = req.body.o_mm2;
+    const o_dd2 = req.body.o_dd2;
+
     const ex_name = req.body.ex_name;
     const ex_relationship = req.body.ex_relationship;
     const ex_relationship_ch = req.body.ex_relationship_ch;
+    const job3 = req.body.job3;
+    const job3_ch = req.body.job3_ch;
 
 
     // 檢查文件是否存在
     fs.access(csvFilePath2, fs.constants.F_OK, (err) => {
         if (err) {
             // 如果文件不存在，寫入標題並附加數據
-            const csvHeader = 'id,type,本居id,本居住所,是否有斜線,rg,年號,adrlevel1,adr1tp,adr1cd,地名1,adrlevel2,adr1tp2,adr1cd2,地名2,adrlevel3,adr1tp3,adr1cd3,地名3,adrlevel4,adr1tp4,adr1cd4,地名4,chome,address,of1,of2,reason,戶主事由,rg2,年號2,yy,mm,dd,ex_reason,前戶主事由,ex_name,ex_relationship,前戶主續柄,index\n'; 
+            const csvHeader = '戶號,是否有斜線,戶冊別,rg,年號,adrlevel1,adr1tp,adr1cd,地名1,adrlevel2,adr1tp2,adr1cd2,地名2,adrlevel3,adr1tp3,adr1cd3,地名3,adrlevel4,adr1tp4,adr1cd4,地名4,chome,address,of1,of2,是否有修改,本居又ハ本國住所,本居無此欄位,族稱,族稱無此欄位,開戶年號代碼,開戶年號,yy,mm,dd,開戶緣由代碼,開戶緣由,前戶主退由代碼,前戶主退由,戶主姓名,yy2,mm2,dd2,前戶主姓名,與前戶主續柄代碼,與前戶主續柄,戶主職業代碼,戶主職業,index\n'; 
             fs.writeFile(csvFilePath2, csvHeader, 'utf-8', (err) => {
                 if (err) {
                     console.error('Error writing CSV header:', err);
                     res.status(500).send({ message: 'Error in generating CSV' });
                     return;
                 }
-                appendDataToCSV2(id,type,origin_id,origin_address,slash,rg,rg_ch,first,first_ch,first_all_ch,first_all_ch,second,second_ch,second_all_ch,second_all_ch,third,third_ch,third_all_ch,third_all_ch,fourth,fourth_ch,fourth_all_ch,fourth_all_ch,chome,address,of1,of2,reason,reason_ch,rg2,rg2_ch,yy2,mm2,dd2,ex_reason,ex_reason_ch,ex_name,ex_relationship,ex_relationship_ch,res);
+                appendDataToCSV2(id,slash,type,rg,rg_ch,first,first_ch,first_all_ch,first_all_ch,second,second_ch,second_all_ch,second_all_ch,third,third_ch,third_all_ch,third_all_ch,fourth,fourth_ch,fourth_all_ch,fourth_all_ch,chome,address,of1,of2,revise,origin_address,o_add_no_checkboxValue,clan_name,c_name_no_checkboxValue,rg2,rg2_ch,yy2,mm2,dd2,reason,reason_ch,ex_reason,ex_reason_ch,o_name,o_yy2,o_mm2,o_dd2,ex_name,ex_relationship,ex_relationship_ch,job3,job3_ch,res);
             });
         } else {
             // 文件存在，附加數據
@@ -91,7 +104,7 @@ app.post('/generate-householdForm-csv', (req, res) => {
                     res.status(500).send({ message: 'Error in generating CSV' });
                     return;
                 }
-                appendDataToCSV2(id,type,origin_id,origin_address,slash,rg,rg_ch,first,first_ch,first_all_ch,first_all_ch,second,second_ch,second_all_ch,second_all_ch,third,third_ch,third_all_ch,third_all_ch,fourth,fourth_ch,fourth_all_ch,fourth_all_ch,chome,address,of1,of2,reason,reason_ch,rg2,rg2_ch,yy2,mm2,dd2,ex_reason,ex_reason_ch,ex_name,ex_relationship,ex_relationship_ch,res);
+                appendDataToCSV2(id,slash,type,rg,rg_ch,first,first_ch,first_all_ch,first_all_ch,second,second_ch,second_all_ch,second_all_ch,third,third_ch,third_all_ch,third_all_ch,fourth,fourth_ch,fourth_all_ch,fourth_all_ch,chome,address,of1,of2,revise,origin_address,o_add_no_checkboxValue,clan_name,c_name_no_checkboxValue,rg2,rg2_ch,yy2,mm2,dd2,reason,reason_ch,ex_reason,ex_reason_ch,o_name,o_yy2,o_mm2,o_dd2,ex_name,ex_relationship,ex_relationship_ch,job3,job3_ch,res);
             });
         }
     });
@@ -99,7 +112,7 @@ app.post('/generate-householdForm-csv', (req, res) => {
 
 let index = 1; // 定義一個全局變量，用於自動增加索引值
 
-function appendDataToCSV2(id,type,origin_id,origin_address,slash,rg,rg_ch,first,first_ch,first_all_ch,first_all_ch,second,second_ch,second_all_ch,second_all_ch,third,third_ch,third_all_ch,third_all_ch,fourth,fourth_ch,fourth_all_ch,fourth_all_ch,chome,address,of1,of2,reason,reason_ch,rg2,rg2_ch,yy2,mm2,dd2,ex_reason,ex_reason_ch,ex_name,ex_relationship,ex_relationship_ch,res) {
+function appendDataToCSV2(id,slash,type,rg,rg_ch,first,first_ch,first_all_ch,first_all_ch,second,second_ch,second_all_ch,second_all_ch,third,third_ch,third_all_ch,third_all_ch,fourth,fourth_ch,fourth_all_ch,fourth_all_ch,chome,address,of1,of2,revise,origin_address,o_add_no_checkboxValue,clan_name,c_name_no_checkboxValue,rg2,rg2_ch,yy2,mm2,dd2,reason,reason_ch,ex_reason,ex_reason_ch,o_name,o_yy2,o_mm2,o_dd2,ex_name,ex_relationship,ex_relationship_ch,job3,job3_ch,res) {
     // 下拉選單中文
     const rg_ch2 = rg_ch.trim() ? rg_ch.split(' ')[1] : '';//rg_ch 是空白的情況下，rg_ch2 也是空白
     const first_ch2 = first_ch.trim() ?first_ch.split(' ')[1]: '';
@@ -118,9 +131,10 @@ function appendDataToCSV2(id,type,origin_id,origin_address,slash,rg,rg_ch,first,
     const rg2_ch2 = rg2_ch.trim() ? rg2_ch.split(' ')[1] : '';
     const ex_reason_ch2= ex_reason_ch.trim() ? ex_reason_ch.split(' ')[1] : '';
     const ex_relationship_ch2 = ex_relationship_ch.trim() ? ex_relationship_ch.split(' ')[1] : '';
+    const job3_ch2=job3_ch.trim() ? job3_ch.split(' ')[1] : '';
 
     // 建構CSV檔案內容
-    const csvContent = `${id},${type},${origin_id},${origin_address},${slash},${rg},${rg_ch2},${first},${first_ch2},${first_all_ch1},${first_all_ch2},${second},${second_ch2},${second_all_ch1},${second_all_ch2},${third},${third_ch2},${third_all_ch1},${third_all_ch2},${fourth},${fourth_ch2},${fourth_all_ch1},${fourth_all_ch2},${chome},${address},${of1},${of2},${reason},${reason_ch2},${rg2},${rg2_ch2},${yy2},${mm2},${dd2},${ex_reason},${ex_reason_ch2},${ex_name},${ex_relationship},${ex_relationship_ch2},${index}\n`;
+    const csvContent = `${id},${slash},${type},${rg},${rg_ch2},${first},${first_ch2},${first_all_ch1},${first_all_ch2},${second},${second_ch2},${second_all_ch1},${second_all_ch2},${third},${third_ch2},${third_all_ch1},${third_all_ch2},${fourth},${fourth_ch2},${fourth_all_ch1},${fourth_all_ch2},${chome},${address},${of1},${of2},${revise},${origin_address},${o_add_no_checkboxValue},${clan_name},${c_name_no_checkboxValue},${rg2},${rg2_ch2},${yy2},${mm2},${dd2},${reason},${reason_ch2},${ex_reason},${ex_reason_ch2},${o_name},${o_yy2},${o_mm2},${o_dd2},${ex_name},${ex_relationship},${ex_relationship_ch2},${job3},${job3_ch2},${index}\n`;
 
     // 在每次新增數據時自動增加索引值
     index++;
@@ -140,10 +154,9 @@ function appendDataToCSV2(id,type,origin_id,origin_address,slash,rg,rg_ch,first,
 app.post('/modify-householdForm-csv', (req, res) => {
     // 從請求體中取得傳遞的數字
     const id = req.body.id;
-    const type = req.body.type;
-    const origin_id = req.body.origin_id;
-    const origin_address = req.body.origin_address;
     const slash = req.body.slash;
+    const type = req.body.type;
+
     const rg = req.body.rg;
     const rg_ch= req.body.rg_ch;
     const first = req.body.first;
@@ -167,19 +180,33 @@ app.post('/modify-householdForm-csv', (req, res) => {
     const of1 = req.body.of1;
     const of2 = req.body.of2;
 
-    const reason = req.body.reason;
-    const reason_ch = req.body.reason_ch;
+    const revise=req.body.revise;
+    const origin_address = req.body.origin_address;
+    const o_add_no_checkboxValue = req.body.o_add_no_checkboxValue;
+
+    const clan_name = req.body.clan_name;
+    const c_name_no_checkboxValue = req.body.c_name_no_checkboxValue;
+
     const rg2 = req.body.rg2;
     const rg2_ch = req.body.rg2_ch;
     const yy2 = req.body.yy2;
     const mm2 = req.body.mm2;
     const dd2 = req.body.dd2;
-
+    const reason = req.body.reason;
+    const reason_ch = req.body.reason_ch;
     const ex_reason = req.body.ex_reason;
     const ex_reason_ch = req.body.ex_reason_ch;
+
+    const o_name = req.body.o_name;
+    const o_yy2 = req.body.o_yy2;
+    const o_mm2 = req.body.o_mm2;
+    const o_dd2 = req.body.o_dd2;
+
     const ex_name = req.body.ex_name;
     const ex_relationship = req.body.ex_relationship;
     const ex_relationship_ch = req.body.ex_relationship_ch;
+    const job3 = req.body.job3;
+    const job3_ch = req.body.job3_ch;
     const index = req.body.index;
 
     // 下拉選單中文
@@ -200,6 +227,7 @@ app.post('/modify-householdForm-csv', (req, res) => {
     const rg2_ch2 = rg2_ch.trim() ? rg2_ch.split(' ')[1] : '';
     const ex_reason_ch2= ex_reason_ch.trim() ? ex_reason_ch.split(' ')[1] : '';
     const ex_relationship_ch2 = ex_relationship_ch.trim() ? ex_relationship_ch.split(' ')[1] : '';
+    const job3_ch2=job3_ch.trim() ? job3_ch.split(' ')[1] : '';
 
     // 读取 CSV 文件的内容
     fs.readFile(csvFilePath2, 'utf-8', (err, data) => {
@@ -214,7 +242,7 @@ app.post('/modify-householdForm-csv', (req, res) => {
         // 將內容按行拆分
         if (index >= 0 && index < rows.length) {
             // 將輸入框內容拚結成一行
-            const newRow = `${id},${type},${origin_id},${origin_address},${slash},${rg},${rg_ch2},${first},${first_ch2},${first_all_ch1},${first_all_ch2},${second},${second_ch2},${second_all_ch1},${second_all_ch2},${third},${third_ch2},${third_all_ch1},${third_all_ch2},${fourth},${fourth_ch2},${fourth_all_ch1},${fourth_all_ch2},${chome},${address},${of1},${of2},${reason},${reason_ch2},${rg2},${rg2_ch2},${yy2},${mm2},${dd2},${ex_reason},${ex_reason_ch2},${ex_name},${ex_relationship},${ex_relationship_ch2},${index}`;
+            const newRow = `${id},${slash},${type},${rg},${rg_ch2},${first},${first_ch2},${first_all_ch1},${first_all_ch2},${second},${second_ch2},${second_all_ch1},${second_all_ch2},${third},${third_ch2},${third_all_ch1},${third_all_ch2},${fourth},${fourth_ch2},${fourth_all_ch1},${fourth_all_ch2},${chome},${address},${of1},${of2},${revise},${origin_address},${o_add_no_checkboxValue},${clan_name},${c_name_no_checkboxValue},${rg2},${rg2_ch2},${yy2},${mm2},${dd2},${reason},${reason_ch2},${ex_reason},${ex_reason_ch2},${o_name},${o_yy2},${o_mm2},${o_dd2},${ex_name},${ex_relationship},${ex_relationship_ch2},${job3},${job3_ch2},${index}`;
             // 覆蓋到原始 CSV 行
             rows[index] = newRow;
 

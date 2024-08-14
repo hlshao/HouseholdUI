@@ -111,6 +111,10 @@ const txtFilePath20 = "select/menu006_續柄.txt";
 const selectId20= "ex_relationshipInput";
 loadDropdownFromTxtFile(txtFilePath20, selectId20);
 
+const txtFilePath21 = "select/menu010_職業.txt";
+const selectId21 = "job3";
+loadDropdownFromTxtFile(txtFilePath21, selectId21);
+
 function handleRgChange(first,rg) {
     // 獲取選中的年號
     const selectedYearText = document.getElementById(rg).value;
@@ -1181,20 +1185,19 @@ document.addEventListener("DOMContentLoaded", function() {
             e.preventDefault();
 
             var id = document.getElementById('id').value; // 戶號
-            var typeInput = document.querySelector('input[name="type"]:checked');// 戶冊別
-            if (typeInput) {
-                var type = typeInput.value; 
-            } else {
-                var type = ""; 
-            }
-            var origin_id = document.getElementById('origin_id').value; // 本居id
-            var origin_address = document.getElementById('origin_address').value; // 本居住所
             var slashInput = document.querySelector('input[name="slash"]:checked');// 斜線
             if (slashInput) {
                 var slash = slashInput.value; 
             } else {
                 var slash = ""; 
             }
+            var typeInput = document.querySelector('input[name="type"]:checked');// 戶冊別
+            if (typeInput) {
+                var type = typeInput.value; 
+            } else {
+                var type = ""; 
+            }
+
 
             var rg = document.getElementById('rg').value;  // 年號
             var rg_ch = ""; // 年號的文字
@@ -1246,12 +1249,22 @@ document.addEventListener("DOMContentLoaded", function() {
             var address = document.getElementById('address').value;  // 番地
             var of1 = document.getElementById('of1').value;  // 幾之
             var of2 = document.getElementById('of2').value;  // 幾
-            
-            var reason = document.getElementById('reason').value;  // 戶主事由
-            var reason_ch = "";
-            if (reason){
-                reason_ch = document.getElementById('reason').options[document.getElementById('reason').selectedIndex].text;  // 戶主事由的文字
+
+            var reviseInput = document.querySelector('input[name="revise"]:checked');// 是否修改
+            if (reviseInput) {
+                var revise = reviseInput.value; 
+            } else {
+                var revise = ""; 
             }
+
+            var origin_address = document.getElementById('origin_address').value; // 本國住所
+            var o_add_no_checkbox = document.getElementById('o_add_no'); // 無此欄位=1
+            var o_add_no_checkboxValue = o_add_no_checkbox.checked ? 1 : 0;
+
+            var clan_name = document.getElementById('clan_name').value; // 族稱
+            var c_name_no_checkbox = document.getElementById('c_name_no'); // 無此欄位=1
+            var c_name_no_checkboxValue = c_name_no_checkbox.checked ? 1 : 0;
+
             var rg2 = document.getElementById('rg2').value;  // 年號2
             var rg2_ch = "";
             if (rg2){
@@ -1262,16 +1275,32 @@ document.addEventListener("DOMContentLoaded", function() {
             var mm2 = document.getElementById('mm2').value; //月2
             var dd2 = document.getElementById('dd2').value; //日2
 
-            var ex_reason = document.getElementById('ex_reason').value;  // 前戶主事由
+            var reason = document.getElementById('reason').value;  // 開戶原由
+            var reason_ch = "";
+            if (reason){
+                reason_ch = document.getElementById('reason').options[document.getElementById('reason').selectedIndex].text;  // 戶主事由的文字
+            }
+            var ex_reason = document.getElementById('ex_reason').value;  // 前戶主退由
             var ex_reason_ch = "";
             if (ex_reason){
                 ex_reason_ch = document.getElementById('ex_reason').options[document.getElementById('ex_reason').selectedIndex].text;  // 前戶主事由的文字
             }
+            var o_name = document.getElementById('o_name').value; //戶主
+            var o_yy2 = document.getElementById('o_yy2').value; //年
+            var o_mm2 = document.getElementById('o_mm2').value; //月
+            var o_dd2 = document.getElementById('o_dd2').value; //日
+
             var ex_name = document.getElementById('ex_name').value; //前戶主
             var ex_relationship = document.getElementById('ex_relationshipInput').value; // 前戶主續柄
             var ex_relationship_ch = ""; 
             if (ex_relationship){
                 ex_relationship_ch = document.getElementById('ex_relationshipInput').options[document.getElementById('ex_relationshipInput').selectedIndex].text; // 前戶主續柄的文字
+            }
+
+            var job3 = document.getElementById('job3').value; //前戶主職業
+            var job3_ch = ""; 
+            if (job3){
+                job3_ch = document.getElementById('job3').options[document.getElementById('job3').selectedIndex].text; // 職業的文字
             }
             
             // 發送POST請求到指定的路徑'/generate-householdForm-csv'
@@ -1280,14 +1309,19 @@ document.addEventListener("DOMContentLoaded", function() {
                 headers: {
                     'Content-Type': 'application/json', // 指定請求的內容類型為JSON
                 },
-                body: JSON.stringify({ id : id ,type:type,origin_id:origin_id,origin_address:origin_address,slash:slash,rg:rg,rg_ch:rg_ch,first:first,first_ch:first_ch, first_all_ch:first_all_ch,
+                body: JSON.stringify({id:id,slash:slash,type:type,
+                    rg:rg,rg_ch:rg_ch,first:first,first_ch:first_ch, first_all_ch:first_all_ch,
                     second:second,second_ch:second_ch,second_all_ch:second_all_ch,
                     third:third,third_ch:third_ch,third_all_ch:third_all_ch,
                     fourth:fourth,fourth_ch:fourth_ch,fourth_all_ch:fourth_all_ch,
                     chome:chome,address:address,of1:of1,of2:of2,
-                    reason:reason,reason_ch:reason_ch,rg2:rg2,rg2_ch:rg2_ch,
-                    yy2:yy2,mm2:mm2,dd2:dd2,
-                    ex_reason:ex_reason,ex_reason_ch:ex_reason_ch,ex_name:ex_name,ex_relationship:ex_relationship,ex_relationship_ch:ex_relationship_ch}), // 將輸入的數字轉換為JSON格式並作為請求體發送
+                    revise:revise,
+                    origin_address:origin_address,o_add_no_checkboxValue:o_add_no_checkboxValue,
+                    clan_name:clan_name,c_name_no_checkboxValue:c_name_no_checkboxValue,
+                    rg2:rg2,rg2_ch:rg2_ch,yy2:yy2,mm2:mm2,dd2:dd2,
+                    reason:reason,reason_ch:reason_ch,ex_reason:ex_reason,ex_reason_ch:ex_reason_ch,
+                    o_name:o_name,o_yy2:o_yy2,o_mm2:o_mm2,o_dd2:o_dd2,
+                    ex_name:ex_name,ex_relationship:ex_relationship,ex_relationship_ch:ex_relationship_ch,job3:job3,job3_ch:job3_ch}), // 將輸入的數字轉換為JSON格式並作為請求體發送
             })
             .then(response => response.json()) // 解析回應的JSON數據
             .then(data => {
@@ -1295,14 +1329,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // 清除輸入框的值
                 document.getElementById('id').value = '';
-                var typeRadioButtons = document.querySelectorAll('input[name="type"]');
-                typeRadioButtons.forEach(function(radio) {
-                    radio.checked = false;
-                });
-                document.getElementById('origin_id').value= '';
-                document.getElementById('origin_address').value= '';
                 var slashRadioButtons = document.querySelectorAll('input[name="slash"]');
                 slashRadioButtons.forEach(function(radio) {
+                    radio.checked = false;
+                });
+                var typeRadioButtons = document.querySelectorAll('input[name="type"]');
+                typeRadioButtons.forEach(function(radio) {
                     radio.checked = false;
                 });
                 document.getElementById('rg').value= '';
@@ -1318,15 +1350,31 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById('address').value= '';
                 document.getElementById('of1').value= '';
                 document.getElementById('of2').value= '';
-                document.getElementById('reason').value= '';
+                var reviseRadioButtons = document.querySelectorAll('input[name="revise"]');
+                reviseRadioButtons.forEach(function(radio) {
+                    radio.checked = false;
+                });
+                document.getElementById('origin_address').value= '';
+                document.getElementById('o_add_no').checked = false; // 清除复选框状态
+                document.getElementById('o_add_no').value = '0'; // 恢复默认值
+                document.getElementById('clan_name').value= '';
+                document.getElementById('c_name_no').checked = false; // 清除复选框状态
+                document.getElementById('c_name_no').value = '0'; // 恢复默认值
                 document.getElementById('rg2').value= '';
                 document.getElementById('yy2').value= '';
                 document.getElementById('mm2').value= '';
                 document.getElementById('dd2').value= '';
+                document.getElementById('reason').value= '';
                 document.getElementById('ex_reason').value= '';
+                document.getElementById('o_name').value= '';
+                document.getElementById('o_yy2').value= '';
+                document.getElementById('o_mm2').value= '';
+                document.getElementById('o_dd2').value= '';
                 document.getElementById('ex_name').value= '';
                 document.getElementById('ex_relationshipsearch').value= '';
                 document.getElementById('ex_relationshipInput').value= '';
+                document.getElementById('job3search').value = '';
+                document.getElementById('job3').value = '';
 
             })
             .catch((error) => {
@@ -1674,8 +1722,51 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }})
 
+//所有戶冊csv
+function loadAllRecords() {
+    fetch('household.csv')
+        .then(response => response.text())
+        .then(csvData => {
+            var data = parseCSV2(csvData);
+            var tableHtml = "<table>";
+
+            // 表頭
+            tableHtml += "<tr>";
+            for (var i = 0; i < data[0].length; i++) {
+                if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47) {
+                    continue; // 跳過 i 為 5、7、8、9 的情況
+                }
+                tableHtml += "<th>" + data[0][i] + "</th>";
+            }
+            tableHtml += "</tr>";
+
+            // 表身
+            for (var j = 1; j < data.length- 1; j++) {
+                tableHtml += "<tr>";
+                for (var i = 0; i < data[j].length; i++) {
+                    if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47) {
+                        continue; // 跳過 i 為 5、7、8、9 的情況
+                    }
+                    tableHtml += "<td>" + data[j][i] + "</td>";
+                }
+                tableHtml += "</tr>";
+            }
+
+            tableHtml += "</table>";
+            document.getElementById("csvTable").innerHTML = tableHtml;
+        })
+        .catch(error => {
+            console.error('Error loading CSV file:', error);
+        });
+}
+window.onload = function() {
+    loadAllRecords(); // 加載並顯示所有的 CSV 紀錄
+};
+
 //查詢戶冊
 function searchhousehold() {
+    // 隱藏所有csv內容
+    document.getElementById("allRecords").style.display = "none";
     // 獲取查詢的戶號
     var id = document.getElementById("id").value;
   
@@ -1699,7 +1790,7 @@ function searchhousehold() {
                 tableHtml += "<tr>";
                 tableHtml += "<th>修改</th>"; // 新增修改欄位
                 for (var i = 0; i < data[0].length; i++) {
-                    if (i === 5 || i === 7 || i === 8 || i === 9|| i === 11|| i === 12|| i === 13|| i === 15|| i === 16|| i === 17|| i === 19|| i === 20|| i === 21|| i === 27|| i === 29|| i === 34|| i === 37) {
+                    if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47) {
                         continue; // 跳過 i 為 5、7、8、9 的情況
                     }
                     tableHtml += "<th>" + data[0][i] + "</th>";
@@ -1711,7 +1802,7 @@ function searchhousehold() {
                     // 修改欄位及單選框
                     tableHtml += "<td><input type='radio' name='modify' onclick='fillInputs(" + JSON.stringify(results[j]) + ")'></td>";
                     for (var i = 0; i < results[j].length; i++) {
-                        if (i === 5 || i === 7 || i === 8 || i === 9|| i === 11|| i === 12|| i === 13|| i === 15|| i === 16|| i === 17|| i === 19|| i === 20|| i === 21|| i === 27|| i === 29|| i === 34|| i === 37) {
+                        if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47) {
                             continue; // 跳過 i 為 5、7、8、9 的情況
                         }
                         tableHtml += "<td>" + results[j][i] + "</td>";
@@ -1763,8 +1854,15 @@ function fillInputs(rowData) {
         element.classList.remove('hidden');
     });
     document.getElementById("id").value = rowData[0]; //戶號
-    // 單選框
-    var typeValue = rowData[1]; // 從 CSV 文件中獲取的值
+    // 是否有斜線
+    var typeValue2 = rowData[1]; // 從 CSV 文件中獲取的值
+    if (typeValue2 === "1") {
+        document.getElementById("yes").checked = true; // 是
+    } else if (typeValue2 === "0") {
+        document.getElementById("no").checked = true; // 否
+    }
+    // 戶冊別
+    var typeValue = rowData[2]; // 從 CSV 文件中獲取的值
     if (typeValue === "1") {
         document.getElementById("origin").checked = true; // 本冊
     } else if (typeValue === "2") {
@@ -1772,109 +1870,136 @@ function fillInputs(rowData) {
     } else if (typeValue === "3") {
         document.getElementById("stay").checked = true; // 寄留戶
     }
-    document.getElementById("origin_id").value = rowData[2]; //本居id
-    document.getElementById("origin_address").value = rowData[3]; //本國住所
-    // 是否有斜線
-    var typeValue2 = rowData[4]; // 從 CSV 文件中獲取的值
-    if (typeValue2 === "1") {
-        document.getElementById("yes").checked = true; // 是
-    } else if (typeValue2 === "0") {
-        document.getElementById("no").checked = true; // 否
-    }
 
     //年號
-    setSelectedIndex(rowData,"rg",5,6)
+    setSelectedIndex(rowData,"rg",3,4)
 
     // 更新第一層選單，並在更新完成後執行相應的操作
-    updateFirst(rowData[5], "first", function() {
+    updateFirst(rowData[3], "first", function() {
         // 第一層
-        setSelectedIndex(rowData,"first",7,8)
+        setSelectedIndex(rowData,"first",5,6)
     });
 
     //更新第一層地名 selectedLevel,first_all,rg
-    if (rowData[7] !== "") {
-        updateFirstAll(rowData[7], "first_all","rg", function() {
+    if (rowData[5] !== "") { 
+        updateFirstAll(rowData[5], "first_all","rg", function() { 
             // 第一層地名
-            setSelectedIndex(rowData,"first_all",9,10)
+            setSelectedIndex(rowData,"first_all",7,8) 
             var first_all_selectElement = document.getElementById("first_all").value; //第一層地名的識別碼
 
             // 更新第二層選單，並在更新完成後執行相應的操作
             updateSecond(first_all_selectElement, "second", function() {
                 // 第二層
-                setSelectedIndex(rowData,"second",11,12)
+                setSelectedIndex(rowData,"second",9,10)
 
             });
             //第二層地名
-            updateSecondAll(rowData[11], "first_all","second_all", function() {
+            updateSecondAll(rowData[9], "first_all","second_all", function() {
                 // 第二層地名
-                setSelectedIndex(rowData,"second_all",13,14)
+                setSelectedIndex(rowData,"second_all",11,12) 
                 var second_all_selectElement = document.getElementById("second_all").value; //第二層地名的識別碼
                 // 第三層選單
                 updatethird(second_all_selectElement, "third", function() {
                     // 第三層
-                    setSelectedIndex(rowData,"third",15,16)
+                    setSelectedIndex(rowData,"third",13,14)
                 });
 
                 //第三層地名
-                updatethirdAll(rowData[15], "second_all","third_all", function() {
+                updatethirdAll(rowData[13], "second_all","third_all", function() {
                     // 第三層地名
-                    setSelectedIndex(rowData,"third_all",17,18)
+                    setSelectedIndex(rowData,"third_all",15,16)
                     var third_all_selectElement = document.getElementById("third_all").value; //第三層地名的識別碼
                     // 第四層選單
                     updatefourth(third_all_selectElement, "fourth", function() {
                         // 第4層
-                        setSelectedIndex(rowData,"fourth",19,20)
+                        setSelectedIndex(rowData,"fourth",17,18)
                     });
                     //第4層地名
-                    updatefourthAll(rowData[19], "third_all","fourth_all", function() {
+                    updatefourthAll(rowData[17], "third_all","fourth_all", function() {
                         // 第4層地名
-                        setSelectedIndex(rowData,"fourth_all",21,22)
+                        setSelectedIndex(rowData,"fourth_all",19,20)
                     });
                 });
             });
             
         });
     }
+    document.getElementById("chome").value = rowData[21]; //丁目
+    document.getElementById("address").value = rowData[22]; //番地
+    document.getElementById("of1").value = rowData[23]; //之
+    document.getElementById("of2").value = rowData[24]; //之
 
-    document.getElementById("chome").value = rowData[23]; //丁目
-    document.getElementById("address").value = rowData[24]; //番地
-    document.getElementById("of1").value = rowData[25]; //之
-    document.getElementById("of2").value = rowData[26]; //之
-    //戶主事由
-    setSelectedIndex(rowData,"reason",27,28)
-    //年號2
-    setSelectedIndex(rowData,"rg2",29,30)
-    document.getElementById("yy2").value = rowData[31]; //年
-    document.getElementById("mm2").value = rowData[32]; //月
-    document.getElementById("dd2").value = rowData[33]; //日
-    //前戶主是由
-    setSelectedIndex(rowData,"ex_reason",34,35)
-    document.getElementById("ex_name").value = rowData[36]; //前戶主名字
-    //戶主續柄
-    setSelectedIndex(rowData,"ex_relationshipInput",37,38)
+    // 是否有修改
+    var reviseValue2 = rowData[25]; // 從 CSV 文件中獲取的值
+    if (reviseValue2 === "1") {
+        document.getElementById("yes").checked = true; // 是
+    } else if (reviseValue2 === "0") {
+        document.getElementById("no").checked = true; // 否
+    }
+
+    document.getElementById("origin_address").value = rowData[26]; //本居又ハ本國住所
+    // 無此欄位
+    var o_addValue = rowData[27]; // 從 CSV 文件中獲取的值
+    if (o_addValue === "1") {
+        document.getElementById("o_add_no").checked = true;
+        document.getElementById("o_add_no").value = "1";
+    } else {
+        document.getElementById("o_add_no").checked = false;
+        document.getElementById("o_add_no").value = "0";
+    }
+
+    document.getElementById("clan_name").value = rowData[28]; //族稱
+     // 無此欄位
+    var c_nameValue = rowData[29]; // 從 CSV 文件中獲取的值
+    if (c_nameValue === "1") {
+        document.getElementById("c_name_no").checked = true;
+        document.getElementById("c_name_no").value = "1";
+    } else {
+        document.getElementById("c_name_no").checked = false;
+        document.getElementById("c_name_no").value = "0";
+    }
+
+    //開戶日期
+    setSelectedIndex(rowData,"rg2",30,31)
+    document.getElementById("yy2").value = rowData[32]; //年
+    document.getElementById("mm2").value = rowData[33]; //月
+    document.getElementById("dd2").value = rowData[34]; //日
+
+    //開戶原由
+    setSelectedIndex(rowData,"reason",35,36)
+    //前戶主退由
+    setSelectedIndex(rowData,"ex_reason",37,38)
+    document.getElementById("o_name").value = rowData[39]; //戶主名字
+    document.getElementById("o_yy2").value = rowData[40]; //年
+    document.getElementById("o_mm2").value = rowData[41]; //月
+    document.getElementById("o_dd2").value = rowData[42]; //日
+    document.getElementById("ex_name").value = rowData[43]; //前戶主名字
+    //與前戶主續柄
+    setSelectedIndex(rowData,"ex_relationshipInput",44,45)
+    //戶主職業
+    setSelectedIndex(rowData,"job3",46,47)
     //index
-    document.getElementById("indexInput").value = rowData[39];
+    document.getElementById("indexInput").value = rowData[48];
 
 }
-//修改
+//修改戶冊
 function modifyHousehold() {
     // 獲取 indexInput 的值
     var index = document.getElementById("indexInput").value;
     var id = document.getElementById('id').value; // 戶號
-    var typeInput = document.querySelector('input[name="type"]:checked');// 戶冊別
-    if (typeInput) {
-        var type = typeInput.value; 
-    } else {
-        var type = ""; 
-    }
-    var origin_id = document.getElementById('origin_id').value; // 本居id
-    var origin_address = document.getElementById('origin_address').value; // 本居住所
     var slashInput = document.querySelector('input[name="slash"]:checked');// 斜線
     if (slashInput) {
         var slash = slashInput.value; 
     } else {
         var slash = ""; 
     }
+    var typeInput = document.querySelector('input[name="type"]:checked');// 戶冊別
+    if (typeInput) {
+        var type = typeInput.value; 
+    } else {
+        var type = ""; 
+    }
+    //var origin_id = document.getElementById('origin_id').value; // 本居id
 
     var rg = document.getElementById('rg').value;  // 年號
     var rg_ch = ""; // 年號的文字
@@ -1926,12 +2051,22 @@ function modifyHousehold() {
     var address = document.getElementById('address').value;  // 番地
     var of1 = document.getElementById('of1').value;  // 幾之
     var of2 = document.getElementById('of2').value;  // 幾
-    
-    var reason = document.getElementById('reason').value;  // 戶主事由
-    var reason_ch = "";
-    if (reason){
-        reason_ch = document.getElementById('reason').options[document.getElementById('reason').selectedIndex].text;  // 戶主事由的文字
+
+    var reviseInput = document.querySelector('input[name="revise"]:checked');// 是否修改
+    if (reviseInput) {
+        var revise = reviseInput.value; 
+    } else {
+        var revise = ""; 
     }
+
+    var origin_address = document.getElementById('origin_address').value; // 本國住所
+    var o_add_no_checkbox = document.getElementById('o_add_no'); // 無此欄位=1
+    var o_add_no_checkboxValue = o_add_no_checkbox.checked ? 1 : 0;
+
+    var clan_name = document.getElementById('clan_name').value; // 族稱
+    var c_name_no_checkbox = document.getElementById('c_name_no'); // 無此欄位=1
+    var c_name_no_checkboxValue = c_name_no_checkbox.checked ? 1 : 0;
+
     var rg2 = document.getElementById('rg2').value;  // 年號2
     var rg2_ch = "";
     if (rg2){
@@ -1942,16 +2077,32 @@ function modifyHousehold() {
     var mm2 = document.getElementById('mm2').value; //月2
     var dd2 = document.getElementById('dd2').value; //日2
 
-    var ex_reason = document.getElementById('ex_reason').value;  // 前戶主事由
+    var reason = document.getElementById('reason').value;  // 開戶原由
+    var reason_ch = "";
+    if (reason){
+        reason_ch = document.getElementById('reason').options[document.getElementById('reason').selectedIndex].text;  // 戶主事由的文字
+    }
+    var ex_reason = document.getElementById('ex_reason').value;  // 前戶主退由
     var ex_reason_ch = "";
     if (ex_reason){
         ex_reason_ch = document.getElementById('ex_reason').options[document.getElementById('ex_reason').selectedIndex].text;  // 前戶主事由的文字
     }
+    var o_name = document.getElementById('o_name').value; //戶主
+    var o_yy2 = document.getElementById('o_yy2').value; //年
+    var o_mm2 = document.getElementById('o_mm2').value; //月
+    var o_dd2 = document.getElementById('o_dd2').value; //日
+
     var ex_name = document.getElementById('ex_name').value; //前戶主
     var ex_relationship = document.getElementById('ex_relationshipInput').value; // 前戶主續柄
     var ex_relationship_ch = ""; 
     if (ex_relationship){
         ex_relationship_ch = document.getElementById('ex_relationshipInput').options[document.getElementById('ex_relationshipInput').selectedIndex].text; // 前戶主續柄的文字
+    }
+
+    var job3 = document.getElementById('job3').value; //前戶主職業
+    var job3_ch = ""; 
+    if (job3){
+        job3_ch = document.getElementById('job3').options[document.getElementById('job3').selectedIndex].text; // 職業的文字
     }
 
     // 發送 POST 請求到指定的路徑'/modify-householdForm-csv'
@@ -1960,14 +2111,19 @@ function modifyHousehold() {
         headers: {
             'Content-Type': 'application/json', // 指定請求的內容類型為JSON
         },
-        body: JSON.stringify({ id : id ,type:type,origin_id:origin_id,origin_address:origin_address,slash:slash,rg:rg,rg_ch:rg_ch,first:first,first_ch:first_ch, first_all_ch:first_all_ch,
+        body: JSON.stringify({id:id,slash:slash,type:type,
+            rg:rg,rg_ch:rg_ch,first:first,first_ch:first_ch, first_all_ch:first_all_ch,
             second:second,second_ch:second_ch,second_all_ch:second_all_ch,
             third:third,third_ch:third_ch,third_all_ch:third_all_ch,
             fourth:fourth,fourth_ch:fourth_ch,fourth_all_ch:fourth_all_ch,
             chome:chome,address:address,of1:of1,of2:of2,
-            reason:reason,reason_ch:reason_ch,rg2:rg2,rg2_ch:rg2_ch,
-            yy2:yy2,mm2:mm2,dd2:dd2,
-            ex_reason:ex_reason,ex_reason_ch:ex_reason_ch,ex_name:ex_name,ex_relationship:ex_relationship,ex_relationship_ch:ex_relationship_ch,index:index}), // 將輸入的數字轉換為JSON格式並作為請求體發送
+            revise:revise,
+            origin_address:origin_address,o_add_no_checkboxValue:o_add_no_checkboxValue,
+            clan_name:clan_name,c_name_no_checkboxValue:c_name_no_checkboxValue,
+            rg2:rg2,rg2_ch:rg2_ch,yy2:yy2,mm2:mm2,dd2:dd2,
+            reason:reason,reason_ch:reason_ch,ex_reason:ex_reason,ex_reason_ch:ex_reason_ch,
+            o_name:o_name,o_yy2:o_yy2,o_mm2:o_mm2,o_dd2:o_dd2,
+            ex_name:ex_name,ex_relationship:ex_relationship,ex_relationship_ch:ex_relationship_ch,job3:job3,job3_ch:job3_ch,index:index}), // 將輸入的數字轉換為JSON格式並作為請求體發送
     })
     .then(response => response.json()) // 解析回應的JSON數據
     .then(data => {
@@ -1975,14 +2131,12 @@ function modifyHousehold() {
 
         // 清除輸入框的值
         document.getElementById('id').value = '';
-        var typeRadioButtons = document.querySelectorAll('input[name="type"]');
-        typeRadioButtons.forEach(function(radio) {
-            radio.checked = false;
-        });
-        document.getElementById('origin_id').value= '';
-        document.getElementById('origin_address').value= '';
         var slashRadioButtons = document.querySelectorAll('input[name="slash"]');
         slashRadioButtons.forEach(function(radio) {
+            radio.checked = false;
+        });
+        var typeRadioButtons = document.querySelectorAll('input[name="type"]');
+        typeRadioButtons.forEach(function(radio) {
             radio.checked = false;
         });
         document.getElementById('rg').value= '';
@@ -1998,16 +2152,31 @@ function modifyHousehold() {
         document.getElementById('address').value= '';
         document.getElementById('of1').value= '';
         document.getElementById('of2').value= '';
-        document.getElementById('reason').value= '';
+        var reviseRadioButtons = document.querySelectorAll('input[name="revise"]');
+        reviseRadioButtons.forEach(function(radio) {
+            radio.checked = false;
+        });
+        document.getElementById('origin_address').value= '';
+        document.getElementById('o_add_no').checked = false; // 清除复选框状态
+        document.getElementById('o_add_no').value = '0'; // 恢复默认值
+        document.getElementById('clan_name').value= '';
+        document.getElementById('c_name_no').checked = false; // 清除复选框状态
+        document.getElementById('c_name_no').value = '0'; // 恢复默认值
         document.getElementById('rg2').value= '';
         document.getElementById('yy2').value= '';
         document.getElementById('mm2').value= '';
         document.getElementById('dd2').value= '';
+        document.getElementById('reason').value= '';
         document.getElementById('ex_reason').value= '';
+        document.getElementById('o_name').value= '';
+        document.getElementById('o_yy2').value= '';
+        document.getElementById('o_mm2').value= '';
+        document.getElementById('o_dd2').value= '';
         document.getElementById('ex_name').value= '';
         document.getElementById('ex_relationshipsearch').value= '';
         document.getElementById('ex_relationshipInput').value= '';
-        document.getElementById('indexInput').value= '';
+        document.getElementById('job3search').value = '';
+        document.getElementById('job3').value = '';
     })
 }
 

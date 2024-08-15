@@ -82,6 +82,40 @@
             
         }
 
+        table {
+            border-collapse: separate; /* 使用 separate 以确保圆角生效 */
+            border-spacing: 0; /* 消除单元格间的空隙 */
+            width: 100%;
+        }
+
+        /* 给表格单元格添加圆角 */
+        table th,
+        table td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        table th:first-child {
+            border-top-left-radius: 10px; /* 左上角圆角 */
+        }
+
+        table th:last-child {
+            border-top-right-radius: 10px; /* 右上角圆角 */
+        }
+
+        table tr:last-child td:first-child {
+            border-bottom-left-radius: 10px; /* 左下角圆角 */
+        }
+
+        table tr:last-child td:last-child {
+            border-bottom-right-radius: 10px; /* 右下角圆角 */
+        }
+
+        /* 奇數行背景顏色 */
+        table tr:nth-child(odd) {
+            background-color: #dad7cd;
+        }
+
         /* 奇數行背景顏色 */
         table tr:nth-child(odd) {
             background-color: #dad7cd;
@@ -199,6 +233,10 @@
                 <select id="foot_binding">
                 </select>
                 <br>
+                <label for="nameInput">是否有變更續柄：</label>
+                <input type="radio" name="relevant_ys" value="1" id="yes_ys">是
+                <input type="radio" name="relevant_ys" value="0" id="no_ys">否
+                <br>
                 <label for="nameInput">初始關係1:</label>
                 <select id="initial_relationship1">
                 </select>
@@ -210,9 +248,9 @@
                 關係人<input type="text" id="relevant_person2">
                 <!--
                 <button type="submit">新增</button>
-                <br>-->
+                <br>
                 index
-                <input type="number" id="indexInput2" readonly>
+                <input type="number" id="indexInput2" readonly>-->
                 <button type="button" onclick="modifyHousehold2()">修改</button>
             </div>
         </form>

@@ -1388,6 +1388,21 @@ document.addEventListener("DOMContentLoaded", function() {
     // 阻止表單預設提交行為
 //    e.preventDefault();
 document.addEventListener("DOMContentLoaded", function() {
+    // 首先讀取CSV文件並獲取倒數第二行的戶號
+    fetch('household.csv')
+        .then(response => response.text())
+        .then(csvData => {
+            var data = parseCSV2(csvData); // 解析CSV數據
+            if (data.length > 1) {
+                var secondLastRow = data[data.length - 2]; // 獲取倒數第二行
+                var householdNumber = secondLastRow[0]; // 假設戶號在第一列
+                document.getElementById('id1').value = householdNumber; // 自動填入戶號
+            }
+        })
+        .catch(error => {
+            
+        });
+
     const formElement = document.getElementById('memberForm');
     
     if (formElement) {
@@ -1459,6 +1474,12 @@ document.addEventListener("DOMContentLoaded", function() {
             if (foot_binding){
                 foot_binding_ch = document.getElementById('foot_binding').options[document.getElementById('foot_binding').selectedIndex].text; // 纏足的文字
             }
+            var relevant_ysInput = document.querySelector('input[name="relevant_ys"]:checked');// 斜線
+            if (relevant_ysInput) {
+                var relevant_ys = relevant_ysInput.value; 
+            } else {
+                var relevant_ys = ""; 
+            }
             var initial_relationship1 = document.getElementById('initial_relationship1').value; //初始關係1
             var initial_relationship1_ch = ""; 
             if (initial_relationship1){
@@ -1481,7 +1502,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 body: JSON.stringify({ id1 : id1 ,perno:perno,slash2:slash2, name : name,name2:name2,name3:name3,name4:name4,name5:name5, reign : reign,reign_ch:reign_ch , yy : yy , mm : mm , dd : dd , 
                     sex : sex ,father:father,mother:mother,porder:porder,porder_ch:porder_ch,relationship:relationship,relationship_ch:relationship_ch,job1:job1,job1_ch:job1_ch,
                     job2:job2,job2_ch:job2_ch,race:race,race_ch:race_ch,opium:opium,opium_ch:opium_ch,foot_binding:foot_binding,foot_binding_ch:foot_binding_ch,
-                    initial_relationship1:initial_relationship1,initial_relationship1_ch:initial_relationship1_ch,relevant_person1:relevant_person1,initial_relationship2:initial_relationship2,initial_relationship2_ch:initial_relationship2_ch,relevant_person2:relevant_person2}), // 將輸入的數字轉換為JSON格式並作為請求體發送
+                    relevant_ys:relevant_ys,
+                    initial_relationship1:initial_relationship1,initial_relationship1_ch:initial_relationship1_ch,relevant_person1:relevant_person1,initial_relationship2:initial_relationship2,initial_relationship2_ch:initial_relationship2_ch,relevant_person2:relevant_person2,}), // 將輸入的數字轉換為JSON格式並作為請求體發送
             })
             .then(response => response.json()) // 解析回應的JSON數據
             .then(data => {
@@ -1519,13 +1541,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById('race').value= ''; 
                 document.getElementById('opium').value= ''; 
                 document.getElementById('foot_binding').value= '';
+                var relevant_ysRadioButtons = document.querySelectorAll('input[name="relevant_ys"]');
+                relevant_ysRadioButtons.forEach(function(radio) {
+                    radio.checked = false;
+                });
                 document.getElementById('initial_relationship1').value= ''; 
                 document.getElementById('relevant_person1').value= ''; 
                 document.getElementById('initial_relationship2').value= ''; 
                 document.getElementById('relevant_person2').value= ''; 
 
                 // 更改背景顏色為預設
-                changeBackgroundColor('#fff');
+                changeBackgroundColor('#b7b7a4');
 
             })
             .catch((error) => {
@@ -1733,7 +1759,7 @@ function loadAllRecords() {
             // 表頭
             tableHtml += "<tr>";
             for (var i = 0; i < data[0].length; i++) {
-                if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47) {
+                if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47|| i === 48) {
                     continue; // 跳過 i 為 5、7、8、9 的情況
                 }
                 tableHtml += "<th>" + data[0][i] + "</th>";
@@ -1744,7 +1770,7 @@ function loadAllRecords() {
             for (var j = 1; j < data.length- 1; j++) {
                 tableHtml += "<tr>";
                 for (var i = 0; i < data[j].length; i++) {
-                    if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47) {
+                    if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47|| i === 48) {
                         continue; // 跳過 i 為 5、7、8、9 的情況
                     }
                     tableHtml += "<td>" + data[j][i] + "</td>";
@@ -1760,7 +1786,10 @@ function loadAllRecords() {
         });
 }
 window.onload = function() {
-    loadAllRecords(); // 加載並顯示所有的 CSV 紀錄
+    // 檢查當前頁面的URL或文件名
+    if (window.location.pathname.endsWith('house_search.html')) {
+        loadAllRecords(); // 只在 house_search.html 加載並顯示所有的 CSV 紀錄
+    }
 };
 
 //查詢戶冊
@@ -1790,7 +1819,7 @@ function searchhousehold() {
                 tableHtml += "<tr>";
                 tableHtml += "<th>修改</th>"; // 新增修改欄位
                 for (var i = 0; i < data[0].length; i++) {
-                    if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47) {
+                    if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47|| i === 48) {
                         continue; // 跳過 i 為 5、7、8、9 的情況
                     }
                     tableHtml += "<th>" + data[0][i] + "</th>";
@@ -1802,7 +1831,7 @@ function searchhousehold() {
                     // 修改欄位及單選框
                     tableHtml += "<td><input type='radio' name='modify' onclick='fillInputs(" + JSON.stringify(results[j]) + ")'></td>";
                     for (var i = 0; i < results[j].length; i++) {
-                        if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47) {
+                        if (i === 1 || i === 2 || i === 3 || i === 4 || i === 5 || i === 6 || i === 7 || i === 8 || i === 9|| i === 10 || i === 11|| i === 12|| i === 13|| i === 14|| i === 15|| i === 16|| i === 17||i === 18|| i === 19|| i === 20|| i === 21||i === 22||i === 23||i === 24||i === 25||i === 26|| i === 27||i === 28|| i === 29||i === 30|| i === 35||i === 36|| i === 37|| i === 38|| i === 40|| i === 41|| i === 42|| i === 44|| i === 45|| i === 46|| i === 47|| i === 48) {
                             continue; // 跳過 i 為 5、7、8、9 的情況
                         }
                         tableHtml += "<td>" + results[j][i] + "</td>";
@@ -2206,7 +2235,7 @@ function searchmember() {
                 tableHtml += "<tr>";
                 tableHtml += "<th>修改</th>"; // 新增修改欄位
                 for (var i = 0; i < data[0].length; i++) {
-                    if (i === 4 || i === 5 || i === 6 || i === 7|| i === 9|| i === 16|| i === 18|| i === 20|| i === 22|| i === 24|| i === 26|| i === 28|| i === 30|| i === 33) {
+                    if (i === 2 ||i === 4 || i === 5 || i === 6 || i === 7|| i === 8|| i === 9|| i === 16|| i === 17|| i === 18|| i === 20|| i === 21|| i === 22|| i === 23|| i === 24|| i === 25|| i === 26|| i === 27|| i === 28|| i === 29|| i === 30|| i === 31|| i === 32|| i === 33|| i === 34|| i === 35|| i === 36|| i === 37) {
                         continue; // 跳過
                     }
                     tableHtml += "<th>" + data[0][i] + "</th>";
@@ -2218,7 +2247,7 @@ function searchmember() {
                     // 修改欄位及單選框
                     tableHtml += "<td><input type='radio' name='modify' onclick='fillInputs2(" + JSON.stringify(results[j]) + ")'></td>";
                     for (var i = 0; i < results[j].length; i++) {
-                        if (i === 4 || i === 5 || i === 6 || i === 7|| i === 9|| i === 16|| i === 18|| i === 20|| i === 22|| i === 24|| i === 26|| i === 28|| i === 30|| i === 33) {
+                        if (i === 2 ||i === 4 || i === 5 || i === 6 || i === 7|| i === 8|| i === 9|| i === 16|| i === 17|| i === 18|| i === 20|| i === 21|| i === 22|| i === 23|| i === 24|| i === 25|| i === 26|| i === 27|| i === 28|| i === 29|| i === 30|| i === 31|| i === 32|| i === 33|| i === 34|| i === 35|| i === 36|| i === 37) {
                             continue; // 跳過
                         }
                         tableHtml += "<td>" + results[j][i] + "</td>";
@@ -2285,14 +2314,21 @@ function fillInputs2(rowData) {
     setSelectedIndex(rowData,"race",24,25)
     setSelectedIndex(rowData,"opium",26,27) //阿片
     setSelectedIndex(rowData,"foot_binding",28,29) //纏足
+    // 是否有斜線
+    var relevant_ysValue = rowData[30]; // 從 CSV 文件中獲取的值
+    if (relevant_ysValue === "1") {
+        document.getElementById("yes_ys").checked = true; // 是
+    } else if (relevant_ysValue === "0") {
+        document.getElementById("no_ys").checked = true; // 否
+    }
     //初始關係
-    setSelectedIndex(rowData,"initial_relationship1",30,31)
-    document.getElementById("relevant_person1").value = rowData[32]; //關係人名字
-    setSelectedIndex(rowData,"initial_relationship2",33,34)
-    document.getElementById("relevant_person2").value = rowData[35]; //關係人名字
+    setSelectedIndex(rowData,"initial_relationship1",31,32)
+    document.getElementById("relevant_person1").value = rowData[33]; //關係人名字
+    setSelectedIndex(rowData,"initial_relationship2",34,35)
+    document.getElementById("relevant_person2").value = rowData[36]; //關係人名字
 
     //index
-    document.getElementById("indexInput2").value = rowData[36];
+    document.getElementById("indexInput2").value = rowData[37];
 }
 
 //修改
@@ -2364,6 +2400,12 @@ function modifyHousehold2() {
     if (foot_binding){
         foot_binding_ch = document.getElementById('foot_binding').options[document.getElementById('foot_binding').selectedIndex].text; // 纏足的文字
     }
+    var relevant_ysInput = document.querySelector('input[name="relevant_ys"]:checked');// 斜線
+    if (relevant_ysInput) {
+        var relevant_ys = relevant_ysInput.value; 
+    } else {
+        var relevant_ys = ""; 
+    }
     var initial_relationship1 = document.getElementById('initial_relationship1').value; //初始關係1
     var initial_relationship1_ch = ""; 
     if (initial_relationship1){
@@ -2386,6 +2428,7 @@ function modifyHousehold2() {
         body: JSON.stringify({ id1 : id1 ,perno:perno,slash2:slash2, name : name,name2:name2,name3:name3,name4:name4,name5:name5, reign : reign,reign_ch:reign_ch , yy : yy , mm : mm , dd : dd , 
             sex : sex ,father:father,mother:mother,porder:porder,porder_ch:porder_ch,relationship:relationship,relationship_ch:relationship_ch,job1:job1,job1_ch:job1_ch,
             job2:job2,job2_ch:job2_ch,race:race,race_ch:race_ch,opium:opium,opium_ch:opium_ch,foot_binding:foot_binding,foot_binding_ch:foot_binding_ch,
+            relevant_ys:relevant_ys,
             initial_relationship1:initial_relationship1,initial_relationship1_ch:initial_relationship1_ch,relevant_person1:relevant_person1,initial_relationship2:initial_relationship2,initial_relationship2_ch:initial_relationship2_ch,relevant_person2:relevant_person2,index2:index2}), // 將輸入的數字轉換為JSON格式並作為請求體發送
     })
     .then(response => response.json()) // 解析回應的JSON數據
@@ -2424,6 +2467,10 @@ function modifyHousehold2() {
         document.getElementById('race').value= ''; 
         document.getElementById('opium').value= ''; 
         document.getElementById('foot_binding').value= '';
+        var relevant_ysRadioButtons = document.querySelectorAll('input[name="relevant_ys"]');
+                relevant_ysRadioButtons.forEach(function(radio) {
+                    radio.checked = false;
+                });
         document.getElementById('initial_relationship1').value= ''; 
         document.getElementById('relevant_person1').value= ''; 
         document.getElementById('initial_relationship2').value= ''; 
@@ -2431,7 +2478,7 @@ function modifyHousehold2() {
         document.getElementById('indexInput2').value= ''; 
 
         // 更改背景顏色為預設
-        changeBackgroundColor('#fff');
+        changeBackgroundColor('#b7b7a4');
 
     })
     .catch((error) => {

@@ -309,6 +309,7 @@ app.post('/generate-csv', (req, res) => {
     const opium_ch = req.body.opium_ch;
     const foot_binding = req.body.foot_binding;
     const foot_binding_ch = req.body.foot_binding_ch;
+    const relevant_ys = req.body.relevant_ys;
     const initial_relationship1 = req.body.initial_relationship1;
     const initial_relationship1_ch = req.body.initial_relationship1_ch;
     const relevant_person1 = req.body.relevant_person1;
@@ -321,14 +322,14 @@ app.post('/generate-csv', (req, res) => {
     fs.access(csvFilePath, fs.constants.F_OK, (err) => {
         if (err) {
             // 如果文件不存在，寫入標題並附加數據
-            const csvHeader = 'id,perno,是否有斜線,name,name2,name3,name4,name5,sex,reign,年號,yy,mm,dd,father,mother,porder,出生別,relationship,續柄,job1,職業1,job2,職業2,race,種族,opium,阿片,foot_binding,纏足,initial_relationship1,初始關係1,relevant_person1,initial_relationship2,初始關係2,relevant_person2,index\n';
+            const csvHeader = '戶號,人號,是否有斜線,名字,名字2,名字3,名字4,名字5,性別,reign,年號,yy,mm,dd,father,mother,porder,出生別,relationship,續柄,job1,職業1,job2,職業2,race,種族,opium,阿片,foot_binding,纏足,是否有變更續柄,initial_relationship1,初始關係1,relevant_person1,initial_relationship2,初始關係2,relevant_person2,index\n';
             fs.writeFile(csvFilePath, csvHeader, 'utf-8', (err) => {
                 if (err) {
                     console.error('Error writing CSV header:', err);
                     res.status(500).send({ message: 'Error in generating CSV' });
                     return;
                 }
-                appendDataToCSV(id1,perno,slash2, name,name2,name3,name4,name5, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2,res);
+                appendDataToCSV(id1,perno,slash2, name,name2,name3,name4,name5, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,relevant_ys,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2,res);
             });
         } else {
             // 文件存在，附加數據
@@ -338,7 +339,7 @@ app.post('/generate-csv', (req, res) => {
                     res.status(500).send({ message: 'Error in generating CSV' });
                     return;
                 }
-                appendDataToCSV(id1,perno,slash2, name,name2,name3,name4,name5, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2, res);
+                appendDataToCSV(id1,perno,slash2, name,name2,name3,name4,name5, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,relevant_ys,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2, res);
             });
         }
     });
@@ -346,7 +347,7 @@ app.post('/generate-csv', (req, res) => {
 
 let index2 = 1; // 定義一個全局變量，用於自動增加索引值
 
-function appendDataToCSV(id1, perno,slash2,name,name2,name3,name4,name5, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2,res) {
+function appendDataToCSV(id1, perno,slash2,name,name2,name3,name4,name5, sex, reign,reign_ch, yy, mm, dd,father,mother,porder,porder_ch,relationship,relationship_ch,job1,job1_ch,job2,job2_ch,race,race_ch,opium,opium_ch,foot_binding,foot_binding_ch,relevant_ys,initial_relationship1,initial_relationship1_ch,relevant_person1,initial_relationship2,initial_relationship2_ch,relevant_person2,res) {
     //中文
     const reign_ch2 = reign_ch.trim() ? reign_ch.split(' ')[1] : '';
     const porder_ch2=porder_ch.trim() ? porder_ch.split(' ')[1] : '';
@@ -359,7 +360,7 @@ function appendDataToCSV(id1, perno,slash2,name,name2,name3,name4,name5, sex, re
     const initial_relationship1_ch2=initial_relationship1_ch.trim() ? initial_relationship1_ch.split(' ')[1] : '';
     const initial_relationship2_ch2=initial_relationship2_ch.trim() ? initial_relationship2_ch.split(' ')[1] : '';
     // 建構CSV檔案內容
-    const csvContent = `${id1},${perno},${slash2},${name},${name2},${name3},${name4},${name5},${sex},${reign},${reign_ch2},${yy},${mm},${dd},${father},${mother},${porder},${porder_ch2},${relationship},${relationship_ch2},${job1},${job1_ch2},${job2},${job2_ch2},${race},${race_ch2},${opium},${opium_ch2},${foot_binding},${foot_binding_ch2},${initial_relationship1},${initial_relationship1_ch2},${relevant_person1},${initial_relationship2},${initial_relationship2_ch2},${relevant_person2},${index2}\n`;
+    const csvContent = `${id1},${perno},${slash2},${name},${name2},${name3},${name4},${name5},${sex},${reign},${reign_ch2},${yy},${mm},${dd},${father},${mother},${porder},${porder_ch2},${relationship},${relationship_ch2},${job1},${job1_ch2},${job2},${job2_ch2},${race},${race_ch2},${opium},${opium_ch2},${foot_binding},${foot_binding_ch2},${relevant_ys},${initial_relationship1},${initial_relationship1_ch2},${relevant_person1},${initial_relationship2},${initial_relationship2_ch2},${relevant_person2},${index2}\n`;
 
     // 在每次新增數據時自動增加索引值
     index2++;
@@ -408,6 +409,7 @@ app.post('/modify-generate-csv', (req, res) => {
     const opium_ch = req.body.opium_ch;
     const foot_binding = req.body.foot_binding;
     const foot_binding_ch = req.body.foot_binding_ch;
+    const relevant_ys = req.body.relevant_ys;
     const initial_relationship1 = req.body.initial_relationship1;
     const initial_relationship1_ch = req.body.initial_relationship1_ch;
     const relevant_person1 = req.body.relevant_person1;
@@ -442,7 +444,7 @@ app.post('/modify-generate-csv', (req, res) => {
         // 根據索引找到要修改的行
         if (index2 >= 0 && index2 < rows2.length) {
             // 將輸入框內容拚結成一行
-            const newRow2 = `${id1},${perno},${slash2},${name},${name2},${name3},${name4},${name5},${sex},${reign},${reign_ch2},${yy},${mm},${dd},${father},${mother},${porder},${porder_ch2},${relationship},${relationship_ch2},${job1},${job1_ch2},${job2},${job2_ch2},${race},${race_ch2},${opium},${opium_ch2},${foot_binding},${foot_binding_ch2},${initial_relationship1},${initial_relationship1_ch2},${relevant_person1},${initial_relationship2},${initial_relationship2_ch2},${relevant_person2},${index2}`;
+            const newRow2 = `${id1},${perno},${slash2},${name},${name2},${name3},${name4},${name5},${sex},${reign},${reign_ch2},${yy},${mm},${dd},${father},${mother},${porder},${porder_ch2},${relationship},${relationship_ch2},${job1},${job1_ch2},${job2},${job2_ch2},${race},${race_ch2},${opium},${opium_ch2},${foot_binding},${foot_binding_ch2},${relevant_ys},${initial_relationship1},${initial_relationship1_ch2},${relevant_person1},${initial_relationship2},${initial_relationship2_ch2},${relevant_person2},${index2}`;
 
             // 覆蓋到原始 CSV 行
             rows2[index2] = newRow2;

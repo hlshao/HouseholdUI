@@ -87,7 +87,7 @@ app.post('/generate-householdForm-csv', (req, res) => {
     fs.access(csvFilePath2, fs.constants.F_OK, (err) => {
         if (err) {
             // 如果文件不存在，寫入標題並附加數據
-            const csvHeader = '戶號,是否有斜線,戶冊別,rg,年號,adrlevel1,adr1tp,adr1cd,地名1,adrlevel2,adr1tp2,adr1cd2,地名2,adrlevel3,adr1tp3,adr1cd3,地名3,adrlevel4,adr1tp4,adr1cd4,地名4,chome,address,of1,of2,是否有修改,本居又ハ本國住所,本居無此欄位,族稱,族稱無此欄位,開戶年號代碼,開戶年號,yy,mm,dd,開戶緣由代碼,開戶緣由,前戶主退由代碼,前戶主退由,戶主姓名,yy2,mm2,dd2,前戶主姓名,與前戶主續柄代碼,與前戶主續柄,戶主職業代碼,戶主職業,index\n'; 
+            const csvHeader = '戶號HID,是否有斜線,戶冊別,rg,年號,adrlevel1,adr1tp,adr1cd,地名1,adrlevel2,adr1tp2,adr1cd2,地名2,adrlevel3,adr1tp3,adr1cd3,地名3,adrlevel4,adr1tp4,adr1cd4,地名4,chome,address,of1,of2,是否有修改,本居又ハ本國住所,本居無此欄位,族稱,族稱無此欄位,開戶年號代碼,開戶年號,開戶年,開戶月,開戶日,開戶緣由代碼,開戶緣由,前戶主退由代碼,前戶主退由,戶主姓名,戶主出生年,戶主出生月,戶主出生日,前戶主姓名,與前戶主續柄代碼,與前戶主續柄,戶主職業代碼,戶主職業,index\n'; 
             fs.writeFile(csvFilePath2, csvHeader, 'utf-8', (err) => {
                 if (err) {
                     console.error('Error writing CSV header:', err);
@@ -322,7 +322,7 @@ app.post('/generate-csv', (req, res) => {
     fs.access(csvFilePath, fs.constants.F_OK, (err) => {
         if (err) {
             // 如果文件不存在，寫入標題並附加數據
-            const csvHeader = '戶號,人號,是否有斜線,名字,名字2,名字3,名字4,名字5,性別,reign,年號,yy,mm,dd,father,mother,porder,出生別,relationship,續柄,job1,職業1,job2,職業2,race,種族,opium,阿片,foot_binding,纏足,是否有變更續柄,initial_relationship1,初始關係1,relevant_person1,initial_relationship2,初始關係2,relevant_person2,index\n';
+            const csvHeader = '戶號HID,人號PID,是否有斜線,名字,名字2,名字3,名字4,名字5,性別,reign,年號,年,月,日,父親,母親,porder,出生別,relationship,續柄,job1,職業1,job2,職業2,race,種族,opium,阿片,foot_binding,纏足,是否有變更續柄,initial_relationship1,初始關係1,relevant_person1,initial_relationship2,初始關係2,relevant_person2,index\n';
             fs.writeFile(csvFilePath, csvHeader, 'utf-8', (err) => {
                 if (err) {
                     console.error('Error writing CSV header:', err);
@@ -499,6 +499,7 @@ app.post('/generate-eventForm-csv', (req, res) => {
     const event_ch = req.body.event_ch;
 
     const relevant_person3 = req.body.relevant_person3;
+    const type2 = req.body.type2;
     const relationInput = req.body.relationInput;
     const relationInput_ch = req.body.relationInput_ch;
 
@@ -533,14 +534,14 @@ app.post('/generate-eventForm-csv', (req, res) => {
     fs.access(csvFilePath3, fs.constants.F_OK, (err) => {
         if (err) {
             // 如果文件不存在，寫入標題並附加數據
-            const csvHeader = 'id,perno,rg,年號,yy,mm,dd,no,event,事件,關係人,relation,關係,戶主,relationship,續柄,rg2,年號2,adrlevel1,adr1tp,adr1cd,地名1,adrlevel2,adr1tp2,adr1cd2,地名2,adrlevel3,adr1tp3,adr1cd3,地名3,adrlevel4,adr1tp4,adr1cd4,地名4,chome,address,of1,of2,index\n'; 
+            const csvHeader = '戶號HID,人號PID,rg,年號,年,月,日,事件序次,event,事件,事件關係人姓名,本戶或他戶,relation,與事件本人關係,他戶戶主姓名,relationship,與本戶或他戶戶主的關係,rg2,年號2,adrlevel1,adr1tp,adr1cd,地名1,adrlevel2,adr1tp2,adr1cd2,地名2,adrlevel3,adr1tp3,adr1cd3,地名3,adrlevel4,adr1tp4,adr1cd4,地名4,chome,address,of1,of2,index\n'; 
             fs.writeFile(csvFilePath3, csvHeader, 'utf-8', (err) => {
                 if (err) {
                     console.error('Error writing CSV header:', err);
                     res.status(500).send({ message: 'Error in generating CSV' });
                     return;
                 }
-                appendDataToCSV3(id2,perno2,rg3,rg3_ch,yy3,mm3,dd3,no3,event,event_ch,relevant_person3,relationInput,relationInput_ch,name2,relationshipInput2,relationshipInput2_ch,rg_event,rg_event_ch,first_event,first_event_ch,first_all_event_ch,first_all_event_ch,second_event,second_event_ch,second_all_event_ch,second_all_event_ch,third_event,third_event_ch,third_all_event_ch,third_all_event_ch,fourth_event,fourth_event_ch,fourth_all_event_ch,fourth_all_event_ch,chome_event,address_event,of1_event,of2_event,res);
+                appendDataToCSV3(id2,perno2,rg3,rg3_ch,yy3,mm3,dd3,no3,event,event_ch,relevant_person3,type2,relationInput,relationInput_ch,name2,relationshipInput2,relationshipInput2_ch,rg_event,rg_event_ch,first_event,first_event_ch,first_all_event_ch,first_all_event_ch,second_event,second_event_ch,second_all_event_ch,second_all_event_ch,third_event,third_event_ch,third_all_event_ch,third_all_event_ch,fourth_event,fourth_event_ch,fourth_all_event_ch,fourth_all_event_ch,chome_event,address_event,of1_event,of2_event,res);
             });
         } else {
             // 文件存在，附加數據
@@ -550,7 +551,7 @@ app.post('/generate-eventForm-csv', (req, res) => {
                     res.status(500).send({ message: 'Error in generating CSV' });
                     return;
                 }
-                appendDataToCSV3(id2,perno2,rg3,rg3_ch,yy3,mm3,dd3,no3,event,event_ch,relevant_person3,relationInput,relationInput_ch,name2,relationshipInput2,relationshipInput2_ch,rg_event,rg_event_ch,first_event,first_event_ch,first_all_event_ch,first_all_event_ch,second_event,second_event_ch,second_all_event_ch,second_all_event_ch,third_event,third_event_ch,third_all_event_ch,third_all_event_ch,fourth_event,fourth_event_ch,fourth_all_event_ch,fourth_all_event_ch,chome_event,address_event,of1_event,of2_event,res);
+                appendDataToCSV3(id2,perno2,rg3,rg3_ch,yy3,mm3,dd3,no3,event,event_ch,relevant_person3,type2,relationInput,relationInput_ch,name2,relationshipInput2,relationshipInput2_ch,rg_event,rg_event_ch,first_event,first_event_ch,first_all_event_ch,first_all_event_ch,second_event,second_event_ch,second_all_event_ch,second_all_event_ch,third_event,third_event_ch,third_all_event_ch,third_all_event_ch,fourth_event,fourth_event_ch,fourth_all_event_ch,fourth_all_event_ch,chome_event,address_event,of1_event,of2_event,res);
             });
         }
     });
@@ -558,7 +559,7 @@ app.post('/generate-eventForm-csv', (req, res) => {
 
 let index3 = 1; // 定義一個全局變量，用於自動增加索引值
 
-function appendDataToCSV3(id2,perno2,rg3,rg3_ch,yy3,mm3,dd3,no3,event,event_ch,relevant_person3,relationInput,relationInput_ch,name2,relationshipInput2,relationshipInput2_ch,rg_event,rg_event_ch,first_event,first_event_ch,first_all_event_ch,first_all_event_ch,second_event,second_event_ch,second_all_event_ch,second_all_event_ch,third_event,third_event_ch,third_all_event_ch,third_all_event_ch,fourth_event,fourth_event_ch,fourth_all_event_ch,fourth_all_event_ch,chome_event,address_event,of1_event,of2_event,res) {
+function appendDataToCSV3(id2,perno2,rg3,rg3_ch,yy3,mm3,dd3,no3,event,event_ch,relevant_person3,type2,relationInput,relationInput_ch,name2,relationshipInput2,relationshipInput2_ch,rg_event,rg_event_ch,first_event,first_event_ch,first_all_event_ch,first_all_event_ch,second_event,second_event_ch,second_all_event_ch,second_all_event_ch,third_event,third_event_ch,third_all_event_ch,third_all_event_ch,fourth_event,fourth_event_ch,fourth_all_event_ch,fourth_all_event_ch,chome_event,address_event,of1_event,of2_event,res) {
     // 下拉選單中文
     const rg3_ch2 = rg3_ch.trim() ? rg3_ch.split(' ')[1] : '';
     const event_ch2 = event_ch.trim() ? event_ch.split(' ')[1] : '';
@@ -580,7 +581,7 @@ function appendDataToCSV3(id2,perno2,rg3,rg3_ch,yy3,mm3,dd3,no3,event,event_ch,r
 
 
     // 建構CSV檔案內容
-    const csvContent = `${id2},${perno2},${rg3},${rg3_ch2},${yy3},${mm3},${dd3},${no3},${event},${event_ch2},${relevant_person3},${relationInput},${relationInput_ch2},${name2},${relationshipInput2},${relationshipInput2_ch2},${rg_event},${rg_event_ch2},${first_event},${first_event_ch2},${first_all_event_ch1},${first_all_event_ch2},${second_event},${second_event_ch2},${second_all_event_ch1},${second_all_event_ch2},${third_event},${third_event_ch2},${third_all_event_ch1},${third_all_event_ch2},${fourth_event},${fourth_event_ch2},${fourth_all_event_ch1},${fourth_all_event_ch2},${chome_event},${address_event},${of1_event},${of2_event},${index3}\n`;
+    const csvContent = `${id2},${perno2},${rg3},${rg3_ch2},${yy3},${mm3},${dd3},${no3},${event},${event_ch2},${relevant_person3},${type2},${relationInput},${relationInput_ch2},${name2},${relationshipInput2},${relationshipInput2_ch2},${rg_event},${rg_event_ch2},${first_event},${first_event_ch2},${first_all_event_ch1},${first_all_event_ch2},${second_event},${second_event_ch2},${second_all_event_ch1},${second_all_event_ch2},${third_event},${third_event_ch2},${third_all_event_ch1},${third_all_event_ch2},${fourth_event},${fourth_event_ch2},${fourth_all_event_ch1},${fourth_all_event_ch2},${chome_event},${address_event},${of1_event},${of2_event},${index3}\n`;
 
     // 在每次新增數據時自動增加索引值
     index3++;
@@ -612,6 +613,7 @@ app.post('/modify-eventForm-csv', (req, res) => {
     const event_ch = req.body.event_ch;
 
     const relevant_person3 = req.body.relevant_person3;
+    const type2 = req.body.type2;
     const relationInput = req.body.relationInput;
     const relationInput_ch = req.body.relationInput_ch;
 
@@ -674,7 +676,7 @@ app.post('/modify-eventForm-csv', (req, res) => {
         // 根據索引找到要修改的行
         if (index3 >= 0 && index3 < rows3.length) {
             // 將輸入框內容拚結成一行
-            const newRow3 = `${id2},${perno2},${rg3},${rg3_ch2},${yy3},${mm3},${dd3},${no3},${event},${event_ch2},${relevant_person3},${relationInput},${relationInput_ch2},${name2},${relationshipInput2},${relationshipInput2_ch2},${rg_event},${rg_event_ch2},${first_event},${first_event_ch2},${first_all_event_ch1},${first_all_event_ch2},${second_event},${second_event_ch2},${second_all_event_ch1},${second_all_event_ch2},${third_event},${third_event_ch2},${third_all_event_ch1},${third_all_event_ch2},${fourth_event},${fourth_event_ch2},${fourth_all_event_ch1},${fourth_all_event_ch2},${chome_event},${address_event},${of1_event},${of2_event},${index3}`;
+            const newRow3 = `${id2},${perno2},${rg3},${rg3_ch2},${yy3},${mm3},${dd3},${no3},${event},${event_ch2},${relevant_person3},${type2},${relationInput},${relationInput_ch2},${name2},${relationshipInput2},${relationshipInput2_ch2},${rg_event},${rg_event_ch2},${first_event},${first_event_ch2},${first_all_event_ch1},${first_all_event_ch2},${second_event},${second_event_ch2},${second_all_event_ch1},${second_all_event_ch2},${third_event},${third_event_ch2},${third_all_event_ch1},${third_all_event_ch2},${fourth_event},${fourth_event_ch2},${fourth_all_event_ch1},${fourth_all_event_ch2},${chome_event},${address_event},${of1_event},${of2_event},${index3}`;
 
             // 覆蓋到原始 CSV 行
             rows3[index3] = newRow3;

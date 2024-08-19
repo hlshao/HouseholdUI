@@ -91,7 +91,7 @@ const txtFilePath15 = "select/menu013_事件.txt";
 const selectId15= "event";
 loadDropdownFromTxtFile(txtFilePath15, selectId15);
 
-const txtFilePath16 = "select/menu013_事件.txt";
+const txtFilePath16 = "select/menu006_續柄.txt";
 const selectId16= "relationInput";
 loadDropdownFromTxtFile(txtFilePath16, selectId16);
 
@@ -1565,6 +1565,22 @@ document.addEventListener("DOMContentLoaded", function() {
     // 阻止表單預設提交行為
     //e.preventDefault();
 document.addEventListener("DOMContentLoaded", function() {
+    // 首先讀取CSV文件並獲取倒數第二行的戶號
+    fetch('person.csv')
+        .then(response => response.text())
+        .then(csvData => {
+            var data = parseCSV2(csvData); // 解析CSV數據
+            if (data.length > 1) {
+                var secondLastRow = data[data.length - 2]; // 獲取倒數第二行
+                var householdNumber = secondLastRow[0]; // 戶號
+                var personNumber = secondLastRow[1]; // 人號
+                document.getElementById('id2').value = householdNumber; // 自動填入戶號
+                document.getElementById('perno2').value = personNumber; // 自動填入人好
+            }
+        })
+        .catch(error => {
+            
+        });
     const formElement = document.getElementById('eventForm');
     
     if (formElement) {
@@ -1589,6 +1605,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 event_ch = document.getElementById('event').options[document.getElementById('event').selectedIndex].text; // 事件的文字
             }
             var relevant_person3 = document.getElementById('relevant_person3').value; // 關係人
+            var type2Input = document.querySelector('input[name="type2"]:checked');// 本戶或他戶
+            if (type2Input) {
+                var type2 = type2Input.value; 
+            } else {
+                var type2 = ""; 
+            }
             var relationInput = document.getElementById('relationInput').value; // 關係
             var relationInput_ch = ""; 
             if (relationInput){
@@ -1661,7 +1683,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 },
                 body: JSON.stringify({ id2:id2,perno2:perno2,rg3 : rg3,rg3_ch:rg3_ch , yy3 : yy3 , mm3 : mm3 , dd3 : dd3 , no3:no3,
                     event: event,event_ch:event_ch,
-                    relevant_person3:relevant_person3,relationInput:relationInput,relationInput_ch:relationInput_ch,
+                    relevant_person3:relevant_person3,type2:type2,relationInput:relationInput,relationInput_ch:relationInput_ch,
                     name2:name2,relationshipInput2:relationshipInput2,relationshipInput2_ch:relationshipInput2_ch,
                     rg_event:rg_event,rg_event_ch:rg_event_ch,first_event:first_event,first_event_ch:first_event_ch,first_all_event_ch:first_all_event_ch,
                     second_event:second_event,second_event_ch:second_event_ch,second_all_event_ch:second_all_event_ch,
@@ -1685,6 +1707,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById('eventsearch').value = '';
                 document.getElementById('event').value = '';
                 document.getElementById('relevant_person3').value = '';
+                var type2RadioButtons = document.querySelectorAll('input[name="type2"]');
+                type2RadioButtons.forEach(function(radio) {
+                    radio.checked = false;
+                });
                 document.getElementById('relationsearch').value = '';
                 document.getElementById('relationInput').value = '';
                 document.getElementById('name2').value = '';
@@ -2512,7 +2538,7 @@ function searchevent() {
                 tableHtml += "<tr>";
                 tableHtml += "<th>修改</th>"; // 新增修改欄位
                 for (var i = 0; i < data[0].length; i++) {
-                    if (i === 2 || i === 8|| i === 11|| i ===14|| i ===16|| i ===18|| i ===19|| i ===20|| i ===22|| i ===23|| i ===24|| i ===26|| i ===27|| i ===28|| i ===30|| i ===31|| i ===32) {
+                    if (i === 2 || i === 8|| i === 11|| i === 12|| i === 14|| i === 15|| i === 16|| i === 17|| i === 18|| i === 19|| i === 20|| i === 21|| i === 22|| i === 23|| i === 24|| i === 25|| i === 26|| i === 27|| i === 28|| i === 29|| i === 30|| i === 31|| i === 32|| i === 33|| i === 34|| i === 35|| i === 36|| i === 37|| i === 38|| i === 39) {
                         continue; // 跳過
                     }
                     tableHtml += "<th>" + data[0][i] + "</th>";
@@ -2524,7 +2550,7 @@ function searchevent() {
                     // 修改欄位及單選框
                     tableHtml += "<td><input type='radio' name='modify' onclick='fillInputs3(" + JSON.stringify(results[j]) + ")'></td>";
                     for (var i = 0; i < results[j].length; i++) {
-                        if (i === 2 || i === 8|| i === 11|| i ===14|| i ===16|| i ===18|| i ===19|| i ===20|| i ===22|| i ===23|| i ===24|| i ===26|| i ===27|| i ===28|| i ===30|| i ===31|| i ===32) {
+                        if (i === 2 || i === 8|| i === 11|| i === 12|| i === 14|| i === 15|| i === 16|| i === 17|| i === 18|| i === 19|| i === 20|| i === 21|| i === 22|| i === 23|| i === 24|| i === 25|| i === 26|| i === 27|| i === 28|| i === 29|| i === 30|| i === 31|| i === 32|| i === 33|| i === 34|| i === 35|| i === 36|| i === 37|| i === 38|| i === 39) {
                             continue; // 跳過
                         }
                         tableHtml += "<td>" + results[j][i] + "</td>";
@@ -2570,56 +2596,63 @@ function fillInputs3(rowData) {
     document.getElementById("no3").value = rowData[7]; //序次
     setSelectedIndex(rowData,"event",8,9)//事件
     document.getElementById("relevant_person3").value = rowData[10]; //關係人
-    setSelectedIndex(rowData,"relationInput",11,12)//關係
+    // 本戶或他戶
+    var type2Value = rowData[11]; // 從 CSV 文件中獲取的值
+    if (type2Value === "1") {
+        document.getElementById("self").checked = true; // 本戶
+    } else if (type2Value === "2") {
+        document.getElementById("other").checked = true; // 他戶
+    }
+    setSelectedIndex(rowData,"relationInput",12,13)//關係
     //他戶
-    document.getElementById("name2").value = rowData[13]; //戶主
-    setSelectedIndex(rowData,"relationshipInput2",14,15)//續柄
+    document.getElementById("name2").value = rowData[14]; //戶主
+    setSelectedIndex(rowData,"relationshipInput2",15,16)//續柄
     //住所
-    setSelectedIndex(rowData,"rg_event",16,17)//年號
+    setSelectedIndex(rowData,"rg_event",17,18)//年號
     // 更新第一層選單，並在更新完成後執行相應的操作
-    updateFirst(rowData[16], "first_event", function() {
+    updateFirst(rowData[17], "first_event", function() {
         // 第一層
-        setSelectedIndex(rowData,"first_event",18,19)
+        setSelectedIndex(rowData,"first_event",19,20)
     });
 
     //更新第一層地名 selectedLevel,first_all,rg
-    if (rowData[17] !== "") {
-        updateFirstAll(rowData[18], "first_all_event","rg_event", function() {
+    if (rowData[18] !== "") {
+        updateFirstAll(rowData[19], "first_all_event","rg_event", function() {
             // 第一層地名
-            setSelectedIndex(rowData,"first_all_event",20,21)
+            setSelectedIndex(rowData,"first_all_event",21,22)
             var first_all_selectElement2 = document.getElementById("first_all_event").value; //第一層地名的識別碼
 
             // 更新第二層選單，並在更新完成後執行相應的操作
             updateSecond(first_all_selectElement2, "second_event", function() {
                 // 第二層
-                setSelectedIndex(rowData,"second_event",22,23)
+                setSelectedIndex(rowData,"second_event",23,24)
 
             });
             //第二層地名
-            updateSecondAll(rowData[22], "first_all_event","second_all_event", function() {
+            updateSecondAll(rowData[23], "first_all_event","second_all_event", function() {
                 // 第二層地名
-                setSelectedIndex(rowData,"second_all_event",24,25)
+                setSelectedIndex(rowData,"second_all_event",25,26)
                 var second_all_selectElement2 = document.getElementById("second_all_event").value; //第二層地名的識別碼
                 // 第三層選單
                 updatethird(second_all_selectElement2, "third_event", function() {
                     // 第三層
-                    setSelectedIndex(rowData,"third_event",26,27)
+                    setSelectedIndex(rowData,"third_event",27,28)
                 });
 
                 //第三層地名
-                updatethirdAll(rowData[26], "second_all_event","third_all_event", function() {
+                updatethirdAll(rowData[27], "second_all_event","third_all_event", function() {
                     // 第三層地名
-                    setSelectedIndex(rowData,"third_all_event",28,29)
+                    setSelectedIndex(rowData,"third_all_event",29,30)
                     var third_all_selectElement2 = document.getElementById("third_all_event").value; //第三層地名的識別碼
                     // 第四層選單
                     updatefourth(third_all_selectElement2, "fourth_event", function() {
                         // 第4層
-                        setSelectedIndex(rowData,"fourth_event",30,31)
+                        setSelectedIndex(rowData,"fourth_event",31,32)
                     });
                     //第4層地名
-                    updatefourthAll(rowData[30], "third_all_event","fourth_all_event", function() {
+                    updatefourthAll(rowData[31], "third_all_event","fourth_all_event", function() {
                         // 第4層地名
-                        setSelectedIndex(rowData,"fourth_all_event",32,33)
+                        setSelectedIndex(rowData,"fourth_all_event",33,34)
                     });
                 });
             });
@@ -2627,12 +2660,12 @@ function fillInputs3(rowData) {
         });
     }
 
-    document.getElementById("chome_event").value = rowData[34];//丁目
-    document.getElementById("address_event").value = rowData[35];//番地
-    document.getElementById("of1_event").value = rowData[36];//之
-    document.getElementById("of2_event").value = rowData[37];//之
+    document.getElementById("chome_event").value = rowData[35];//丁目
+    document.getElementById("address_event").value = rowData[36];//番地
+    document.getElementById("of1_event").value = rowData[37];//之
+    document.getElementById("of2_event").value = rowData[38];//之
     //index
-    document.getElementById("indexInput3").value = rowData[38];
+    document.getElementById("indexInput3").value = rowData[39];
 }
 //修改
 function modifyHousehold3() {
@@ -2653,6 +2686,12 @@ function modifyHousehold3() {
     var event_ch = ""; 
     if (event){
         event_ch = document.getElementById('event').options[document.getElementById('event').selectedIndex].text; // 事件的文字
+    }
+    var type2Input = document.querySelector('input[name="type2"]:checked');// 本戶或他戶
+    if (type2Input) {
+        var type2 = type2Input.value; 
+    } else {
+        var type2 = ""; 
     }
     var relevant_person3 = document.getElementById('relevant_person3').value; // 關係人
     var relationInput = document.getElementById('relationInput').value; // 關係
@@ -2726,7 +2765,7 @@ function modifyHousehold3() {
         },
         body: JSON.stringify({ id2:id2,perno2:perno2,rg3 : rg3,rg3_ch:rg3_ch , yy3 : yy3 , mm3 : mm3 , dd3 : dd3 , no3:no3,
             event: event,event_ch:event_ch,
-            relevant_person3:relevant_person3,relationInput:relationInput,relationInput_ch:relationInput_ch,
+            relevant_person3:relevant_person3,type2:type2,relationInput:relationInput,relationInput_ch:relationInput_ch,
             name2:name2,relationshipInput2:relationshipInput2,relationshipInput2_ch:relationshipInput2_ch,
             rg_event:rg_event,rg_event_ch:rg_event_ch,first_event:first_event,first_event_ch:first_event_ch,first_all_event_ch:first_all_event_ch,
             second_event:second_event,second_event_ch:second_event_ch,second_all_event_ch:second_all_event_ch,
@@ -2750,6 +2789,10 @@ function modifyHousehold3() {
         document.getElementById('eventsearch').value = '';
         document.getElementById('event').value = '';
         document.getElementById('relevant_person3').value = '';
+        var type2RadioButtons = document.querySelectorAll('input[name="type2"]');
+        type2RadioButtons.forEach(function(radio) {
+            radio.checked = false;
+        });
         document.getElementById('relationsearch').value = '';
         document.getElementById('relationInput').value = '';
         document.getElementById('name2').value = '';

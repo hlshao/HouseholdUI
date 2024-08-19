@@ -467,7 +467,7 @@ app.post('/modify-generate-csv', (req, res) => {
 
 // 監聽指定端口，啟動伺服器
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Server running at http://140.112.158.83:${port}`);
 });
 
 // 在應用程序啟動時讀取 CSV 文件以獲取最後一行的索引值

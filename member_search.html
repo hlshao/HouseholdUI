@@ -161,6 +161,12 @@
                     <li class="nav-item">
                     <a class="nav-link" href="member_search.html"> 查詢與修改成員</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="member_compare.html">
+                            <span>成員比對</span>
+                        </a>
+                    </li>
+                </ul>
                 </ul>
                 </div>
             </div>
@@ -172,9 +178,9 @@
         <form id="memberForm">
             <label for="nameInput">戶號：</label>
             <input type="number" id="id1">
+            <label for="nameInput">人號：</label>
+            <input type="number" id="perno">
             <div id="hid" class="hidden">
-                <label for="nameInput">人號：</label>
-                <input type="number" id="perno">
                 <label for="nameInput">是否有斜線：</label>
                 <input type="radio" name="slash2" value="1" id="yes2">是
                 <input type="radio" name="slash2" value="0" id="no2">否
@@ -249,8 +255,8 @@
                 <!--
                 <button type="submit">新增</button>
                 <br>
-                index
-                <input type="number" id="indexInput2" readonly>-->
+                index-->
+                <input type="number" id="indexInput2" readonly>
                 <button type="button" onclick="modifyHousehold2()">修改</button>
             </div>
         </form>

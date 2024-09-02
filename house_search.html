@@ -132,6 +132,22 @@
         .hidden {
             display: none;
         }
+        
+        .underlined-label {
+            position: relative;
+            padding-bottom: 3px; /* 底線與文字之間的距離 */
+            display: inline-block;
+            font-size: 28px;
+        }
+
+        .underlined-label::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 200px; /* 固定線的長度 */
+            border-bottom: 3px dotted;
+        }
     </style>
 </head>
 <body>
@@ -242,10 +258,10 @@
                 <label for="nameInput" class="underlined-label">戶主</label>
                 <br>
                 姓名<input type="text" id="o_name">
-                出生日期
-                <input type="number" id="o_yy2">年
-                <input type="number" id="o_mm2">月
-                <input type="number" id="o_dd2">日
+                <!--出生日期-->
+                <input type="number" id="o_yy2" style="display: none;"><!--年-->
+                <input type="number" id="o_mm2" style="display: none;"><!--月-->
+                <input type="number" id="o_dd2" style="display: none;"><!--日-->
                 <br>
                 <label for="nameInput" class="underlined-label">前戶主トノ續柄榮稱職業</label>
                 <br>
@@ -260,8 +276,8 @@
                 </select>
                 <!--<button type="submit">新增</button>
                 <br>
-                index
-                <input type="number" id="indexInput" readonly>-->
+                index-->
+                <input type="number" id="indexInput" readonly style="display: none;">
                 <button type="button" onclick="modifyHousehold()">修改</button>
             </div>
         </form>

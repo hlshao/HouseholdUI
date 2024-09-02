@@ -438,36 +438,53 @@ app.post('/modify-generate-csv', (req, res) => {
             return;
         }
 
-        // 將內容按行拆分
-        let rows2 = data.trim().split('\n');
+        const newRow2 = `${id1},${perno},${slash2},${name},${name2},${name3},${name4},${name5},${sex},${reign},${reign_ch2},${yy},${mm},${dd},${father},${mother},${porder},${porder_ch2},${relationship},${relationship_ch2},${job1},${job1_ch2},${job2},${job2_ch2},${race},${race_ch2},${opium},${opium_ch2},${foot_binding},${foot_binding_ch2},${relevant_ys},${initial_relationship1},${initial_relationship1_ch2},${relevant_person1},${initial_relationship2},${initial_relationship2_ch2},${relevant_person2},${index2}`;
+        console.log(newRow2)
+        fs.readFile(csvFilePath, 'utf-8', (err, data) => {
+            if (err) {
+                console.error('文件錯誤:', err);
+                return;
+            }
 
-        // 根據索引找到要修改的行
-        if (index2 >= 0 && index2 < rows2.length) {
-            // 將輸入框內容拚結成一行
-            const newRow2 = `${id1},${perno},${slash2},${name},${name2},${name3},${name4},${name5},${sex},${reign},${reign_ch2},${yy},${mm},${dd},${father},${mother},${porder},${porder_ch2},${relationship},${relationship_ch2},${job1},${job1_ch2},${job2},${job2_ch2},${race},${race_ch2},${opium},${opium_ch2},${foot_binding},${foot_binding_ch2},${relevant_ys},${initial_relationship1},${initial_relationship1_ch2},${relevant_person1},${initial_relationship2},${initial_relationship2_ch2},${relevant_person2},${index2}`;
+            let rows = data.split('\n');
+            const header = rows[0].split(',');
 
-            // 覆蓋到原始 CSV 行
-            rows2[index2] = newRow2;
+            const indexColumn = header.indexOf('index');
+            if (indexColumn === -1) {
+                console.error('未找到"index" 的列');
+                return;
+            }
+            const updatedRows = rows.map((row, rowIndex) => {
+                if (rowIndex === 0) {
+                    return row;
+                }
 
-            // 將修改後的內容寫回csv
-            const modifiedData2 = rows2.join('\n')+ '\n';;
-            fs.writeFile(csvFilePath, modifiedData2, 'utf-8', (err) => {
+                const columns = row.split(',');
+                if (columns[indexColumn] === index2) {
+                    console.log(`Found target row with index ${index2}:`, row);
+                    return newRow2
+                }
+                return row;
+            });
+            const updatedCsvData = updatedRows.join('\n');
+
+            // 更新csv
+            fs.writeFile(csvFilePath, updatedCsvData, (err) => {
                 if (err) {
                     console.error('Error writing modified CSV:', err);
                     res.status(500).send({ message: 'Error in modifying CSV' });
                     return;
+                } else {
+                    res.send({ message: 'CSV modified' });
                 }
-                res.send({ message: 'CSV modified' });
             });
-        } else {
-            res.status(400).send({ message: 'Invalid index' });
-        }
+        });
     });
 });
 
 // 監聽指定端口，啟動伺服器
 app.listen(port, () => {
-    console.log(`Server running at http://140.112.158.83:${port}`);
+    console.log(`Server running at http://localhost:${port}`);
 });
 
 // 在應用程序啟動時讀取 CSV 文件以獲取最後一行的索引值
@@ -808,3 +825,352 @@ app.post('/modify-specialForm-csv', (req, res) => {
 });
 
 
+const chokidar = require('chokidar');
+const csv = require('csv-parser');
+
+const filePath = './person.csv'; 
+const filePath3 = './event.csv'; 
+let persondata = [];
+
+
+function readCSVFile() {
+    persondata = [];
+    fs.createReadStream(filePath)
+        .pipe(csv())
+        .on('data', (row) => {
+            persondata.push(row);
+        })
+        .on('end', () => {
+            console.log('CSV file successfully processed');
+        })
+        .on('error', (err) => {
+            console.error('Error reading CSV file:', err);
+        });
+}
+let eventdata = []
+
+function readCSVFile3() {
+    eventdata = [];
+    fs.createReadStream(filePath3)
+        .pipe(csv())
+        .on('data', (row) => {
+            eventdata.push(row);
+        })
+        .on('end', () => {
+            console.log('CSV file successfully processed');
+        })
+        .on('error', (err) => {
+            console.error('Error reading CSV file:', err);
+        });
+}
+
+// Initialize file reading and set up file monitoring
+readCSVFile();
+readCSVFile3();
+const { parse } = require('csv-parse');
+const { stringify } = require('csv-stringify');
+
+const watcher = chokidar.watch(filePath, { persistent: true });
+const watcher2 = chokidar.watch(filePath3, { persistent: true });
+
+
+watcher
+    .on('change', (path) => {
+        console.log(`${path} has been changed. Reloading data...`);
+        readCSVFile();
+        readCSVFile3();
+    })
+    .on('unlink', (path) => {
+        console.log(`${path} has been deleted.`);
+        persondata = [];
+        eventdata = [];
+    });
+watcher2
+    .on('change', (path) => {
+        console.log(`${path} has been changed. Reloading data...`);
+        readCSVFile();
+        readCSVFile3();
+    })
+    .on('unlink', (path) => {
+        console.log(`${path} has been deleted.`);
+        persondata = [];
+        eventdata = [];
+    });
+
+
+
+
+    function compareRows(persondata) {
+        const results = [];
+    
+        for (let i = 0; i < persondata.length; i++) {
+            for (let j = i + 1; j < persondata.length; j++) {
+                let commonCount = 0;
+                const keys = Object.keys(persondata[i]);
+                const validKeys = ['名字', '性別', '父親', '母親', '出生別'];
+                keys.forEach((key) => {
+                    if (validKeys.includes(key) && persondata[i][key] === persondata[j][key]) {
+                        commonCount++;
+                    }
+                });
+                const date1 = `${persondata[i]['年號']}-${persondata[i]['年']}-${persondata[i]['月']}-${persondata[i]['日']}`;
+                const date2 = `${persondata[j]['年號']}-${persondata[j]['年']}-${persondata[j]['月']}-${persondata[j]['日']}`;
+                if (persondata[i]['index'] !== persondata[j]['index'] && date1 === date2) {
+                    commonCount++;
+                }
+    
+                if (commonCount >= 4) {
+                    results.push({
+                        row1: i + 1,
+                        row2: j + 1,
+                        commonFields: commonCount,
+                        rowData1: persondata[i],
+                        rowData2: persondata[j],
+                    });
+                }
+                //}
+            }
+        }
+        results.sort((a, b) => b.commonFields - a.commonFields);
+        return results;
+    }
+    // API Endpoint to get comparison results
+    app.get('/api/compare', (req, res) => {
+        const results = compareRows(persondata);
+        res.json(results);
+    });
+    
+    function EventcompareRows(eventdata) {
+        const results = [];
+    
+        for (let i = 0; i < eventdata.length; i++) {
+            for (let j = i + 1; j < eventdata.length; j++) {
+                // 首先检查名字是否相同
+                //if (eventdata[i].name === eventdata[j].name) {
+                let commonCount = 0;
+                const keys = Object.keys(eventdata[i]);
+    
+                const validKeys = ['人號PID', 'event'];
+                keys.forEach((key) => {
+                    if (validKeys.includes(key) && eventdata[i][key] === eventdata[j][key]) {
+                        commonCount++;
+                    }
+                });
+                const date1 = `${eventdata[i]['年號']}-${eventdata[i]['年']}-${eventdata[i]['月']}-${eventdata[i]['日']}`;
+                const date2 = `${eventdata[j]['年號']}-${eventdata[j]['年']}-${eventdata[j]['月']}-${eventdata[j]['日']}`;
+                if (eventdata[i]['index'] !== eventdata[j]['index'] && date1 === date2) {
+                    commonCount++;
+                }
+    
+                if (commonCount >= 2) {
+                    results.push({
+                        row1: i + 1,
+                        row2: j + 1,
+                        commonFields: commonCount,
+                        rowData1: eventdata[i],
+                        rowData2: eventdata[j],
+                    });
+                }
+                //}
+            }
+        }
+        results.sort((a, b) => b.commonFields - a.commonFields);
+        return results;
+    }
+    
+    app.get('/event/compare', (req, res) => {
+    
+        const results = EventcompareRows(eventdata);
+        res.json(results);
+    });
+    
+    app.post('/api/delete', (req, res) => {
+        const { id } = req.body;
+    
+        if (typeof id !== 'string') {
+            return res.status(400).json({ success: false, message: 'Invalid ID' });
+        }
+    
+        fs.readFile('./person.csv', 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error reading CSV file:', err);
+                return res.status(500).json({ success: false, message: 'Error reading CSV file' });
+            }
+    
+            parse(data, { columns: true, trim: true }, (parseErr, records) => {
+                if (parseErr) {
+                    console.error('Error parsing CSV file:', parseErr);
+                    return res.status(500).json({ success: false, message: 'Error parsing CSV file' });
+                }
+    
+                // Filter out the records that have the specified id
+                const updatedRecords = records.filter(record => record.index !== id);
+    
+                // Write the updated records back to the CSV file
+                stringify(updatedRecords, { header: true }, (stringifyErr, output) => {
+                    if (stringifyErr) {
+                        console.error('Error converting records to CSV:', stringifyErr);
+                        return res.status(500).json({ success: false, message: 'Error converting records to CSV' });
+                    }
+    
+                    fs.writeFile('./person.csv', output, 'utf8', (writeErr) => {
+                        if (writeErr) {
+                            console.error('Error writing CSV file:', writeErr);
+                            return res.status(500).json({ success: false, message: 'Error writing CSV file' });
+                        }
+    
+                        res.json({ success: true });
+                    });
+                });
+            });
+        });
+    });
+    app.post('/api/event/delete', (req, res) => {
+        const { id } = req.body;
+    
+        if (typeof id !== 'string') {
+            return res.status(400).json({ success: false, message: 'Invalid ID' });
+        }
+    
+        fs.readFile('./event.csv', 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error reading CSV file:', err);
+                return res.status(500).json({ success: false, message: 'Error reading CSV file' });
+            }
+    
+            parse(data, { columns: true, trim: true }, (parseErr, records) => {
+                if (parseErr) {
+                    console.error('Error parsing CSV file:', parseErr);
+                    return res.status(500).json({ success: false, message: 'Error parsing CSV file' });
+                }
+    
+                // Filter out the records that have the specified id
+                console.log(id)
+                const updatedRecords = records.filter(record => record.index !== id);
+                // Write the updated records back to the CSV file
+                stringify(updatedRecords, { header: true }, (stringifyErr, output) => {
+                    if (stringifyErr) {
+                        console.error('Error converting records to CSV:', stringifyErr);
+                        return res.status(500).json({ success: false, message: 'Error converting records to CSV' });
+                    }
+    
+                    fs.writeFile('./event.csv', output, 'utf8', (writeErr) => {
+                        if (writeErr) {
+                            console.error('Error writing CSV file:', writeErr);
+                            return res.status(500).json({ success: false, message: 'Error writing CSV file' });
+                        }
+                        res.json({ success: true });
+                    });
+                });
+            });
+        });
+    });
+    app.post('/api/house/delete', (req, res) => {
+        const { id } = req.body;
+    
+        if (typeof id !== 'string') {
+            return res.status(400).json({ success: false, message: 'Invalid ID' });
+        }
+    
+        fs.readFile('./household.csv', 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error reading CSV file:', err);
+                return res.status(500).json({ success: false, message: 'Error reading CSV file' });
+            }
+    
+            parse(data, { columns: true, trim: true }, (parseErr, records) => {
+                if (parseErr) {
+                    console.error('Error parsing CSV file:', parseErr);
+                    return res.status(500).json({ success: false, message: 'Error parsing CSV file' });
+                }
+    
+                // Filter out the records that have the specified id
+                console.log(id)
+                const updatedRecords = records.filter(record => record.index !== id);
+                // Write the updated records back to the CSV file
+                stringify(updatedRecords, { header: true }, (stringifyErr, output) => {
+                    if (stringifyErr) {
+                        console.error('Error converting records to CSV:', stringifyErr);
+                        return res.status(500).json({ success: false, message: 'Error converting records to CSV' });
+                    }
+    
+                    fs.writeFile('./household.csv', output, 'utf8', (writeErr) => {
+                        if (writeErr) {
+                            console.error('Error writing CSV file:', writeErr);
+                            return res.status(500).json({ success: false, message: 'Error writing CSV file' });
+                        }
+                        res.json({ success: true });
+                    });
+                });
+            });
+        });
+    });
+    
+    app.post('/houselayer', (req, res) => {
+        const { id } = req.body;
+        console.log('Received ID:', id);
+    
+        if (typeof id !== 'string' || !id.trim()) {
+            return res.status(400).json({ success: false, message: 'Invalid ID' });
+        }
+    
+        fs.readFile('./household.csv', 'utf8', (err, data) => {
+            if (err) {
+                console.error('Error reading CSV file:', err);
+                return res.status(500).json({ success: false, message: 'Error reading CSV file' });
+            }
+    
+            parse(data, { columns: true, trim: true }, (parseErr, records) => {
+                if (parseErr) {
+                    console.error('Error parsing CSV file:', parseErr);
+                    return res.status(500).json({ success: false, message: 'Error parsing CSV file' });
+                }
+    
+                // Filter out the records that have the specified id
+                // const filteredRecords = records.filter(record => record.index === id);
+                // 假設 `戶號` 是 CSV 文件中的欄位，並且 `戶主` 是標識戶主的欄位
+                const results = [];
+    
+                // 1. 找到符合戶號HID的記錄並新增至results (R1)
+                const householdRecords = records.filter(record => record['戶號HID'] === id);
+                householdRecords.forEach(record => {
+                    record['關聯組'] = 'R1';
+                    record['關係人'] = record['戶主姓名'];
+                    results.push(record);
+                });
+    
+                // 2. 檢查該戶主是否是其他戶的前戶主，如果是，新增至results (R2)
+                householdRecords.forEach(record => {
+                    const householdHeadName = record['戶主姓名'];
+                    const relatedRecordsR2 = records.filter(r => r['前戶主姓名'] === householdHeadName);
+                    relatedRecordsR2.forEach(relatedRecord => {
+                        relatedRecord['關聯組'] = 'R1';
+                        relatedRecord['關係人'] = householdHeadName;
+                        results.push(relatedRecord);
+    
+                        // 3. 檢查R2中的戶主是否是其他戶的前戶主，如果是，新增至results (R3)
+                        const furtherRelatedRecordsR3 = records.filter(r => r['前戶主姓名'] === relatedRecord['戶主姓名']);
+                        furtherRelatedRecordsR3.forEach(furtherRelatedRecord => {
+                            furtherRelatedRecord['關聯組'] = 'R2';
+                            furtherRelatedRecord['關係人'] = relatedRecord['戶主姓名'];
+                            results.push(furtherRelatedRecord);
+    
+                            // 4. 檢查R3中的戶主是否是其他戶的前戶主，如果是，新增至results (R4)
+                            const furtherRelatedRecordsR4 = records.filter(r => r['前戶主姓名'] === furtherRelatedRecord['戶主姓名']);
+                            furtherRelatedRecordsR4.forEach(furtherRelatedRecordR4 => {
+                                furtherRelatedRecordR4['關聯組'] = 'R3';
+                                furtherRelatedRecordR4['關係人'] = furtherRelatedRecord['戶主姓名'];
+                                results.push(furtherRelatedRecordR4);
+                            });
+                        });
+                    });
+                });
+    
+                if (results.length === 0) {
+                    return res.status(404).json({ success: false, message: 'No records found with the given ID' });
+                }
+    
+                res.json(results);
+            });
+        });
+    });

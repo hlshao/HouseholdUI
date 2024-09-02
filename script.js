@@ -1850,6 +1850,7 @@ function searchhousehold() {
                     }
                     tableHtml += "<th>" + data[0][i] + "</th>";
                 }
+                tableHtml += "<th>刪除</th>"; // 新增刪除欄位
                 tableHtml += "</tr>";
                 // 表身
                 for (var j = 0; j < results.length; j++) {
@@ -1862,6 +1863,8 @@ function searchhousehold() {
                         }
                         tableHtml += "<td>" + results[j][i] + "</td>";
                     }
+                    // 刪除按鈕
+                    tableHtml += "<td><button onclick='deleteRow_house("+ JSON.stringify(results[j]) +")'>刪除</button></td>";
                 }
                 tableHtml += "</table>";
                 resultDiv.innerHTML = tableHtml;
@@ -2240,6 +2243,7 @@ function modifyHousehold() {
 function searchmember() {
     // 獲取查詢的戶號
     var id1 = document.getElementById("id1").value;
+    var perno = document.getElementById("perno").value;
   
     // 使用 fetch 加載文件
     fetch('person.csv')
@@ -2248,9 +2252,21 @@ function searchmember() {
             // 讀取csv
             var data = parseCSV2(csvData);
   
-            // 查找名字匹配的行
+            // 查找匹配的行
             var results = data.filter(function(row) {
-                return row[0] === id1; // 戶號
+                // 如果兩者都有，則必須都匹配
+                if (id1 && perno) {
+                    return row[0] === id1 && row[1] === perno;
+                }
+                // 如果只有戶號，則匹配戶號
+                else if (id1) {
+                    return row[0] === id1;
+                }
+                // 如果只有人號，則匹配人號
+                else if (perno) {
+                    return row[1] === perno;
+                }
+                return false; // 如果都沒有提供，返回空
             });
   
             // 顯示結果
@@ -2266,6 +2282,7 @@ function searchmember() {
                     }
                     tableHtml += "<th>" + data[0][i] + "</th>";
                 }
+                tableHtml += "<th>刪除</th>"; // 新增刪除欄位
                 tableHtml += "</tr>";
                 // 表身
                 for (var j = 0; j < results.length; j++) {
@@ -2278,6 +2295,8 @@ function searchmember() {
                         }
                         tableHtml += "<td>" + results[j][i] + "</td>";
                     }
+                    // 刪除按鈕
+                    tableHtml += "<td><button onclick='deleteRow_member("+ JSON.stringify(results[j]) +")'>刪除</button></td>";
                     tableHtml += "</tr>";
                 }
                 tableHtml += "</table>";
@@ -2543,6 +2562,7 @@ function searchevent() {
                     }
                     tableHtml += "<th>" + data[0][i] + "</th>";
                 }
+                tableHtml += "<th>刪除</th>"; // 新增刪除欄位
                 tableHtml += "</tr>";
                 // 表身
                 for (var j = 0; j < results.length; j++) {
@@ -2555,6 +2575,8 @@ function searchevent() {
                         }
                         tableHtml += "<td>" + results[j][i] + "</td>";
                     }
+                    // 刪除按鈕
+                    tableHtml += "<td><button onclick='deleteRow_event("+ JSON.stringify(results[j]) +")'>刪除</button></td>";
                     tableHtml += "</tr>";
                 }
                 tableHtml += "</table>";
@@ -3003,7 +3025,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 確保元素存在，避免 'null' 錯誤
     if (eventDropdown && relationFields && otherhouse && where) {
         eventDropdown.addEventListener('change', function() {
-            if (eventDropdown.value === '102'|| eventDropdown.value === '103' || eventDropdown.value === '104'|| eventDropdown.value === '105'|| eventDropdown.value === '106'|| eventDropdown.value === '201'
+            if (eventDropdown.value === '102'|| eventDropdown.value === '103' || eventDropdown.value === '104'|| eventDropdown.value === '105'|| eventDropdown.value === '106'
             || eventDropdown.value === '204'|| eventDropdown.value === '205'|| eventDropdown.value === '307'|| eventDropdown.value === '310'|| eventDropdown.value === '406'|| eventDropdown.value === '414'
             || eventDropdown.value === '805'|| eventDropdown.value === '806'|| eventDropdown.value === '807'|| eventDropdown.value === '808'|| eventDropdown.value === '809'|| eventDropdown.value === '810'
             || eventDropdown.value === '901'|| eventDropdown.value === '902'|| eventDropdown.value === '906') { //0
@@ -3015,12 +3037,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 relationFields.style.display = 'block';  // 根據需求，這裡可能需要調整顯示還是隱藏
                 clearAndHide(otherhouse);
                 clearAndHide(where);        // 隱藏 where 元素
-            } else if (eventDropdown.value === '101'|| eventDropdown.value === '202'|| eventDropdown.value === '206'|| eventDropdown.value === '207'|| eventDropdown.value === '601'|| eventDropdown.value === '603'
+            } else if (eventDropdown.value === '101'|| eventDropdown.value === '201'|| eventDropdown.value === '601'|| eventDropdown.value === '603'
             || eventDropdown.value === '803'|| eventDropdown.value === '811') { //2
                 clearAndHide(relationFields);
                 clearAndHide(otherhouse);    
                 where.style.display = 'block';            
-            }else if (eventDropdown.value === '308'|| eventDropdown.value === '309'|| eventDropdown.value === '407'|| eventDropdown.value === '413'|| eventDropdown.value === '408'|| eventDropdown.value === '501'
+            }else if (eventDropdown.value === '202'||eventDropdown.value === '206'||eventDropdown.value === '207'||eventDropdown.value === '209'|| eventDropdown.value === '308'|| eventDropdown.value === '309'|| eventDropdown.value === '407'|| eventDropdown.value === '413'|| eventDropdown.value === '408'|| eventDropdown.value === '501'
             || eventDropdown.value === '502'|| eventDropdown.value === '514'|| eventDropdown.value === '505'|| eventDropdown.value === '507'|| eventDropdown.value === '515'|| eventDropdown.value === '516'
             || eventDropdown.value === '510'|| eventDropdown.value === '511'|| eventDropdown.value === '512'|| eventDropdown.value === '513'|| eventDropdown.value === '801'|| eventDropdown.value === '802'
             || eventDropdown.value === '903'|| eventDropdown.value === '904'|| eventDropdown.value === '905') { //6
@@ -3049,3 +3071,259 @@ document.addEventListener('DOMContentLoaded', function() {
         element.style.display = 'none';
     }
 });
+
+//生命歷程
+function searchRelationship() {
+    // 獲取查詢的名字
+    var inputName = document.getElementById("inputName").value;
+  
+    // 使用 fetch 加載文件
+    fetch('person.csv')
+        .then(response => response.text())
+        .then(csvData => {
+            // 讀取csv
+            var data = parseCSV(csvData);
+  
+            // 查找人號匹配的行
+            var result = data.find(function(row) {
+                return row[1] === inputName; // 人號
+            });
+  
+            if (result) {
+                // 獲取姓名
+                var personName = result[3];
+                var personInfo = {
+                    id: personName, 
+                    type: 'person',
+                    pid: result[1], // 人號
+                    name: result[3], // 姓名
+                    reign: result[10], // 年號
+                    yy: result[11], // 年
+                    mm: result[12], // 月
+                    dd: result[13], // 日
+                    father: result[14], // 爸爸
+                    mother: result[15], // 媽媽
+                    porder: result[17], // 出生別
+                    gender: result[8], // 性別
+                };
+                
+                // 使用 fetch 加載 event.csv
+                fetch('event.csv')
+                    .then(response => response.text())
+                    .then(eventCsvData => {
+                        // 讀取csv
+                        var eventData = parseCSV(eventCsvData);
+
+                        // 查找所有與 PID 相關的事件
+                        var matchingEvents = eventData.filter(function(row) {
+                            return row[1] === inputName; // 人號
+                        });
+
+                        if (matchingEvents.length > 0) {
+                            // 初始化 Cytoscape
+                            var elements = [
+                                { data: personInfo }
+                            ];
+
+                            matchingEvents.forEach(function(eventRow) {
+                                var event = eventRow[9]; // 事件
+                                var relationName = eventRow[10]; // 事件關係人姓名
+                                var rela = eventRow[13]; // 與事件本人關係
+                                var no7 = eventRow[7]; // 事件序次
+                                var uniqueEventId = event + '-' + no7; // 生成唯一事件ID
+
+                                elements.push({ data: { id: uniqueEventId  , type: 'event',label: event,relatedno: eventRow[7], relarg: eventRow[3], relayy: eventRow[4],relamm: eventRow[5],reladd: eventRow[6]} });
+                                //elements.push({ data: { id: 'event-' + uniqueEventId , source: uniqueEventId , target: personName, label:"事件" } });
+                                elements.push({ data: { id: 'event-' + uniqueEventId, source: uniqueEventId, target: personName, label: no7 } });
+
+                                if (relationName && relationName.trim() !== "") {
+                                    elements.push({ data: { id: relationName , type: 'relation'} });
+                                    elements.push({ data: { id: 'relation-' + relationName, source: relationName, target: uniqueEventId, label: rela } });
+                                }
+                            });
+
+                            initializeCytoscape(elements, personInfo);
+                        } else {
+                            console.error("找不到相符的事件資料。");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('載入 event.csv 時發生錯誤:', error);
+                    });
+
+            } else {
+                console.error("找不到相符的資料。");
+            }
+        })
+        .catch(error => {
+            console.error('Error loading CSV file:', error);
+        });
+  }
+  
+  // 讀取csv
+  function parseCSV(csvData) {
+    var rows = csvData.split('\n');
+    var result = [];
+    for (var i = 0; i < rows.length; i++) {
+        var columns = rows[i].split(',');
+        result.push(columns);
+    }
+    return result;
+  }
+  
+  // 修改 Cytoscape 初始化部分
+  function initializeCytoscape(elements, personInfo) {
+    var cy = window.cy = cytoscape({
+      container: document.getElementById('cy'),
+      
+      elements: elements,
+      style: [
+          {
+              selector: 'node',
+              style: {
+                  'label': 'data(id)',
+                  'text-valign': 'center',
+              }
+          },
+          {
+              selector: 'edge',
+              style: {
+                  'label': 'data(label)',
+                  'curve-style': 'bezier',
+                  'target-arrow-shape': 'triangle',
+                  'width': 2,
+                  'line-color': '#ccc',
+                  'font-size': '10px' // 將字體大小設置為10像素
+              }
+          },
+          {
+            selector: 'node[type="person"]',
+            style: {
+                'background-color': '#edafb8',
+                'label': 'data(id)',
+                'text-valign': 'center'
+            }
+          },
+          {
+            selector: 'node[type="event"]', // 事件節點
+            style: {
+                'label': 'data(label)', // 使用 label 作為顯示文字
+                'background-color': '#95bdb9', // 設置事件節點為藍色
+            }
+          },
+          {
+            selector: 'node[type="relation"]',// 關係人節點
+            style: {
+                'background-color': '#f2cc8f', // 設置關係人節點為黃色
+            }
+          }
+          
+      ],
+      layout: {
+          name: 'cose',
+      }
+    });
+    // Tooltip 顯示邏輯
+    var tooltip = document.getElementById('tooltip');
+
+    cy.on('mouseover', 'node', function(event) {
+        var node = event.target;
+        var nodeData = node.data();
+        
+        if (nodeData.type === 'person') {
+            // 顯示人員信息
+            tooltip.innerHTML = `人號: ${nodeData.pid}<br>姓名: ${nodeData.name}<br>生日: ${nodeData.reign}${nodeData.yy}年${nodeData.mm}月${nodeData.dd}日<br>性別: ${nodeData.gender}<br>父親: ${nodeData.father}<br>母親: ${nodeData.mother}<br>出生別: ${nodeData.porder}`;
+        }else if (nodeData.type === 'event') {
+            // 顯示事件信息
+            tooltip.innerHTML = `事件序次: ${nodeData.relatedno}<br>事件日期: ${nodeData.relarg}${nodeData.relayy}年${nodeData.relamm}月${nodeData.reladd}日`;
+        } else {
+            // 顯示節點 ID
+            tooltip.innerHTML = node.id();
+        }
+
+        tooltip.style.display = 'block';
+        var position = node.renderedPosition();
+        tooltip.style.left = (position.x + 10) + 'px'; // 在節點右邊顯示
+        tooltip.style.top = (position.y + 10) + 'px'; // 在節點下方顯示
+    });
+
+    cy.on('mouseout', 'node', function() {
+        tooltip.style.display = 'none';
+    });
+  };
+
+  // 刪除戶冊
+  function deleteRow_house(id) {
+    var ID3 = id[48];
+    fetch('/api/house/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: ID3 // 將鍵名改為 id
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('刪除成功');
+            } else {
+                alert('Error deleting row: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting row:', error);
+        });
+}
+
+
+  // 刪除成員
+  function deleteRow_member(id) {
+    var ID2 = id[37];
+    fetch('/api/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: ID2 // 將鍵名改為 id
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('刪除成功');
+            } else {
+                alert('Error deleting row: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting row:', error);
+        });
+}
+
+// 刪除事件
+function deleteRow_event(id) {
+    var ID = id[39];
+    fetch('/api/event/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: ID // 將鍵名改為 id
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('刪除成功');
+            } else {
+                alert('Error deleting row: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting row:', error);
+        });
+}

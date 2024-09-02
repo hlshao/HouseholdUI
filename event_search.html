@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>事件</title>
+    <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="css/responsive.css" rel="stylesheet" />
+    <style>
+        body{
+            background-color: #b7b7a4; /* 背景 */
+        }
+        .household, .member, .event ,.special{
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 20px; /* 圓角 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px; 
+            box-sizing: border-box; 
+            margin-bottom: 20px; /* 底部距離 */
+            font-size: 25px; /* 調整文字大小 */
+            color:#6b705c; /* 文字顏色 */
+
+        }
+
+        input, select {
+            border-radius: 5px; /* 圓角 */
+            margin-bottom: 10px; /* 這只是為了增加一些垂直間距，可根據需要調整 */
+            width: 200px; /* 調整寬度，可以使用百分比或像素值 */
+            height: 30px; /* 調整高度，可以使用百分比或像素值 */
+            font-size: 25px; /* 調整文字大小 */
+            border: 1px solid #000; /* 設定框線的顏色和寬度 */
+        }
+
+        h2 { /*標題底線*/
+            border-bottom: 2px solid #a2a2a2; /* 設定底線的寬度、類型和顏色 */
+            width: 20%; /* 調整底線寬度，可以根據需要調整百分比 */
+            padding-bottom: 5px; /* 可選：增加底線與文字之間的空間 */
+            color:#6b705c; /* 文字顏色 */
+        }
+
+        /*單選框*/
+        input[type="radio"] {
+            width: 20px; /* 調整寬度 */
+            height: 20px; /* 調整高度 */
+        }
+
+        /* 按鈕 */
+        button{
+            border: 2px solid #6b705c; /* 邊框 */
+            background-color:#fff; /* 白色背景 */
+            color:#6b705c; /* 文字顏色 */
+            border-radius: 48px; /* 圓角 */
+            cursor:pointer;
+            width: 120px; /* 調整寬度 */
+            height: 40px; /* 調整高度 */
+            font-size: 20px; /* 調整文字大小 */
+        }
+            
+        button:hover{  /* 按鈕特效 */
+            color:#fff;
+            background-color:#6b705c;
+            border:2px #6b705c solid;
+            
+        }
+
+        table {
+            border-collapse: separate; /* 使用 separate 以确保圆角生效 */
+            border-spacing: 0; /* 消除单元格间的空隙 */
+            width: 100%;
+        }
+
+        /* 给表格单元格添加圆角 */
+        table th,
+        table td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+
+        table th:first-child {
+            border-top-left-radius: 10px; /* 左上角圆角 */
+        }
+
+        table th:last-child {
+            border-top-right-radius: 10px; /* 右上角圆角 */
+        }
+
+        table tr:last-child td:first-child {
+            border-bottom-left-radius: 10px; /* 左下角圆角 */
+        }
+
+        table tr:last-child td:last-child {
+            border-bottom-right-radius: 10px; /* 右下角圆角 */
+        }
+
+        /* 奇數行背景顏色 */
+        table tr:nth-child(odd) {
+            background-color: #dad7cd;
+        }
+
+        #fourth,
+        #fourth_all,
+        #fourth_event,
+        #fourth_all_event {
+            width: 300px; /* 調整寬度以適應您的需求 */
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header_section">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+            <a class="navbar-brand" href="index.html">
+                <span>
+                民族所
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                <ul class="navbar-nav  ">
+                    <li class="nav-item active">
+                    <a class="nav-link" href="index.html">首頁 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="event.html">
+                        <span>新增事件</span>
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="event_search.html"> 查詢與修改事件</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="event_compare.html"> 事件比對</a>
+                    </li>
+                </ul>
+                </div>
+            </div>
+            </nav>
+        </div>
+    </header>
+    <div class="event">
+        <h2>事件</h2>
+        <form id="eventForm">
+            <label for="nameInput">所屬戶號:</label>
+            <input type="number" id="id2">
+            <label for="nameInput">所屬人號:</label>
+            <input type="number" id="perno2">
+            <div id="hid" class="hidden">
+                <label for="nameInput">事件序次:</label>
+                <input type="number" id="no3">
+                <br>
+                <label for="nameInput">事件日期:</label>
+                <select id="rg3">
+                </select>
+                <input type="number" id="yy3">年
+                <input type="number" id="mm3">月
+                <input type="number" id="dd3">日
+                <br>
+                <label for="nameInput">事件類型：</label>
+                <input type="text" id="eventsearch" oninput="filterOptions('event', 'eventsearch')" placeholder="搜尋事件">
+                <select id="event">
+                </select>
+                <br>
+                <div id="relationFields">
+                    事件關係人姓名<input type="text" id="relevant_person3">
+                    <label for="nameInput">本戶或他戶：</label>
+                    <input type="radio" name="type2" value="1" id="self">本戶
+                    <input type="radio" name="type2" value="2" id="other">他戶
+                    <br>
+                    與事件本人的關係
+                    <input type="text" id="relationsearch" oninput="filterOptions('relationInput', 'relationsearch')" placeholder="搜尋關係">
+                    <select id="relationInput">
+                    </select>
+                    <br>
+                    與本戶或他戶戶主的關係
+                    <input type="text" id="relationshipsearch2" oninput="filterOptions('relationshipInput2', 'relationshipsearch2')" placeholder="搜尋續柄">
+                    <select id="relationshipInput2">
+                    </select>
+                </div>
+                <div id="otherhouse">
+                    <label for="nameInput">他戶戶主姓名:</label>
+                    <input type="text" id="name2">
+                </div>
+                <div id="where">
+                    <label for="nameInput">他戶住所:</label>
+                    年號
+                    <select id="rg_event">
+                    </select>
+                    <select id="first_event">
+                    </select>
+                    <select id="first_all_event">
+                    </select>
+                    <select id="second_event">
+                    </select>
+                    <select id="second_all_event">
+                    </select>
+                    <select id="third_event">
+                    </select>
+                    <select id="third_all_event">
+                    </select>
+                    <select id="fourth_event">
+                    </select>
+                    <select id="fourth_all_event">
+                    </select>
+                    <input type="number" id="chome_event">丁目
+                    <input type="number" id="address_event">番地
+                    <input type="number" id="of1_event">之
+                    <input type="number" id="of2_event">
+                </div>
+                <!--<button type="submit">新增</button>
+                <br>
+                index-->
+                <input type="number" id="indexInput3" readonly style="display: none;">
+                <button type="button" onclick="modifyHousehold3()">修改</button>
+            </div>
+        </form>
+        <button onclick="searchevent()">查詢</button>
+        <div id="result3"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

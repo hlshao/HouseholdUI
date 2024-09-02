@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta charset="UTF-8">
+    <title>戶冊</title>
+    <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="css/responsive.css" rel="stylesheet" />
+    <style>
+        body{
+            background-color: #b7b7a4; /* 背景 */
+        }
+
+        .household, .member, .event ,.special{
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 20px; /* 圓角 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px; 
+            box-sizing: border-box; 
+            margin-bottom: 20px; /* 底部距離 */
+            font-size: 25px; /* 調整文字大小 */
+            color:#6b705c; /* 文字顏色 */
+
+        }
+
+        input, select {
+            border-radius: 5px; /* 圓角 */
+            margin-bottom: 10px; /* 這只是為了增加一些垂直間距，可根據需要調整 */
+            width: 200px; /* 調整寬度，可以使用百分比或像素值 */
+            height: 30px; /* 調整高度，可以使用百分比或像素值 */
+            font-size: 25px; /* 調整文字大小 */
+            border: 1px solid #000; /* 設定框線的顏色和寬度 */
+        }
+
+        h2 { /*標題底線*/
+            border-bottom: 2px solid #a2a2a2; /* 設定底線的寬度、類型和顏色 */
+            width: 20%; /* 調整底線寬度，可以根據需要調整百分比 */
+            padding-bottom: 5px; /* 可選：增加底線與文字之間的空間 */
+            color:#6b705c; /* 文字顏色 */
+        }
+        
+
+        /*單選框*/
+        input[type="radio"] {
+            width: 20px; /* 調整寬度 */
+            height: 20px; /* 調整高度 */
+        }
+
+        /*勾選框*/
+        input[type="checkbox"] {
+            width: 20px; /* 調整寬度 */
+            height: 20px; /* 調整高度 */
+        }
+
+        /* 按鈕 */
+        button{
+            border: 2px solid #6b705c; /* 邊框 */
+            background-color:#fff; /* 白色背景 */
+            color:#6b705c; /* 文字顏色 */
+            border-radius: 48px; /* 圓角 */
+            cursor:pointer;
+            width: 120px; /* 調整寬度 */
+            height: 40px; /* 調整高度 */
+            font-size: 20px; /* 調整文字大小 */
+        }
+            
+        button:hover{  /* 按鈕特效 */
+            color:#fff;
+            background-color:#6b705c;
+            border:2px #6b705c solid;
+            
+        }
+
+        /* 奇數行背景顏色 */
+        table tr:nth-child(odd) {
+            background-color: #dad7cd;
+        }
+
+        #fourth,
+        #fourth_all,
+        #fourth_event,
+        #fourth_all_event {
+            width: 300px; /* 調整寬度以適應您的需求 */
+        }
+
+        .underlined-label {
+            position: relative;
+            padding-bottom: 3px; /* 底線與文字之間的距離 */
+            display: inline-block;
+            font-size: 28px;
+        }
+
+        .underlined-label::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 200px; /* 固定線的長度 */
+            border-bottom: 3px dotted;
+        }
+    </style>
+</head>
+<body>
+    <header class="header_section">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+            <a class="navbar-brand" href="index.html">
+                <span>
+                民族所
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                <ul class="navbar-nav  ">
+                    <li class="nav-item active">
+                    <a class="nav-link" href="index.html">首頁 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="house.html">
+                        <span>新增戶冊</span>
+                    </a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="house_search.html"> 查詢與修改戶冊</a>
+                    </li>
+                </ul>
+                </div>
+            </div>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="household">
+        <h2>戶冊</h2>
+        <form id="householdForm">
+            <label for="nameInput">輸入戶號：</label>
+            <input type="number" id="id">
+            <br>
+            <label for="nameInput">是否有斜線：</label>
+            <input type="radio" name="slash" value="1" id="yes">是
+            <input type="radio" name="slash" value="0" id="no">否
+            <br>
+            <label for="nameInput">戶冊別：</label>
+            <input type="radio" name="type" value="1" id="origin">本冊
+            <input type="radio" name="type" value="2" id="remove">除冊
+            <input type="radio" name="type" value="3" id="stay">寄留戶
+            <br>
+            <label for="nameInput" class="underlined-label">現住所/本籍</label>
+            <br>
+            <label for="nameInput">地址</label>
+            年號
+            <select id="rg">
+            </select>
+            <select id="first">
+            </select>
+            <select id="first_all">
+            </select>
+            <select id="second">
+            </select>
+            <select id="second_all">
+            </select>
+            <select id="third">
+            </select>
+            <select id="third_all">
+            </select>
+            <select id="fourth">
+            </select>
+            <select id="fourth_all">
+            </select>
+            <input type="number" id="chome">丁目
+            <input type="number" id="address">番地
+            <input type="number" id="of1">之
+            <input type="number" id="of2">
+            <label for="nameInput">是否有修改：</label>
+            <input type="radio" name="revise" value="1" id="yes">是
+            <input type="radio" name="revise" value="0" id="no">否
+            <br>
+            <!--本居id<input type="number" id="origin_id">-->
+            <label for="nameInput">本居又ハ本國住所:</label>
+            <input type="text" id="origin_address">
+            <input type="checkbox" name="o_add" value="1" id="o_add_no" onchange="this.value=this.checked ? 1 : 0;">無此欄位
+            <br>
+            <label for="nameInput">族稱:</label>
+            <input type="text" id="clan_name">
+            <input type="checkbox" name="c_name" value="1" id="c_name_no" onchange="this.value=this.checked ? 1 : 0;">無此欄位
+            <br>
+            <label for="nameInput" class="underlined-label">戶主トナリタル年月日事由</label>
+            <br>
+            <label for="nameInput">開戶日期:</label>
+            年號
+            <select id="rg2">
+            </select>
+            <input type="number" id="yy2">年
+            <input type="number" id="mm2">月
+            <input type="number" id="dd2">日
+            <br>
+            <label for="nameInput">開戶原由:</label>
+            <select id="reason">
+            </select>
+            <label for="nameInput">前戶主退由：</label>
+            <select id="ex_reason">
+            </select>
+            <br>
+            <label for="nameInput" class="underlined-label">戶主</label>
+            <br>
+            姓名<input type="text" id="o_name">
+            <!--出生日期-->
+            <input type="number" id="o_yy2" style="display: none;"><!--年-->
+            <input type="number" id="o_mm2" style="display: none;"><!--月-->
+            <input type="number" id="o_dd2" style="display: none;"><!--日-->
+            <br>
+            <label for="nameInput" class="underlined-label">前戶主トノ續柄榮稱職業</label>
+            <br>
+            前戶主姓名<input type="text" id="ex_name">
+            與前戶主續柄:
+            <input type="text" id="ex_relationshipsearch" oninput="filterOptions('ex_relationshipInput', 'ex_relationshipsearch')" placeholder="搜尋關係">
+            <select id="ex_relationshipInput">
+            </select>
+            <label for="nameInput">戶主職業：</label>
+            <input type="text" id="job3search" oninput="filterOptions('job3', 'job3search')" placeholder="搜尋職業">
+            <select id="job3">
+            </select>
+            <button type="submit">新增</button>
+            <!--
+            <br>
+            index
+            <input type="number" id="indexInput" readonly>
+            <button type="button" onclick="modifyHousehold()">修改</button>-->
+        </form>
+        <!--<button onclick="searchhousehold()">查詢</button>
+        <div id="result"></div>-->
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

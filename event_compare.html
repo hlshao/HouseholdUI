@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <meta charset="UTF-8">
+    <title>事件</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet" />
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="css/responsive.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #b7b7a4;
+            /* 背景 */
+        }
+        
+        .household,
+        .member,
+        .event,
+        .special {
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 20px;
+            /* 圓角 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            /* 底部距離 */
+            font-size: 25px;
+            /* 調整文字大小 */
+            color: #6b705c;
+            /* 文字顏色 */
+        }
+        
+        input,
+        select {
+            border-radius: 5px;
+            /* 圓角 */
+            margin-bottom: 10px;
+            /* 這只是為了增加一些垂直間距，可根據需要調整 */
+            width: 200px;
+            /* 調整寬度，可以使用百分比或像素值 */
+            height: 30px;
+            /* 調整高度，可以使用百分比或像素值 */
+            font-size: 25px;
+            /* 調整文字大小 */
+            border: 1px solid #000;
+            /* 設定框線的顏色和寬度 */
+        }
+        
+        h2 {
+            /*標題底線*/
+            border-bottom: 2px solid #a2a2a2;
+            /* 設定底線的寬度、類型和顏色 */
+            width: 20%;
+            /* 調整底線寬度，可以根據需要調整百分比 */
+            padding-bottom: 5px;
+            /* 可選：增加底線與文字之間的空間 */
+            color: #6b705c;
+            /* 文字顏色 */
+        }
+        /*單選框*/
+        
+        input[type="radio"] {
+            width: 20px;
+            /* 調整寬度 */
+            height: 20px;
+            /* 調整高度 */
+        }
+        /* 按鈕 */
+        
+        button {
+            border: 2px solid #6b705c;
+            /* 邊框 */
+            background-color: #fff;
+            /* 白色背景 */
+            color: #6b705c;
+            /* 文字顏色 */
+            border-radius: 48px;
+            /* 圓角 */
+            cursor: pointer;
+            width: 120px;
+            /* 調整寬度 */
+            height: 40px;
+            /* 調整高度 */
+            font-size: 20px;
+            /* 調整文字大小 */
+        }
+        
+        button:hover {
+            /* 按鈕特效 */
+            color: #fff;
+            background-color: #6b705c;
+            border: 2px #6b705c solid;
+        }
+        /* 奇數行背景顏色 */
+        
+        table tr:nth-child(odd) {
+            background-color: #dad7cd;
+        }
+        
+        #fourth,
+        #fourth_all,
+        #fourth_event,
+        #fourth_all_event {
+            width: 300px;
+            /* 調整寬度以適應您的需求 */
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        table,
+        th,
+        td {
+            border: 1px solid #ccc;
+        }
+        
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header_section">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+                <a class="navbar-brand" href="index.html">
+                    <span>
+                民族所
+                </span>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                        <ul class="navbar-nav  ">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="index.html">首頁 <span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="member_compare.html">
+                                    <span>成員比對</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="event_compare.html"> 事件比對</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="event.html">
+                                   新增事件
+                                </a>
+                                </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="event_search.html"> 事件查詢</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="member">
+
+        <h1>事件比較</h1>
+        <div id="results"></div>
+    </div>
+    <script>
+    const fields = ['人號PID', 'index', '事件', '事件關係人姓名',   '戶號HID'];
+    const fields_list = ['人號PID','index', '事件', '關係人',   '戶號HID'];
+    function fetchComparisonResults() {
+            fetch('/event/compare')
+                .then(response => response.json())
+                .then(results => {
+                        const resultsDiv = document.getElementById('results');
+                        console.log(results)
+                        if (results.length === 0) {
+                            resultsDiv.innerHTML = '<p class="no-results">No rows with 2 or more common fields found.</p>';
+                        } else {
+                            let tableHTML = `
+                            <table>
+                                <thead>
+                                    <tr>
+
+                                        <th>相似程度</th>
+                                        ${fields_list.map(field => `<th>${field}</th>`).join('')}
+                                        <th>日期</th>
+                                        <th>該列刪除</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+        
+                        results.forEach(result => {
+                            // Calculate common fields and their count
+                       
+        
+                            const commonCount = (result.commonFields/3).toFixed(2);
+
+                            // Generate table rows for each comparison
+                            tableHTML += `
+                                <tr>
+                                    <td>${commonCount}</td>
+                                    ${fields.map(field => `<td>${result.rowData1[field] || '無資料'}</td>`).join('')}
+                                    <td>${result.rowData1['年號'] || '無'} ${result.rowData1['年'] || '無'} 年 ${result.rowData1['月'] || '無'} 月${result.rowData1['日'] || '無'} 日</td>
+                                    <td><button onclick="deleteRow('${result.rowData1.index}')">Delete</button></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    ${fields.map(field => `<td>${result.rowData2[field] || '無資料'}</td>`).join('')}
+                                    <td>${result.rowData2['年號'] || '無'} ${result.rowData2['年'] || '無'} 年 ${result.rowData2['月'] || '無'} 月${result.rowData2['日'] || '無'} 日</td>
+                                    <td><button onclick="deleteRow('${result.rowData2.index}')">Delete</button></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="${fields.length + 3}"></td> <!-- Empty row for spacing -->
+                                </tr>
+                            `;
+                        });
+        
+                        tableHTML += `
+                                </tbody>
+                            </table>
+                        `;
+        
+                        resultsDiv.innerHTML = tableHTML;
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching comparison results:', error);
+                });
+        }
+        // Function to handle row deletion
+        function deleteRow(id) {
+            fetch('/api/event/delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Row deleted successfully');
+                        fetchComparisonResults(); // Refresh the results
+                    } else {
+                        alert('Error deleting row: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting row:', error);
+                });
+        }
+
+
+        // Call the function on page load
+        window.onload = fetchComparisonResults;
+    </script>
+
+
+
+</body>
+
+</html>

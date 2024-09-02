@@ -1,4 +1,4 @@
-### version 2.0 (2024/9/2)
+## Version 2.0 (2024/9/2)
 
 # HouseholdUI and Taiwan Household Registration Database Project
 - Project Name: Household Registration User Interface Ver.2.0
@@ -56,13 +56,13 @@ To effectively use the Taiwan Household Registration Database Project's input in
 ### Citation Formats
 
 #### APA or IEEE Reference List Format
-Wang, Weihsin, Chih-Chuan Fan, Shu-Li Huang, Hsuan-Lei Shao(Corr. Author), (2024) Household Registration User Interface (Version 2.0) [Source code]. https://github.com/hlshao/HouseholdUI
+Wang, Weihsin, Chih-Chuan Fan, Shu-Li Huang, Hsuan-Lei Shao(Corr. Author), (2024) Household Registration User Interface (Version 2.0) [Source code]. https://github.com/hlshao/HouseholdUI  
 _Historical version: Wang, Weihsin, Shu-Li Huang, Hsuan-Lei Shao, (2024) Household Registration User Interface (Version 1.1) [Source code]. https://github.com/hlshao/HouseholdUI_
 
 #### ACM References Format
-Wang, Weihsin, Chih-Chuan Fan, Shu-Li Huang, Hsuan-Lei Shao(Corr. Author). 2024. Household Registration User Interface, Version 2.0. Lab. of Computational China Studies. [Source code]. https://github.com/hlshao/HouseholdUI
+Wang, Weihsin, Chih-Chuan Fan, Shu-Li Huang, Hsuan-Lei Shao(Corr. Author). 2024. Household Registration User Interface, Version 2.0. Lab. of Computational China Studies. [Source code]. https://github.com/hlshao/HouseholdUI  
 _Historical version: Wang, Weihsin, Shu-Li Huang, Hsuan-Lei Shao. 2024. Household Registration User Interface, Version 1.1. Lab. of Computational China Studies. [Source code]. https://github.com/hlshao/HouseholdUI_
 
 #### CSE Bibliography Format
-Wang W-H, Fan C-C, Huang S-L, Shao H-L(Corr. Author).2024. Household Registration User Interface (Version 2.0) [Source code]. Available from: https://github.com/hlshao/HouseholdUI
+Wang W-H, Fan C-C, Huang S-L, Shao H-L(Corr. Author).2024. Household Registration User Interface (Version 2.0) [Source code]. Available from: https://github.com/hlshao/HouseholdUI  
 _Historical version: Wang W-H, Huang S-L, Shao H-L.2024. Household Registration User Interface (Version 1.1) [Source code]. Available from: https://github.com/hlshao/HouseholdUI_

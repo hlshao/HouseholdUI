@@ -3327,3 +3327,4 @@ function deleteRow_event(id) {
             console.error('Error deleting row:', error);
         });
 }
+});

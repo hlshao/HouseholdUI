@@ -3082,7 +3082,7 @@ function searchRelationship() {
         .then(response => response.text())
         .then(csvData => {
             // 讀取csv
-            var data = parseCSV(csvData);
+            var data = parseCSV_live(csvData);
   
             // 查找人號匹配的行
             var result = data.find(function(row) {
@@ -3161,7 +3161,7 @@ function searchRelationship() {
   }
   
   // 讀取csv
-  function parseCSV(csvData) {
+  function parseCSV_live(csvData) {
     var rows = csvData.split('\n');
     var result = [];
     for (var i = 0; i < rows.length; i++) {

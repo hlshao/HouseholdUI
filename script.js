@@ -3112,7 +3112,7 @@ function searchRelationship() {
                     .then(response => response.text())
                     .then(eventCsvData => {
                         // 讀取csv
-                        var eventData = parseCSV(eventCsvData);
+                        var eventData = parseCSV_live(eventCsvData);
 
                         // 查找所有與 PID 相關的事件
                         var matchingEvents = eventData.filter(function(row) {

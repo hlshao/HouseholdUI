@@ -19,19 +19,20 @@ To effectively use the Taiwan Household Registration Database Project's input in
 
 ### Step 1: Download and Extract
 - Download the interface package.
-- Extract the files to a folder. The default folder name should be `housePlanInput_1`.
+- Extract the files to a folder. The default folder name should be `HouseholdUI-2.0`.
 
 ### Step 2: Install Node.js
 - Install Node.js from [Node.js official website](https://nodejs.org/en).
 - Ensure that Node.js is properly installed on your system. You can verify the installation by running `node -v` in your command prompt or terminal, which should display the version of Node.js installed.
 
 ### Step 3: Launch the Interface
-- Locate and double-click on the `use.bat` file in the `housePlanInput_1` folder.
+- (WINDOS) Locate and double-click on the `use.bat` file in the `HouseholdUI-2.0` folder.
+- (IOS) Locate and double-click on the `use.sh` file in the `HouseholdUI-2.0` folder.
 - This action will automatically open your default web browser. For optimal performance, it is recommended to use Google Chrome.
 
 ### Step 4: Data Entry
 - Once the interface is open in your browser, you can start entering data according to the provided fields.
-- After entering the data and saving it, the interface will generate four different CSV files in the `housePlanInput_1` folder, corresponding to different data categories: `household`, `person`, `event`, and `special`.
+- After entering the data and saving it, the interface will generate four different CSV files in the `HouseholdUI-2.0` folder, corresponding to different data categories: `household`, `person`, `event`, and `special`.
 
 ### Step 5: Data Compilation and Analysis
 - The generated CSV files (`household.csv`, `person.csv`, `event.csv`, and `special.csv`) can now be used for further compilation, merging, and analysis as per your research requirements.

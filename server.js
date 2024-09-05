@@ -237,7 +237,49 @@ app.post('/modify-householdForm-csv', (req, res) => {
             return;
         }
 
-        // 讀取 CSV 文件的内容
+        const newRow1 = `${id},${slash},${type},${rg},${rg_ch2},${first},${first_ch2},${first_all_ch1},${first_all_ch2},${second},${second_ch2},${second_all_ch1},${second_all_ch2},${third},${third_ch2},${third_all_ch1},${third_all_ch2},${fourth},${fourth_ch2},${fourth_all_ch1},${fourth_all_ch2},${chome},${address},${of1},${of2},${revise},${origin_address},${o_add_no_checkboxValue},${clan_name},${c_name_no_checkboxValue},${rg2},${rg2_ch2},${yy2},${mm2},${dd2},${reason},${reason_ch2},${ex_reason},${ex_reason_ch2},${o_name},${o_yy2},${o_mm2},${o_dd2},${ex_name},${ex_relationship},${ex_relationship_ch2},${job3},${job3_ch2},${index}`;
+        console.log(newRow1)
+        fs.readFile(csvFilePath2, 'utf-8', (err, data) => {
+            if (err) {
+                console.error('文件錯誤:', err);
+                return;
+            }
+
+            let rows1 = data.split('\n');
+            const header1 = rows1[0].split(',');
+
+            const indexColumn1 = header1.indexOf('index');
+            if (indexColumn1 === -1) {
+                console.error('未找到"index" 的列');
+                return;
+            }
+            const updatedRows1 = rows1.map((row, rowIndex) => {
+                if (rowIndex === 0) {
+                    return row;
+                }
+
+                const columns1 = row.split(',');
+                if (columns1[indexColumn1] === index) {
+                    console.log(`Found target row with index ${index}:`, row);
+                    return newRow1
+                }
+                return row;
+            });
+            const updatedCsvData1 = updatedRows1.join('\n');
+
+            // 更新csv
+            fs.writeFile(csvFilePath2, updatedCsvData1, (err) => {
+                if (err) {
+                    console.error('Error writing modified CSV:', err);
+                    res.status(500).send({ message: 'Error in modifying CSV' });
+                    return;
+                } else {
+                    res.send({ message: 'CSV modified' });
+                }
+            });
+        });
+
+        /* // 讀取 CSV 文件的内容
         let rows = data.trim().split('\n');
         // 將內容按行拆分
         if (index >= 0 && index < rows.length) {
@@ -258,7 +300,7 @@ app.post('/modify-householdForm-csv', (req, res) => {
             });
         } else {
             res.status(400).send({ message: 'Invalid index' });
-        }
+        } */
     });
 });
 
@@ -420,15 +462,15 @@ app.post('/modify-generate-csv', (req, res) => {
 
     // 下拉選單中文
     const reign_ch2 = reign_ch.trim() ? reign_ch.split(' ')[1] : '';
-    const porder_ch2=porder_ch.trim() ? porder_ch.split(' ')[1] : '';
-    const relationship_ch2=relationship_ch.trim() ? relationship_ch.split(' ')[1] : '';
-    const job1_ch2=job1_ch.trim() ? job1_ch.split(' ')[1] : '';
-    const job2_ch2=job2_ch.trim() ? job2_ch.split(' ')[1] : '';
-    const race_ch2=race_ch.trim() ? race_ch.split(' ')[1] : '';
-    const opium_ch2=opium_ch.trim() ? opium_ch.split(' ')[1] : '';
-    const foot_binding_ch2=foot_binding_ch.trim() ? foot_binding_ch.split(' ')[1] : '';
-    const initial_relationship1_ch2=initial_relationship1_ch.trim() ? initial_relationship1_ch.split(' ')[1] : '';
-    const initial_relationship2_ch2=initial_relationship2_ch.trim() ? initial_relationship2_ch.split(' ')[1] : '';
+    const porder_ch2 = porder_ch.trim() ? porder_ch.split(' ')[1] : '';
+    const relationship_ch2 = relationship_ch.trim() ? relationship_ch.split(' ')[1] : '';
+    const job1_ch2 = job1_ch.trim() ? job1_ch.split(' ')[1] : '';
+    const job2_ch2 = job2_ch.trim() ? job2_ch.split(' ')[1] : '';
+    const race_ch2 = race_ch.trim() ? race_ch.split(' ')[1] : '';
+    const opium_ch2 = opium_ch.trim() ? opium_ch.split(' ')[1] : '';
+    const foot_binding_ch2 = foot_binding_ch.trim() ? foot_binding_ch.split(' ')[1] : '';
+    const initial_relationship1_ch2 = initial_relationship1_ch.trim() ? initial_relationship1_ch.split(' ')[1] : '';
+    const initial_relationship2_ch2 = initial_relationship2_ch.trim() ? initial_relationship2_ch.split(' ')[1] : '';
 
     // 讀取 CSV 文件的内容
     fs.readFile(csvFilePath, 'utf-8', (err, data) => {
@@ -484,7 +526,7 @@ app.post('/modify-generate-csv', (req, res) => {
 
 // 監聽指定端口，啟動伺服器
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Server running at http://140.112.158.83:${port}`); //140.112.158.83:
 });
 
 // 在應用程序啟動時讀取 CSV 文件以獲取最後一行的索引值
@@ -688,29 +730,58 @@ app.post('/modify-eventForm-csv', (req, res) => {
             return;
         }
 
-        // 將內容按行拆分
-        let rows3 = data.trim().split('\n');
-        // 根據索引找到要修改的行
-        if (index3 >= 0 && index3 < rows3.length) {
-            // 將輸入框內容拚結成一行
-            const newRow3 = `${id2},${perno2},${rg3},${rg3_ch2},${yy3},${mm3},${dd3},${no3},${event},${event_ch2},${relevant_person3},${type2},${relationInput},${relationInput_ch2},${name2},${relationshipInput2},${relationshipInput2_ch2},${rg_event},${rg_event_ch2},${first_event},${first_event_ch2},${first_all_event_ch1},${first_all_event_ch2},${second_event},${second_event_ch2},${second_all_event_ch1},${second_all_event_ch2},${third_event},${third_event_ch2},${third_all_event_ch1},${third_all_event_ch2},${fourth_event},${fourth_event_ch2},${fourth_all_event_ch1},${fourth_all_event_ch2},${chome_event},${address_event},${of1_event},${of2_event},${index3}`;
+        // 構建新的資料列，將變數以逗號分隔組合成一個新的CSV資料行
+        const newRow3 = `${id2},${perno2},${rg3},${rg3_ch2},${yy3},${mm3},${dd3},${no3},${event},${event_ch2},${relevant_person3},${type2},${relationInput},${relationInput_ch2},${name2},${relationshipInput2},${relationshipInput2_ch2},${rg_event},${rg_event_ch2},${first_event},${first_event_ch2},${first_all_event_ch1},${first_all_event_ch2},${second_event},${second_event_ch2},${second_all_event_ch1},${second_all_event_ch2},${third_event},${third_event_ch2},${third_all_event_ch1},${third_all_event_ch2},${fourth_event},${fourth_event_ch2},${fourth_all_event_ch1},${fourth_all_event_ch2},${chome_event},${address_event},${of1_event},${of2_event},${index3}`;
+        console.log(newRow3)
 
-            // 覆蓋到原始 CSV 行
-            rows3[index3] = newRow3;
+        // 再次讀取相同的 CSV 文件以進行更新操作
+        fs.readFile(csvFilePath3, 'utf-8', (err, data) => {
+            if (err) {
+                console.error('文件錯誤:', err);
+                return;
+            }
 
-            // 將修改後的內容寫回csv
-            const modifiedData3 = rows3.join('\n')+ '\n';;
-            fs.writeFile(csvFilePath3, modifiedData3, 'utf-8', (err) => {
+            // 將 CSV 文件的内容按行分割為陣列
+            let rows3 = data.split('\n');
+            const header3 = rows3[0].split(','); // 取得標題列
+
+            // 找出標題中 'index' 所在的列位置
+            const indexColumn3 = header3.indexOf('index');
+            if (indexColumn3 === -1) { // 如果未找到 'index' 列
+                console.error('未找到"index" 的列');
+                return;
+            }
+
+            // 更新每一行數據
+            const updatedRows3 = rows3.map((row, rowIndex) => {
+                if (rowIndex === 0) {// 跳過標題列
+                    return row;
+                }
+
+                // 分割每一行的數據
+                const columns3 = row.split(',');
+                // 如果當前行的 'index' 值與指定的 index3 匹配，則用新行替換
+                if (columns3[indexColumn3] === index3) {
+                    console.log(`Found target row with index ${index3}:`, row);
+                    return newRow3 // 替換為新行
+                }
+                return row;
+            });
+            // 將更新後的所有行重新組合為一個 CSV 字串
+            const updatedCsvData3 = updatedRows3.join('\n');
+
+            // 更新csv
+            fs.writeFile(csvFilePath3, updatedCsvData3, (err) => {
                 if (err) {
                     console.error('Error writing modified CSV:', err);
                     res.status(500).send({ message: 'Error in modifying CSV' });
                     return;
+                } else {
+                    res.send({ message: 'CSV modified' });
                 }
-                res.send({ message: 'CSV modified' });
             });
-        } else {
-            res.status(400).send({ message: 'Invalid index' });
-        }
+        });
+
     });
 });
 

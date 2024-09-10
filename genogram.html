@@ -10,8 +10,7 @@
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <meta charset="UTF-8">
-    <title>成員</title>
+    <title>事件</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
 
     <!-- bootstrap core css -->
@@ -110,6 +109,41 @@
             background-color: #6b705c;
             border: 2px #6b705c solid;
         }
+        
+        table {
+            border-collapse: separate;
+            /* 使用 separate 以确保圆角生效 */
+            border-spacing: 0;
+            /* 消除单元格间的空隙 */
+            width: 100%;
+        }
+        /* 给表格单元格添加圆角 */
+        
+        table th,
+        table td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        
+        table th:first-child {
+            border-top-left-radius: 10px;
+            /* 左上角圆角 */
+        }
+        
+        table th:last-child {
+            border-top-right-radius: 10px;
+            /* 右上角圆角 */
+        }
+        
+        table tr:last-child td:first-child {
+            border-bottom-left-radius: 10px;
+            /* 左下角圆角 */
+        }
+        
+        table tr:last-child td:last-child {
+            border-bottom-right-radius: 10px;
+            /* 右下角圆角 */
+        }
         /* 奇數行背景顏色 */
         
         table tr:nth-child(odd) {
@@ -123,10 +157,15 @@
             width: 300px;
             /* 調整寬度以適應您的需求 */
         }
+        
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 
 <body>
+
     <header class="header_section">
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg custom_nav-container ">
@@ -146,16 +185,13 @@
                                 <a class="nav-link" href="index.html">首頁 <span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="member.html">
-                                    <span>新增成員</span>
+                                <a class="nav-link" href="household_layer.html">
+                                    <span>戶冊關聯查詢</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="member_search.html"> 查詢與修改查詢成員</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="member_compare.html">
-                                    <span>成員比對</span>
+                                <a class="nav-link" href="live.html">
+                                    <span>生命歷程</span>
                                 </a>
                             </li>
                         </ul>
@@ -164,91 +200,30 @@
             </nav>
         </div>
     </header>
-    <div class="member">
-        <h2>成員</h2>
-        <form id="memberForm">
-            <label for="nameInput">戶號：</label>
-            <input type="number" id="id1">
-            <label for="nameInput">人號：</label>
-            <input type="number" id="perno">
-            <label for="nameInput">是否有斜線：</label>
-            <input type="radio" name="slash2" value="1" id="yes2">是
-            <input type="radio" name="slash2" value="0" id="no2">否
-            <br>
-            <label for="nameInput">名字1：</label>
-            <input type="text" id="nameInput">
-            <label for="nameInput">名字2：</label>
-            <input type="text" id="nameInput2">
-            <label for="nameInput">名字3：</label>
-            <input type="text" id="nameInput3">
-            <label for="nameInput">名字4：</label>
-            <input type="text" id="nameInput4">
-            <label for="nameInput">名字5：</label>
-            <input type="text" id="nameInput5">
-            <br>
-            <label for="numberInput">生日：</label>
-            <select id="reign">
-            </select>
-            <input type="number" id="yy">年
-            <input type="number" id="mm">月
-            <input type="number" id="dd">日
-            <input type="radio" name="gender" value="1" id="male">男
-            <input type="radio" name="gender" value="2" id="female">女
-            <br>
-            <label for="nameInput">雙親：</label> 父
-            <input type="text" id="father"> 母
-            <input type="text" id="mother"> 出生別
-            <select id="porder">
-            </select>
-            <br>
-            <label for="nameInput">續柄：</label>
-            <input type="text" id="relationshipsearch" oninput="filterOptions('relationshipInput', 'relationshipsearch')" placeholder="搜尋續柄">
-            <select id="relationshipInput">
-            </select>
-            <br>
-            <label for="nameInput">職業：</label> 1.
-            <input type="text" id="job1search" oninput="filterOptions('job1', 'job1search')" placeholder="搜尋職業">
-            <select id="job1">
-            </select>
-            <br>
-            <label for="nameInput">職業：</label> 2.
-            <input type="text" id="job2search" oninput="filterOptions('job2', 'job2search')" placeholder="搜尋職業">
-            <select id="job2">
-            </select>
-            <br>
-            <label for="nameInput">種族：</label>
-            <select id="race">
-            </select> 阿片
-            <select id="opium">
-            </select> 纏足
-            <select id="foot_binding">
-            </select>
-            <br>
-            <label for="nameInput">是否有變更續柄：</label>
-            <input type="radio" name="relevant_ys" value="1" id="yes_ys">是
-            <input type="radio" name="relevant_ys" value="0" id="no_ys">否
-            <br>
-            <label for="nameInput">初始關係1:</label>
-            <select id="initial_relationship1">
-            </select> 關係人
-            <input type="text" id="relevant_person1">
-            <br>
-            <label for="nameInput">初始關係2:</label>
-            <select id="initial_relationship2">
-            </select> 關係人
-            <input type="text" id="relevant_person2">
+    <div>
+        <script src="https://unpkg.com/gojs@3.0.10/release/go.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+        <div id="allSampleContent" class="p-4 w-full">
 
-            <button type="submit">新增</button>
-            <!--
-            <br>
-            index
-            <input type="number" id="indexInput2" readonly>
-            <button type="button" onclick="modifyHousehold2()">修改</button>-->
-        </form>
-        <!--<button onclick="searchmember()">查詢</button>
-        <div id="result2"></div>-->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+            <script src="./go.js"></script>
+            <div class="member">
+                <h2>成員</h2>
+                <label for="nameInput">姓名：</label>
+                <input type="text" id="name">
+                <label for="nameInput">親等：</label>
+                <input type="number" id="layer">
+                <button onclick="setup()">查詢</button>
+                <div id="sample">
+                    <div id="myDiagramDiv" style="background-color: #f8fafc; border: solid 1px black; width:100%; height:550px;"></div>
+                    <code id="peopleData" style="display: none;"></code>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <script src="script.js"></script>
 </body>
 
 </html>

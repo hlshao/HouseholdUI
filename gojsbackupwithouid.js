@@ -766,7 +766,6 @@ function setup() {
             parsedData.data.forEach(row => {
                 // Check if the entry is a duplicate
                 let selfName = row.self_name.trim();
-                let PID = nextPID;
                 let PID_key = row.PID;
                 let FatherName = row.Father ? row.Father.trim() : '';
                 let MotherName = row.Mother ? row.Mother.trim() : '';
@@ -818,11 +817,12 @@ function setup() {
                     }
 
                 }
+                // 建立媽媽節點
                 if (MotherName && !nameToPID[MotherName]) {
                     if (FatherName) {
                         if (!nameToPID[FatherName]) {
                             const MotherPID = createNode(MotherName, '', '', '', "F", '');
-                            // 建立媽媽節點
+
                             createNode(FatherName, '', '', MotherPID, "M", '');
                             const existingIndex = nodes.findIndex(node =>
                                 node.n === MotherName
@@ -873,14 +873,13 @@ function setup() {
                     };
                     // 這邊修改PID 
                     if (FatherName === "" || MotherName === "") return
-                    createNode(selfName, nameToPID[FatherName], newNode.m, newNode.ux, newNode.s, newNode.a);
+                    selfnode = createNode(selfName, nameToPID[FatherName], newNode.m, newNode.ux, newNode.s, newNode.a);
 
                     const existingIndex = nodes.findIndex(node =>
                         node.n === SpouseName ||
                         node.key === nameToPID[SpouseName]
 
                     );
-                    // 更新配偶節點
                     const existingNode = nodes[existingIndex];
                     if (!existingNode.ux.includes(nameToPID[selfName])) {
                         existingNode.ux.push(nameToPID[selfName])
@@ -899,9 +898,6 @@ function setup() {
                         }
                         if (MotherName && !existingNode.m) {
                             existingNode.m = nameToPID[MotherName];
-                        }
-                        if (SpouseName && !existingNode.ux.includes(nameToPID[selfName])) {
-                            existingNode.ux.push(nameToPID[SpouseName])
                         }
                     }
 

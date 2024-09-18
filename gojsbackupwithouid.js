@@ -449,7 +449,7 @@ function setupMarriages(diagram) {
                 const wife = uxs[j];
                 const wdata = model.findNodeDataForKey(wife);
                 if (key === wife || !wdata) {
-                    console.log("cannot create Marriage relationship with self or unknown person " + wife);
+                    // console.log("cannot create Marriage relationship with self or unknown person " + wife);
                     continue;
                 }
                 const link = findMarriage(diagram, key, wife);
@@ -537,297 +537,469 @@ function setup() {
     const name = document.getElementById("name").value
     const layer = document.getElementById("layer").value
     console.log(name, layer)
-    fetch('./psnname.csv')
+    fetch('./output (1).csv')
         .then(response => response.text())
-        .then(psnnameData => {
-            const parsedPsnname = Papa.parse(psnnameData, {
+        .then(csvData => {
+            const parsedData = Papa.parse(csvData, {
                 header: true, // 將 CSV 的第一行作為鍵名
                 skipEmptyLines: true
             });
 
-            const nameToID = {}; // 名字對應到 ID
-            parsedPsnname.data.forEach(row => {
-                if (row.name && row.id) {
-                    nameToID[row.name.trim()] = row.id.trim();
-                }
-            });
+            let nodes = []; // Array to store nodes
+            const nameToPID = {}; // Map to track existing PIDs by name
+            const seenEntries = {}; // Map to track seen combinations of self_name, Father, Mother, Spouse
+            let nextPID = 1; // Initialize the PID for new nodes
 
-            fetch('./all_relationship_clean.csv')
-                .then(response => response.text())
-                .then(csvData => {
-                    const parsedData = Papa.parse(csvData, {
-                        header: true, // 將 CSV 的第一行作為鍵名
-                        skipEmptyLines: true
-                    });
+            // Function to create a new node and assign a new PID if needed
+            function createNode(name, Father = '', Mother = '', Spouse = '', s = '', a = '') {
+                const newNode = {
+                    key: nextPID, // Assign a unique PID
+                    n: name,
+                    f: Father,
+                    m: Mother,
+                    ux: [Spouse],
+                    s: s,
+                    pid: a
+                };
+                console.log('create new node', newNode)
+                nodes.push(newNode);
+                nameToPID[name] = nextPID; // Store the PID for this name
+                nextPID++; // Increment the PID for the next new node
+                return newNode.key;
 
-                    let nodes = []; // Array to store nodes
-                    const nameToPID = {}; // Map to track existing PIDs by name
-                    const seenEntries = {}; // Map to track seen combinations of self_name, Father, Mother, Spouse
-                    let nextPID = 1; // Initialize the PID for new nodes
+            }
 
-                    // Function to create a new node and assign a new PID if needed
-                    function createNode(id, name, Father = '', Mother = '', Spouse = '', s = '', a = '') {
-                        const newNode = {
-                            key: id, // Assign a unique PID
-                            n: name,
-                            f: Father,
-                            m: Mother,
-                            ux: [Spouse],
-                            s: s,
-                            pid: a
-                        };
-                        console.log('create new node', newNode)
-                        nodes.push(newNode);
-                        nameToPID[name] = nextPID; // Store the PID for this name
-                        nextPID++; // Increment the PID for the next new node
-                        return newNode.key;
+            // Function to check if an entry is a duplicate based on self_name, Father, Mother, and Spouse
+            function UpdateParent(nodes, existingNode, nameToPID, entry) {
+                // 更新其他節點中的父或母為 existingNode的
+                nodes.forEach(node => {
+                    // 更新 node.f 的key為現在目前的key
+                    if (node.f === existingNode.key) {
+                        console.log(`更新父節點 self_name: ${entry.self_name}`);
+                        node.f = nameToPID[entry.self_name];
                     }
 
-                    // Function to check if an entry is a duplicate based on self_name, Father, Mother, and Spouse
-                    function isDuplicate(entry) {
-                        const key = `${entry.Father}-${entry.Mother}-${entry.self_name}`;
-                        const spouseKey = `${entry.Father}-${entry.Mother}-${entry.spouse}`;
-                        const ID = `${entry.Father}-${entry.Mother}-${entry.PID}`;
-                        if (seenEntries[key] && !seenEntries[spouseKey]) {
-                            // 爸媽自己節點一樣
-                            console.log('配偶不同的记录:', key);
-                            const existingIndex = nodes.findIndex(node =>
-                                node.n === entry.self_name &&
-                                (node.f && node.f === nameToPID[entry.Father]) &&
-                                (node.m && node.m === nameToPID[entry.Mother])
-                            );
-                            if (!nameToPID[entry.self_name]) {
-                                const SpouseNamePID = createNode(entry.spouse, '', '', nameToPID[entry.self_name], '', '');
-                                const existingNode = nodes[existingIndex];
-                                existingNode.ux.push(SpouseNamePID);
-                                existingNode.key = existingIndex + 1;
-                                nodes[existingIndex] = existingNode;
-                                console.log(nodes)
-                                return false;
-                            } else {
-                                const existingNode = nodes[existingIndex];
-                                if (existingNode && nameToPID[entry.spouse]) {
-                                    existingNode.ux.push(nameToPID[entry.spouse]);
-                                    existingNode.key = existingIndex + 1;
-                                    nodes[existingIndex] = existingNode;
-                                    nameToPID[entry.self_name] = existingIndex + 1;
-                                    console.log(nodes)
-                                    return false;
-                                }
+                    if (node.m === existingNode.key) {
+                        console.log(`更新母節點新的 self_name: ${entry.self_name}`);
+                        node.m = nameToPID[entry.self_name];
+                    }
+                });
+                console.log(nameToPID[existingNode.n], nameToPID[entry.self_name])
+                nameToPID[existingNode.n] = nameToPID[entry.self_name]
 
+                nodes = nodes.filter(node =>
+                    !(node.pid === entry.PID &&
+                        node.n !== entry.self_name)
+                );
+                console.log('更新後的節點:', nodes);
+                nodes = nodes.filter(node =>
+                    !(!node.pid.includes(entry.PID) &&
+                        node.n === entry.self_name
+
+                    ));
+
+                console.log('更新后的节点列表:', nodes);
+                return nodes
+            }
+
+
+            function isDuplicate(entry) {
+                console.log('開始檢查重複')
+                const key = `${entry.Father}-${entry.Mother}-${entry.self_name}`;
+                const spouseKey = `${entry.Father}-${entry.Mother}-${entry.spouse}`;
+                const ID = `${entry.Father}-${entry.Mother}-${entry.PID}`;
+                if (seenEntries[key] && !seenEntries[spouseKey]) {
+                    // 爸媽自己節點一樣
+                    console.log('配偶不同的记录:', key);
+                    const existingIndex = nodes.findIndex(node =>
+                        node.n === entry.self_name &&
+                        (node.f && node.f === nameToPID[entry.Father]) &&
+                        (node.m && node.m === nameToPID[entry.Mother])
+                    );
+                    if (!nameToPID[entry.spouse]) {
+                        SpouseNamePID = createNode(entry.spouse, '', '', nameToPID[entry.self_name], '', '');
+                    } else {
+                        SpouseNamePID = nameToPID[entry.spouse]
+                    }
+                    const existingNode = nodes[existingIndex];
+                    if (existingNode && SpouseNamePID) {
+                        if (!existingNode.ux.includes(SpouseNamePID)) {
+                            existingNode.ux.push(SpouseNamePID);
+                        }
+                        existingNode.key = existingIndex + 1;
+                        nodes[existingIndex] = existingNode;
+                        nameToPID[entry.self_name] = existingIndex + 1;
+                        console.log(nodes)
+                        return;
+                    }
+
+                } else if (nameToPID[entry.self_name] && !seenEntries[spouseKey]) {
+                    // 名字完全一樣,已經建立過這節點，只是要更新名字節點的資訊 配偶不同 沒有建立過PID
+                    console.log('名字相同的紀錄,配偶不同:', entry.self_name);
+                    // TODO 9 /17改先刪掉
+                    // if (!seenEntries[ID] && !seenEntries[key]) {
+                    //     console.log('同名不同人')
+                    //     return
+                    // }
+                    console.log(nameToPID)
+                    const existingIndex = nodes.findIndex(node =>
+                        node.n === entry.self_name
+                    );
+                    console.log(existingIndex)
+                    console.log(nodes[existingIndex])
+                    const existingNode = nodes[existingIndex];
+                    if (existingNode) {
+                        existingNode.f = nameToPID[entry.Father];
+                        existingNode.m = nameToPID[entry.Mother];
+                        existingNode.s = entry.selfSex;
+                        // existingNode.pid = entry.PID;
+                        if (!existingNode.ux.includes(nameToPID[entry.spouse])) {
+                            existingNode.ux.push(nameToPID[entry.spouse]);
+                        }
+                        nameToPID[entry.self_name] = existingIndex + 1;
+                        nodes[existingIndex] = existingNode;
+                        nameToPID[existingNode.n] = nameToPID[entry.self_name]
+                        console.log(nodes[existingIndex])
+                    }
+                    // 要更新這個刪掉節點的資料 ??
+                    console.log(seenEntries[ID])
+                    if (seenEntries[ID]) {
+                        console.log('名字不同的紀錄,兩個名字,但是爸媽不同:', spouseKey, entry.self_name, entry.PID);
+                        const existingIndex = nodes.findIndex(node =>
+                            node.pid === entry.PID &&
+                            node.n != entry.self_name
+                        );
+                        console.log(nodes[existingIndex])
+                        const existingNode = nodes[existingIndex];
+                        console.log(existingIndex)
+                        if (existingIndex != -1) {
+                            nodes = UpdateParent(nodes, existingNode, nameToPID, entry)
+                        }
+                        console.log(nameToPID)
+                    }
+
+
+                } else if (seenEntries[spouseKey] || seenEntries[ID] && entry.spouse !== "") {
+                    // 情况3：父、母、配偶相同，名字不同
+                    console.log('名字不同的紀錄情況3,：父、母、配偶相同，名字不同:', spouseKey, entry.self_name);
+                    console.log(nameToPID)
+                    const existingIndex = nodes.findIndex(node =>
+                        node.f === nameToPID[entry.Father] &&
+                        node.m === nameToPID[entry.Mother] &&
+                        node.pid.includes(entry.PID)
+                    );
+                    const existingNode = nodes[existingIndex];
+                    console.log(existingNode)
+                    if (existingNode) {
+                        existingNode.n = entry.self_name;
+                        nameToPID[entry.self_name] = existingIndex + 1;
+                        nodes[existingIndex] = existingNode;
+
+                        // 可能會有 空的PID 在配偶時候建立的
+                        // nodes = nodes.filter(node =>
+                        //     !(
+                        //         node.n === entry.self_name &&
+                        //         !node.pid.includes(entry.PID)
+                        //     ));
+                    }
+
+
+
+                    // 這邊可能要先判對他是不是之前有人是用他的節點才可以刪掉
+                    // TODO:
+                    // nodes = nodes.filter(node =>
+                    //     !(
+                    //         node.n === entry.self_name &&
+                    //         !node.pid.includes(entry.PID)
+                    //     ));
+
+
+                    if (seenEntries[ID]) {
+                        console.log('名字不同的紀錄,兩個名字,但是爸媽不同:', spouseKey, entry.self_name, entry.PID);
+                        const existingIndex = nodes.findIndex(node =>
+                            node.pid === entry.PID &&
+                            node.n !== entry.self_name
+                        );
+                        console.log(nodes[existingIndex])
+                        const existingNode = nodes[existingIndex];
+                        console.log(existingIndex)
+                        if (existingIndex != -1) {
+
+                            nodes = UpdateParent(nodes, existingNode, nameToPID, entry)
+
+                        }
+
+                        // 幫忙檢查 父母節點有沒有連結
+                        const FatherName = nodes.findIndex(node =>
+                            node.key === nameToPID[entry.Father]
+                        );
+                        const MotherName = nodes.findIndex(node =>
+                            node.key === nameToPID[entry.Mother]
+                        );
+                        console.log(nodes[FatherName], nodes[MotherName])
+                            // TODO :這裡要修
+                        if (nodes[FatherName] && nodes[MotherName]) {
+                            if (!nodes[FatherName].ux.includes(nodes[MotherName].key)) {
+                                console.log('新增爸爸媽媽節點', nodes[FatherName])
+                                nodes[FatherName].ux.push(nodes[MotherName].key)
                             }
-                            // nodes[existingIndex].ux.push(SpouseNamePID);
 
 
-                        } else if (nameToPID[entry.self_name]) {
-                            // 名字完全一樣，只是要更新名字節點的資訊
-                            console.log('名字相同的紀錄:', entry.self_name);
-                            console.log(nameToPID)
+                            if (!nodes[MotherName].ux.includes(nodes[FatherName].key)) {
+                                console.log('新增爸爸媽媽節點', nodes[FatherName])
+                                nodes[MotherName].ux.push(nodes[FatherName].key)
+                            }
+                        }
+
+                        return
+                    }
+                } else {
+                    console.log('没有重复的记录');
+                    seenEntries[key] = entry.spouse;
+                    seenEntries[spouseKey] = entry.self_name;
+                    seenEntries[ID] = entry.PID;
+                    return;
+                }
+            }
+
+            // Process each row
+            parsedData.data.forEach(row => {
+                // Check if the entry is a duplicate
+                let selfName = row.self_name.trim();
+                let PID = nextPID;
+                let PID_key = row.PID;
+                let FatherName = row.Father ? row.Father.trim() : '';
+                let MotherName = row.Mother ? row.Mother.trim() : '';
+                let SpouseName = row.spouse ? row.spouse.trim() : '';
+                // let selfSex = row.sex === 1 ? "M" : row.sex === 2 ? "F" : '';
+                let selfSex = row.sex === '1' ? 'M' : 'F';
+
+                // 檢查是否有重複
+                isDuplicate(row)
+
+                // 建立爸爸或媽媽節點 邏輯
+                // 1. 檢查是否已經建立過節點 
+                // 2. 如果建立過看看是否有媽媽節點，如果沒有則先建立父節點
+                // 3. 建立完後再建立媽媽節點套入剛剛的父節點
+                // 4. 更新父節點
+                if (FatherName && !nameToPID[FatherName]) {
+                    if (MotherName) {
+                        if (!nameToPID[MotherName]) {
+                            const fatherPID = createNode(FatherName, '', '', '', "M", '');
+                            // 建立媽媽節點
+                            createNode(MotherName, '', '', fatherPID, "F", '');
                             const existingIndex = nodes.findIndex(node =>
-                                node.n === entry.self_name
+                                node.n === FatherName
                             );
-                            console.log(existingIndex)
                             console.log(nodes[existingIndex])
                             const existingNode = nodes[existingIndex];
-                            if (existingNode) {
-                                existingNode.f = nameToPID[entry.Father];
-                                existingNode.m = nameToPID[entry.Mother];
-                                existingNode.pid = entry.PID;
-                                existingNode.ux.push(nameToPID[entry.spouse])
-                                nameToPID[entry.self_name] = existingIndex + 1;
-                                // delete nameToPID[old_Name];
-                                nodes[existingIndex] = existingNode;
-                                nameToPID[existingNode.n] = nameToPID[entry.self_name]
-                                console.log(nodes[existingIndex])
+                            if (!existingNode.ux.includes(nameToPID[MotherName])) {
+                                existingNode.ux.push(nameToPID[MotherName])
                             }
-                            // 要更新這個刪掉節點的資料
-                            if (seenEntries[ID]) {
-                                console.log('名字不同的记录:', spouseKey, entry.self_name);
-                                const existingIndex = nodes.findIndex(node =>
-                                    node.f === nameToPID[entry.Father] &&
-                                    node.m === nameToPID[entry.Mother] &&
-                                    node.pid.includes(entry.PID) &&
-                                    node.n != entry.self_name
-                                );
-                                console.log(nodes[existingIndex])
-                                const existingNode = nodes[existingIndex];
-                                console.log(existingIndex)
-                                if (existingIndex != -1) {
-                                    // 更新其他节点中的父或母为 existingNode 的节点
-                                    nodes.forEach(node => {
-                                        if (node.f === existingNode.key) {
-                                            console.log(`更新父节点为新的 self_name: ${entry.self_name}`);
-                                            node.f = nameToPID[entry.self_name]; // 更新为新的父节点PID
-                                        }
-
-                                        if (node.m === existingNode.key) {
-                                            console.log(`更新母节点为新的 self_name: ${entry.self_name}`);
-                                            node.m = nameToPID[entry.self_name]; // 更新为新的母节点PID
-                                        }
-                                    });
-                                    console.log(nameToPID[existingNode.n], nameToPID[entry.self_name])
-                                }
-                                console.log(nameToPID)
-
-
-                                nodes = nodes.filter(node =>
-                                    !(node.f === nameToPID[entry.Father] &&
-                                        node.m === nameToPID[entry.Mother] &&
-                                        node.pid.includes(entry.PID) &&
-                                        node.n !== entry.self_name)
-                                );
-                                console.log('更新后的节点列表:', nodes);
-                                console.log(nameToPID)
-                            }
-
-
-                        } else if (seenEntries[spouseKey] || seenEntries[ID]) {
-                            // 情况3：父、母、配偶相同，名字不同
-                            console.log('名字不同的记录情况3:', spouseKey, entry.self_name);
-                            console.log(nameToPID)
-                            const existingIndex = nodes.findIndex(node =>
-                                node.f === nameToPID[entry.Father] &&
-                                node.m === nameToPID[entry.Mother] &&
-                                node.pid.includes(entry.PID)
-                            );
-                            console.log(existingIndex)
-                            const existingNode = nodes[existingIndex];
-                            if (existingNode) {
-                                const old_Name = existingNode.n;
-                                existingNode.n = entry.self_name;
-                                nodes[existingIndex] = existingNode;
-                                return false;
-                            }
-
-                            return false
                         } else {
-                            console.log('没有重复的记录');
-                            seenEntries[key] = entry.spouse;
-                            seenEntries[spouseKey] = entry.self_name;
-                            seenEntries[ID] = entry.PID;
-                            return false;
+                            createNode(FatherName, '', '', nameToPID[MotherName], "M", '');
+                        }
+                    }
+
+                } else {
+                    // 更新節點，已經存在
+                    const existingIndex = nodes.findIndex(node =>
+                        node.n === FatherName ||
+                        node.key === nameToPID[FatherName]
+                    );
+                    const existingNode = nodes[existingIndex];
+                    if (existingNode && nameToPID[MotherName]) {
+                        if (!existingNode.ux.includes(nameToPID[MotherName])) {
+                            existingNode.ux.push(nameToPID[MotherName])
+                        }
+                    } else if (existingNode) {
+                        MotherPID = createNode(MotherName, '', '', nameToPID[FatherName], "F", '');
+                        existingNode.ux.push(MotherPID)
+                    }
+
+                }
+                if (MotherName && !nameToPID[MotherName]) {
+                    if (FatherName) {
+                        if (!nameToPID[FatherName]) {
+                            const MotherPID = createNode(MotherName, '', '', '', "F", '');
+                            // 建立媽媽節點
+                            createNode(FatherName, '', '', MotherPID, "M", '');
+                            const existingIndex = nodes.findIndex(node =>
+                                node.n === MotherName
+                            );
+                            console.log(nodes[existingIndex])
+                            const existingNode = nodes[existingIndex];
+                            if (existingNode.ux.includes(nameToPID[FatherName])) return
+                            existingNode.ux.push(nameToPID[FatherName])
+                        }
+                    }
+                } else {
+                    const existingIndex = nodes.findIndex(node =>
+                        node.n === MotherName ||
+                        node.key === nameToPID[MotherName]
+
+                    );
+                    const existingNode = nodes[existingIndex];
+
+                    if (existingNode && nameToPID[FatherName]) {
+                        if (!existingNode.ux.includes(nameToPID[FatherName])) {
+                            existingNode.ux.push(nameToPID[FatherName])
+                        }
+                    } else if (existingNode) {
+                        FatherPID = createNode(FatherName, '', '', nameToPID[MotherName], "F", '');
+                        existingNode.ux.push(FatherPID)
+                    }
+
+                }
+
+
+                if (SpouseName && !nameToPID[SpouseName]) {
+                    if (selfSex == "M") {
+                        createNode(SpouseName, '', '', nameToPID[selfName], 'F', '');
+                    } else {
+                        createNode(SpouseName, '', '', nameToPID[selfName], 'M', '');
+                    }
+
+                }
+                // Create the node for the current entry, if it doesn't exist already
+                if (!nameToPID[selfName]) {
+                    const newNode = {
+                        n: selfName,
+                        f: FatherName ? nameToPID[FatherName] : '',
+                        m: MotherName ? nameToPID[MotherName] : '',
+                        ux: SpouseName ? nameToPID[SpouseName] : [],
+                        s: selfSex ? selfSex : '',
+                        a: PID_key ? PID_key : ''
+                    };
+                    // 這邊修改PID 
+                    if (FatherName === "" || MotherName === "") return
+                    createNode(selfName, nameToPID[FatherName], newNode.m, newNode.ux, newNode.s, newNode.a);
+
+                    const existingIndex = nodes.findIndex(node =>
+                        node.n === SpouseName ||
+                        node.key === nameToPID[SpouseName]
+
+                    );
+                    // 更新配偶節點
+                    const existingNode = nodes[existingIndex];
+                    if (!existingNode.ux.includes(nameToPID[selfName])) {
+                        existingNode.ux.push(nameToPID[selfName])
+                    }
+                }
+                // 確認是否更新
+                else {
+                    // Update existing node if Father or Mother is added later
+                    const existingIndex = nodes.findIndex(node => node.n === selfName);
+                    const existingNode = nodes[existingIndex];
+
+                    // Update father and mother if they exist in the row and aren't already set
+                    if (existingIndex != -1) {
+                        if (FatherName && !existingNode.f) {
+                            existingNode.f = nameToPID[FatherName];
+                        }
+                        if (MotherName && !existingNode.m) {
+                            existingNode.m = nameToPID[MotherName];
+                        }
+                        if (SpouseName && !existingNode.ux.includes(nameToPID[selfName])) {
+                            existingNode.ux.push(nameToPID[SpouseName])
                         }
                     }
 
 
-                    // Process each row
-                    parsedData.data.forEach(row => {
-                        // Check if the entry is a duplicate
-                        let selfName = row.self_name.trim();
-                        let PID_key = row.PID;
-                        let FatherName = row.Father ? row.Father.trim() : '';
-                        let MotherName = row.Mother ? row.Mother.trim() : '';
-                        let SpouseName = row.spouse ? row.spouse.trim() : '';
-                        // 检查是否有重复的记录
-                        if (isDuplicate(row)) {
-                            // 情况1处理逻辑：完全重复，已有的逻辑 // 删除旧的名字在nameToPID中的记录
-                            return;
+                    // Update the node in the array
+                    nodes[existingIndex] = existingNode;
+                }
+            });
+            console.log(nodes);
+            // setupDiagram(myDiagram, nodes,
+            //     4 /* focus on this person */ );
+
+            function buildFamilyTree(nodes, name, maxDegree) {
+                const rootPID = nameToPID[name];
+
+                if (!rootPID) {
+                    return `未找到 "${name}" 相關節點。`;
+                }
+
+                const visited = new Set();
+                const degreeMap = {};
+                const familyTree = [];
+                const familyTree_node = [];
+                const queue = [
+                    [rootPID, 0]
+                ]; // Queue for BFS, each element is [nodePID, degree]
+
+                // BFS traversal
+                while (queue.length > 0) {
+                    const [currentPID, degree] = queue.shift(); // Dequeue the first element
+                    const currentNode = nodes.find(node => node.key === currentPID); // Find current node by PID
+
+                    if (degree > maxDegree) continue; // Skip if degree exceeds max limit
+                    if (!currentNode) continue;
+
+                    // Mark the current node as visited
+                    if (!visited.has(currentPID)) {
+                        visited.add(currentPID);
+                        degreeMap[currentPID] = degree; // Store the degree for the node
+
+                        // Add current node to family tree
+                        if (!familyTree_node.includes(currentNode)) {
+                            familyTree.push({ node: currentNode, degree }); // Add node and degree to family tree
+                            familyTree_node.push(currentNode);
                         }
-                        // 判別資料中是否有父母配偶節點
-                        // 檢查是否更新節點
 
-                        // 處理父親節點
-                        if (FatherName && !nameToPID[FatherName]) {
+                        // Process parents with degree +1
+                        if (currentNode.f && !visited.has(currentNode.f)) {
+                            queue.push([currentNode.f, degree + 1]); // Father
+                        }
+                        if (currentNode.m && !visited.has(currentNode.m)) {
+                            queue.push([currentNode.m, degree + 1]); // Mother
+                        }
 
-                            if (MotherName) {
-                                if (!nameToPID[MotherName]) {
-                                    const fatherPID = createNode(nameToID[FatherName], FatherName);
-                                    // 建立媽媽節點
-                                    createNode(nameToID[MotherName], MotherName, '', '', fatherPID, "F", '');
-                                    const existingIndex = nodes.findIndex(node =>
-                                        node.n === FatherName
-                                    );
-                                    const existingNode = nodes[existingIndex];
-                                    existingNode.ux.push(nameToPID[MotherName])
-                                } else {
-                                    createNode(nameToID[FatherName], FatherName, '', '', nameToPID[MotherName], 'M', '');
+                        // Process spouse with the same degree
+                        if (Array.isArray(currentNode.ux)) {
+                            currentNode.ux.forEach(spousePID => {
+                                if (!visited.has(spousePID) && spousePID !== '') {
+                                    queue.push([spousePID, degree]); // Spouse with the same degree
                                 }
-                            }
-                        } else {
-                            // 更新節點，已經存在
-                            const existingIndex = nodes.findIndex(node =>
-                                node.n === FatherName ||
-                                node.key === nameToPID[FatherName]
-                            );
-                            const existingNode = nodes[existingIndex];
-                            if (existingNode && nameToPID[MotherName]) {
-                                existingNode.ux.push(nameToPID[MotherName])
-                            }
-
-                        }
-                        if (MotherName && !nameToPID[MotherName]) {
-                            if (FatherName) {
-                                if (!nameToPID[FatherName]) {
-                                    const MotherPID = createNode(nameToID[MotherName], MotherName, '', '', '', "F", '');
-                                    // 建立媽媽節點
-                                    createNode(nameToID[FatherName], FatherName, '', '', MotherPID, "M", '');
-                                    const existingIndex = nodes.findIndex(node =>
-                                        node.n === MotherName
-                                    );
-                                    console.log(nodes[existingIndex])
-                                    const existingNode = nodes[existingIndex];
-                                    existingNode.ux.push(nameToPID[FatherName])
-                                } else {
-                                    createNode(nameToID[MotherName], MotherName, '', '', nameToPID[FatherName], 'F', '');
-                                }
-                            }
-                        } else {
-                            // 更新節點，已經存在
-                            const existingIndex = nodes.findIndex(node =>
-                                node.n === MotherName ||
-                                node.key === nameToID[MotherName]
-
-                            );
-                            const existingNode = nodes[existingIndex];
-
-                            if (existingNode && nameToPID[FatherName]) {
-                                existingNode.ux.push(nameToID[FatherName])
-                            }
-
+                            });
                         }
 
-
-                        if (SpouseName && !nameToPID[SpouseName]) {
-                            createNode(nameToID[SpouseName], SpouseName, '', '', nameToPID[selfName], '', '');
-                        }
-                        // Create the node for the current entry, if it doesn't exist already
-                        if (selfName) {
-                            const newNode = {
-                                n: selfName,
-                                f: FatherName ? nameToID[FatherName] : [],
-                                m: MotherName ? nameToID[MotherName] : [],
-                                ux: SpouseName ? nameToID[SpouseName] : [],
-                                s: '',
-                                a: PID_key ? PID_key : ''
-                            };
-                            // 這邊修改PID 
-                            createNode(nameToID[selfName], selfName, newNode.f, newNode.m, newNode.ux, '', newNode.a);
-                        }
-                        // 確認是否更新
-                        else {
-                            // Update existing node if Father or Mother is added later
-                            const existingIndex = nodes.findIndex(node => node.n === selfName);
-                            const existingNode = nodes[existingIndex];
-                            // Update father and mother if they exist in the row and aren't already set
-                            if (existingIndex != -1) {
-                                if (FatherName && !existingNode.f) {
-                                    existingNode.f = nameToPID[FatherName];
-                                }
-                                if (MotherName && !existingNode.m) {
-                                    existingNode.m = nameToPID[MotherName];
-                                }
+                        // ** Process children of current node **
+                        nodes.forEach(childNode => {
+                            if ((childNode.f === currentPID || childNode.m === currentPID) && !visited.has(childNode.key)) {
+                                queue.push([childNode.key, degree + 1]); // Children nodes with degree +1
                             }
+                        });
+                    }
+                }
+
+                // Filter out nodes based on the degree limit
+                const filteredNodes = familyTree.filter(item => item.degree <= maxDegree);
+
+                // Return the filtered family tree and a simplified degree mapping
+                return {
+                    familyTree: filteredNodes,
+                    targetDegree: filteredNodes.map(item => ({
+                        name: item.node.n, // Use `self_name` or `n` as the name field
+                        degree: item.degree
+                    }))
+                };
+            }
 
 
-                            // Update the node in the array
-                            nodes[existingIndex] = existingNode;
-                        }
-                    });
-                    console.log(nodes);
-                    setupDiagram(myDiagram, nodes,
-                        4 /* focus on this person */ );
+            // Example usage
+            const targetName = name; // 根節點人名
+            const maxDegree = layer; // 設定查詢最大親等
+            const result = buildFamilyTree(nodes, targetName, maxDegree);
 
-                })
-                .catch(error => console.error('Error:', error));
+            console.log(result.familyTree); // 顯示家譜樹
+            console.log(result.targetDegree); // 顯示指定親等的節點及其親等
+
+            // Setup diagram with the family tree
+            setupDiagram(myDiagram, result.familyTree.map(item => item.node), 4 /* focus on this person */ );
+
+
         })
+        .catch(error => console.error('Error:', error));
 }

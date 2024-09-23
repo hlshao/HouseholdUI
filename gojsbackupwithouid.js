@@ -307,6 +307,71 @@ function init() {
         blue: '#5d8cc1' // used for marriage link only
     }
 
+    // determine the color for each attribute shape
+    function attrFill(a) {
+        switch (a) {
+            case "9":
+                return colors.red;
+            case "1":
+                return colors.cyan;
+            case "2":
+                return colors.blue;
+            case "3":
+                return colors.orange;
+            case "4":
+                return colors.brown;
+
+            default:
+                return "transparent";
+        }
+    }
+
+    function getGeometry(attribute, shape) {
+        const s = (shape.part.data.s); // determine sex from part data
+        return s === 'M' ? maleGeometry(attribute) : femaleGeometry(attribute);
+    }
+
+    const tlsq = go.Geometry.parse("F M0 0 L40 0 40 40 0 40z");
+
+    function maleGeometry(a) {
+        switch (a) {
+            case "12":
+                return tlsq;
+            case "1":
+                return tlsq;
+            case "2":
+                return tlsq;
+            case "3":
+                return tlsq;
+            case "4":
+                return tlsq;
+
+            default:
+                return tlsq;
+        }
+    }
+
+    // determine the geometry for each attribute shape in a female;
+    // these are all circle slices at each of the four corners of the overall circle
+    const tlarc = go.Geometry.parse("F M20 20 B 0 360 20 20 20 20 z");
+
+    function femaleGeometry(a) {
+        switch (a) {
+            case "12":
+                return tlarc;
+            case "1":
+                return tlarc;
+            case "2":
+                return tlarc;
+            case "3":
+                return tlarc;
+            case "4":
+                return tlarc;
+
+            default:
+                return tlarc;
+        }
+    }
     // two different node templates, one for each sex,
     // named by the category value in the node data object
     myDiagram.nodeTemplate =
@@ -318,9 +383,7 @@ function init() {
         .bind("opacity", "hide", h => h ? 0 : 1)
         .bind("pickable", "hide", h => !h)
         .add(
-            new go.Panel({
-                name: "ICON"
-            })
+            new go.Panel({ name: "ICON" })
             .add(
                 new go.Shape({
                     width: 42,
@@ -334,12 +397,9 @@ function init() {
                 new go.Panel({ // for each attribute show a Shape at a particular place in the overall square
                     itemTemplate: new go.Panel()
                         .add(
-                            new go.Shape({
-                                stroke: null,
-                                strokeWidth: 0
-                            })
-                            .bind("fill", "")
-                            // .bind("geometry", "", getGeometry)
+                            new go.Shape({ stroke: null, strokeWidth: 0 })
+                            .bind("fill", "", attrFill)
+                            .bind("geometry", "", getGeometry)
                         ),
                     margin: 2
                 })
@@ -401,7 +461,27 @@ function init() {
 }
 
 
+function computeFill(attr) {
+    switch (attr[0].toUpperCase()) {
+        case "9":
+            return '#5d8cc1';
+        case "1":
+            return '#775a4a';
+        case "2":
+            return '#94251e';
+        case "3":
+            return '#ca6958';
+        case "4":
+            return '#68bfaf';
 
+        default:
+            return "white";
+    }
+}
+
+function computeAlignment(idx) {
+    return new go.Spot(0.5, 0.5, (idx & 1) === 0 ? -12.5 : 12.5, (idx & 2) === 0 ? -12.5 : 12.5);
+}
 // create and initialize the Diagram.model given an array of node data representing people
 function setupDiagram(diagram, array, focusId) {
     diagram.model =
@@ -551,7 +631,7 @@ function setup() {
             let nextPID = 1; // Initialize the PID for new nodes
 
             // Function to create a new node and assign a new PID if needed
-            function createNode(name, Father = '', Mother = '', Spouse = '', s = '', a = '') {
+            function createNode(name, Father = '', Mother = '', Spouse = '', s = '', pid = '', a = '') {
                 const newNode = {
                     key: nextPID, // Assign a unique PID
                     n: name,
@@ -559,7 +639,8 @@ function setup() {
                     m: Mother,
                     ux: [Spouse],
                     s: s,
-                    pid: a
+                    pid: pid,
+                    a: a
                 };
                 console.log('create new node', newNode)
                 nodes.push(newNode);
@@ -610,14 +691,14 @@ function setup() {
                 const ID = `${entry.Father}-${entry.Mother}-${entry.PID}`;
                 if (seenEntries[key] && !seenEntries[spouseKey]) {
                     // 爸媽自己節點一樣
-                    console.log('配偶不同的记录:', key);
+                    console.log('配偶不同的紀錄:', key);
                     const existingIndex = nodes.findIndex(node =>
                         node.n === entry.self_name &&
                         (node.f && node.f === nameToPID[entry.Father]) &&
                         (node.m && node.m === nameToPID[entry.Mother])
                     );
                     if (!nameToPID[entry.spouse]) {
-                        SpouseNamePID = createNode(entry.spouse, '', '', nameToPID[entry.self_name], '', '');
+                        SpouseNamePID = createNode(entry.spouse, '', '', nameToPID[entry.self_name], '', '', '');
                     } else {
                         SpouseNamePID = nameToPID[entry.spouse]
                     }
@@ -647,11 +728,14 @@ function setup() {
                     );
                     console.log(existingIndex)
                     console.log(nodes[existingIndex])
+                    const Sex = entry.sex === '1' ? 'M' : 'F';
                     const existingNode = nodes[existingIndex];
                     if (existingNode) {
+
                         existingNode.f = nameToPID[entry.Father];
                         existingNode.m = nameToPID[entry.Mother];
-                        existingNode.s = entry.selfSex;
+                        existingNode.s = Sex;
+                        existingNode.a = entry.ethnic;
                         if (!existingNode.ux.includes(nameToPID[entry.spouse])) {
                             existingNode.ux.push(nameToPID[entry.spouse]);
                         }
@@ -693,7 +777,8 @@ function setup() {
                         existingNode.n = entry.self_name;
                         nameToPID[entry.self_name] = existingIndex + 1;
                         nodes[existingIndex] = existingNode;
-
+                        // 這邊可能要先判對他是不是之前有人是用他的節點才可以刪掉
+                        // TODO:
                         // 可能會有 空的PID 在配偶時候建立的
                         // nodes = nodes.filter(node =>
                         //     !(
@@ -701,17 +786,6 @@ function setup() {
                         //         !node.pid.includes(entry.PID)
                         //     ));
                     }
-
-
-
-                    // 這邊可能要先判對他是不是之前有人是用他的節點才可以刪掉
-                    // TODO:
-                    // nodes = nodes.filter(node =>
-                    //     !(
-                    //         node.n === entry.self_name &&
-                    //         !node.pid.includes(entry.PID)
-                    //     ));
-
 
                     if (seenEntries[ID]) {
                         console.log('名字不同的紀錄,兩個名字,但是爸媽不同:', spouseKey, entry.self_name, entry.PID);
@@ -735,14 +809,12 @@ function setup() {
                         const MotherName = nodes.findIndex(node =>
                             node.key === nameToPID[entry.Mother]
                         );
-                        console.log(nodes[FatherName], nodes[MotherName])
 
                         if (nodes[FatherName] && nodes[MotherName]) {
                             if (!nodes[FatherName].ux.includes(nodes[MotherName].key)) {
                                 console.log('新增爸爸媽媽節點', nodes[FatherName])
                                 nodes[FatherName].ux.push(nodes[MotherName].key)
                             }
-
 
                             if (!nodes[MotherName].ux.includes(nodes[FatherName].key)) {
                                 console.log('新增爸爸媽媽節點', nodes[FatherName])
@@ -765,9 +837,9 @@ function setup() {
                 if (parentName && !nameToPID[parentName]) {
                     if (otherParentName) {
                         if (!nameToPID[otherParentName]) {
-                            const parentPID = createNode(parentName, '', '', '', parentGender, '');
+                            const parentPID = createNode(parentName, '', '', '', parentGender, '', '');
                             // 建立另一位父母節點
-                            createNode(otherParentName, '', '', parentPID, otherParentGender, '');
+                            createNode(otherParentName, '', '', parentPID, otherParentGender, '', '');
                             const existingIndex = nodes.findIndex(node =>
                                 node.n === parentName
                             );
@@ -777,7 +849,7 @@ function setup() {
                                 existingNode.ux.push(nameToPID[otherParentName]);
                             }
                         } else {
-                            createNode(parentName, '', '', nameToPID[otherParentName], parentGender, '');
+                            createNode(parentName, '', '', nameToPID[otherParentName], parentGender, '', '');
                         }
                     }
                 } else {
@@ -791,7 +863,7 @@ function setup() {
                             existingNode.ux.push(nameToPID[otherParentName]);
                         }
                     } else if (existingNode) {
-                        const otherParentPID = createNode(otherParentName, '', '', nameToPID[parentName], otherParentGender, '');
+                        const otherParentPID = createNode(otherParentName, '', '', nameToPID[parentName], otherParentGender, '', '');
                         existingNode.ux.push(otherParentPID);
                     }
                 }
@@ -803,6 +875,7 @@ function setup() {
                 let MotherName = row.Mother ? row.Mother.trim() : '';
                 let SpouseName = row.spouse ? row.spouse.trim() : '';
                 let selfSex = row.sex === '1' ? 'M' : 'F';
+                let ethnic = row.ethnic === '12' ? '9' : row.ethnic;
 
                 // 檢查是否有重複
                 isDuplicate(row)
@@ -813,9 +886,9 @@ function setup() {
 
                 if (SpouseName && !nameToPID[SpouseName]) {
                     if (selfSex == "M") {
-                        createNode(SpouseName, '', '', nameToPID[selfName], 'F', '');
+                        createNode(SpouseName, '', '', nameToPID[selfName], 'F', '', '');
                     } else {
-                        createNode(SpouseName, '', '', nameToPID[selfName], 'M', '');
+                        createNode(SpouseName, '', '', nameToPID[selfName], 'M', '', '');
                     }
 
                 }
@@ -827,11 +900,12 @@ function setup() {
                         m: MotherName ? nameToPID[MotherName] : '',
                         ux: SpouseName ? nameToPID[SpouseName] : [],
                         s: selfSex ? selfSex : '',
-                        a: PID_key ? PID_key : ''
+                        pid: PID_key ? PID_key : '',
+                        a: ethnic ? ethnic : ''
                     };
                     // 這邊修改PID 
                     if (FatherName === "" || MotherName === "") return
-                    selfnode = createNode(selfName, nameToPID[FatherName], newNode.m, newNode.ux, newNode.s, newNode.a);
+                    selfnode = createNode(selfName, nameToPID[FatherName], newNode.m, newNode.ux, newNode.s, newNode.a, newNode.a);
 
                     const existingIndex = nodes.findIndex(node =>
                         node.n === SpouseName ||
